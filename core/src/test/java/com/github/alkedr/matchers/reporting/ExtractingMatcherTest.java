@@ -1,0 +1,95 @@
+package com.github.alkedr.matchers.reporting;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
+import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
+import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.MISSING;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.NORMAL;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+public class ExtractingMatcherTest {
+    private static final String NAME = "NAME";
+    private static final String BROKEN_ERROR_MESSAGE = "BROKEN_ERROR_MESSAGE";
+    private final ExtractingMatcher.Extractor<Object> normalExtractor = mock(ExtractingMatcher.Extractor.class);
+    private final ExtractingMatcher.Extractor<Object> missingExtractor = mock(ExtractingMatcher.Extractor.class);
+    private final ExtractingMatcher.Extractor<Object> brokenExtractor = mock(ExtractingMatcher.Extractor.class);
+
+    private final Object item = new Object();
+    private final Object extractedItem = new Object();
+    private static final String EXTRACTED_ITEM_AS_STRING = "EXTRACTED_ITEM_AS_STRING";
+
+    private final ReportingMatcher<Object> matcher = mock(ReportingMatcher.class);
+    private final ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
+
+    @Before
+    public void setUp() {
+        when(normalExtractor.extractFrom(item)).thenReturn(normal(EXTRACTED_ITEM_AS_STRING, extractedItem));
+        when(missingExtractor.extractFrom(item)).thenReturn(missing());
+        when(brokenExtractor.extractFrom(item)).thenReturn(broken(BROKEN_ERROR_MESSAGE));
+    }
+
+    @Test
+    public void run_normal() {
+        new ExtractingMatcher<>(NAME, normalExtractor, matcher).run(item, reporter);
+        verifyNormal();
+    }
+
+    @Test
+    public void run_missing() {
+        new ExtractingMatcher<>(NAME, missingExtractor, matcher).run(item, reporter);
+        verifyMissing();
+    }
+
+    @Test
+    public void run_broken() {
+        new ExtractingMatcher<>(NAME, brokenExtractor, matcher).run(item, reporter);
+        verifyBroken();
+    }
+
+    @Test
+    public void runForMissingItem_normal() {
+        new ExtractingMatcher<>(NAME, normalExtractor, matcher).runForMissingItem(reporter);
+        verifyMissing();
+    }
+
+    @Test
+    public void runForMissingItem_missing() {
+        new ExtractingMatcher<>(NAME, missingExtractor, matcher).runForMissingItem(reporter);
+        verifyMissing();
+    }
+
+    @Test
+    public void runForMissingItem_broken() {
+        new ExtractingMatcher<>(NAME, brokenExtractor, matcher).runForMissingItem(reporter);
+        verifyMissing();
+    }
+
+
+    private void verifyNormal() {
+        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, NORMAL, EXTRACTED_ITEM_AS_STRING);
+        inOrder(matcher, reporter).verify(matcher).run(extractedItem, reporter);
+        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
+        verifyNoMoreInteractions(matcher, reporter);
+    }
+
+    private void verifyMissing() {
+        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, MISSING, "");
+        inOrder(matcher, reporter).verify(matcher).runForMissingItem(reporter);
+        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
+        verifyNoMoreInteractions(matcher, reporter);
+    }
+
+    private void verifyBroken() {
+        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, BROKEN, BROKEN_ERROR_MESSAGE);
+        inOrder(matcher, reporter).verify(matcher).runForMissingItem(reporter);
+        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
+        verifyNoMoreInteractions(matcher, reporter);
+    }
+}
