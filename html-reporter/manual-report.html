@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Пример отчёта</title>
+    <style>
+        body {
+            white-space: pre;
+            font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace
+        }
+.key,.value {
+vertical-align: top;
+display: inline-block;
+}
+.key { font-weight: bold; }
+.key::after {content: ": "}
+.passed { background-color: #DFF0D8 }
+.failed { background-color: #F2DEDE }
+.broken { background-color: #FAEBCC }
+.missing { background-color: #F2DEDE;}
+.checks {margin: 0px 0px 10px 20px; }
+    </style>
+</head>
+<body>
+
+<div class="passed">Успешная проверка</div><div class="failed">Expected: [expected]
+     but: [actual]</div><div class="broken">Сломанная
+проверка</div>
+
+<div class="key">Ключ</div><div class="value">Значение</div><div class="checks"><div class="passed">Успешная проверка</div><div class="failed">Expected: [expected]
+     but: [actual]</div><div class="broken">Сломанная
+проверка</div></div>
+
+<div class="key">Ключ</div>
+<div class="missing value">(отсутствует)</div>
+<div class="checks">
+    <div class="failed">проверка 1</div><br>
+    <div class="failed">проверка 2</div><br>
+    <div class="failed">проверка 3</div><br>
+</div>
+
+<div class="key">Ключ</div>
+<div class="broken value">(ошибка)</div>
+<div class="checks">
+    <div class="broken">Сломанное
+извлечение
+и
+большой
+длинный
+стектрейс</div><br>
+    <div class="failed">проверка 1</div><br>
+    <div class="failed">проверка 2</div><br>
+    <div class="failed">проверка 3</div><br>
+</div>
+
+<div class="key">Ключ</div>
+<div class="value">Значение</div>
+<div class="checks">
+    <div class="passed">Успешная проверка</div><br>
+    <div class="failed">Expected: [expected]
+     but: [actual]</div><br>
+    <div class="key">Ключ</div>
+    <div class="value">Значение</div>
+    <div class="checks">
+        <div class="passed">Успешная проверка</div><br>
+        <div class="failed">Expected: [expected]
+     but: [actual]</div><br>
+        <div class="broken">Сломанная
+проверка</div><br>
+    </div>
+    <div class="broken">Сломанная
+проверка</div><br>
+</div>
+
+<!--TODO: помечать весь key_value_pair как MISSING?-->
+<!--TODO: другой цвет для MISSING-->
+<!--TODO: передавать в value сообщение об ошибке для MISSING (напр. "(missing)"), то же для BROKEN-->
+<!--Можно ещё применить всякие CSS-трюки для сокращения размера типа "Все дивы внутри дива с классом checks имеют
+опделелённые стили", не факт, что это будет быстрее-->
+<!--TODO: тестировать многострочные ключи-->
+<!--TODO: тестировать вложенные проверки, у каторых корень MISSING-->
+<!--TODO: Фолдинг нод и длинного текста-->
+<!--TODO: как-то отображать непечатаемые символы?-->
+
+</body>
+</html>

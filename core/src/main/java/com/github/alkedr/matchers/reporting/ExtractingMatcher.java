@@ -61,12 +61,12 @@ public class MergeableMatcher {
 объединять матчер, извлекающий непроверенные значения с остальными матчерами
 
  */
-public class ExtractingMatcher<T, U> extends BaseReportingMatcher<T> {
+public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     private final String name;
-    private final Extractor<U> extractor;
-    private final ReportingMatcher<U> matcher;
+    private final Extractor extractor;
+    private final ReportingMatcher<?> matcher;
 
-    public ExtractingMatcher(String name, Extractor<U> extractor, ReportingMatcher<U> matcher) {
+    public ExtractingMatcher(String name, Extractor extractor, ReportingMatcher<?> matcher) {
         this.name = name;
         this.extractor = extractor;
         this.matcher = matcher;
@@ -92,15 +92,15 @@ public class ExtractingMatcher<T, U> extends BaseReportingMatcher<T> {
         return name;
     }
 
-    public Extractor<U> getExtractor() {
+    public Extractor getExtractor() {
         return extractor;
     }
 
-    public ReportingMatcher<U> getMatcher() {
+    public ReportingMatcher<?> getMatcher() {
         return matcher;
     }
 
-    private void run(Extractor.ExtractedValue<U> extractedValue, Reporter reporter) {
+    private void run(Extractor.ExtractedValue extractedValue, Reporter reporter) {
         reporter.beginKeyValuePair(name, extractedValue.getStatus(), extractedValue.getValueAsString());
         if (extractedValue.getStatus() == Reporter.ValueStatus.NORMAL) {
             matcher.run(extractedValue.getValue(), reporter);
@@ -113,15 +113,15 @@ public class ExtractingMatcher<T, U> extends BaseReportingMatcher<T> {
 
     // Если придётся добавлять методы для объединения, то нужно будет написать для них реализации по умолчанию
     // TODO: сделать этот интерфейс абстрактным классом?
-    public interface Extractor<U> {
-        ExtractedValue<U> extractFrom(Object item);
+    public interface Extractor {
+        ExtractedValue extractFrom(Object item);
 
-        class ExtractedValue<U> {
+        class ExtractedValue {
             private final Reporter.ValueStatus status;
             private final String valueAsString;
-            private final U value;
+            private final Object value;
 
-            private ExtractedValue(Reporter.ValueStatus status, String valueAsString, U value) {
+            private ExtractedValue(Reporter.ValueStatus status, String valueAsString, Object value) {
                 this.status = status;
                 this.valueAsString = valueAsString;
                 this.value = value;
@@ -135,28 +135,28 @@ public class ExtractingMatcher<T, U> extends BaseReportingMatcher<T> {
                 return valueAsString;
             }
 
-            public U getValue() {
+            public Object getValue() {
                 return value;
             }
 
-            public static <U> ExtractedValue<U> normal(U value) {
+            public static <U> ExtractedValue normal(U value) {
                 return normal(String.valueOf(value), value);  // TODO: String.valueOf только для примитивных типов
             }
 
-            public static <U> ExtractedValue<U> normal(String valueAsString, U value) {
-                return new ExtractedValue<>(Reporter.ValueStatus.NORMAL, valueAsString, value);
+            public static <U> ExtractedValue normal(String valueAsString, U value) {
+                return new ExtractedValue(Reporter.ValueStatus.NORMAL, valueAsString, value);
             }
 
-            public static <U> ExtractedValue<U> missing() {  // TODO: (missing), (broken)?, исключение там же, где и матчеры
-                return new ExtractedValue<>(Reporter.ValueStatus.MISSING, "", null);   // TODO: static instance
+            public static <U> ExtractedValue missing() {  // TODO: (missing), (broken)?, исключение там же, где и матчеры
+                return new ExtractedValue(Reporter.ValueStatus.MISSING, "", null);   // TODO: static instance
             }
 
-            public static <U> ExtractedValue<U> broken(String errorMessage) {
-                return new ExtractedValue<>(Reporter.ValueStatus.BROKEN, errorMessage, null);
+            public static <U> ExtractedValue broken(String errorMessage) {
+                return new ExtractedValue(Reporter.ValueStatus.BROKEN, errorMessage, null);
             }
 
             // здесь Throwable, но реализации Extractor'а должны ловить только Exception
-            public static <U> ExtractedValue<U> broken(Throwable throwable) {
+            public static <U> ExtractedValue broken(Throwable throwable) {
                 // TODO: убрать дублирование с ReportingMatcherAdapter.run
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw, true);

@@ -41,7 +41,7 @@ public class ReportingMatchersForObjectsTest {
 
 
 
-    private static class MyClass {
+    public static class MyClass {
         public final int myField;
         private final int myInaccessibleField;
 

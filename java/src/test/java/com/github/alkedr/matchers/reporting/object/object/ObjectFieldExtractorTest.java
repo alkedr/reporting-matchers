@@ -31,12 +31,12 @@ public class ObjectFieldExtractorTest {
     // TODO: что правильнее делать?
     @Test(expected = NullPointerException.class)
     public void extractFrom_null() {
-        new ObjectFieldExtractor<>(FIELD).extractFrom(null);
+        new ObjectFieldExtractor(FIELD).extractFrom(null);
     }
 
     @Test
     public void extractFrom_normal() {
-        ExtractedValue<Object> actual = new ObjectFieldExtractor<>(FIELD).extractFrom(new MyClass(1));
+        ExtractedValue actual = new ObjectFieldExtractor(FIELD).extractFrom(new MyClass(1));
         assertEquals(NORMAL, actual.getStatus());
         assertEquals("1", actual.getValueAsString());
         assertEquals(1, actual.getValue());
@@ -44,7 +44,7 @@ public class ObjectFieldExtractorTest {
 
     @Test
     public void extractFrom_noSuchField() {
-        ExtractedValue<Object> actual = new ObjectFieldExtractor<>(FIELD).extractFrom(new Object());
+        ExtractedValue actual = new ObjectFieldExtractor(FIELD).extractFrom(new Object());
         assertEquals(BROKEN, actual.getStatus());
         assertThat(actual.getValueAsString(), containsString("IllegalArgumentException"));
         assertNull(actual.getValue());
@@ -52,14 +52,14 @@ public class ObjectFieldExtractorTest {
 
     @Test
     public void inaccessibleField() {
-        ExtractedValue<Object> actual = new ObjectFieldExtractor<>(INACCESSSIBLE_FIELD).extractFrom(new Object());
+        ExtractedValue actual = new ObjectFieldExtractor(INACCESSSIBLE_FIELD).extractFrom(new Object());
         assertEquals(BROKEN, actual.getStatus());
         assertThat(actual.getValueAsString(), containsString("IllegalAccessException"));
         assertNull(actual.getValue());
     }
 
 
-    private static class MyClass {
+    public static class MyClass {
         public final int myField;
         private final int myInaccessibleField;
 

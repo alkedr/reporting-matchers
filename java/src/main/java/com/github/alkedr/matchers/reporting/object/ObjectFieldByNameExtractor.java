@@ -6,7 +6,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
 
-public class ObjectFieldByNameExtractor<T> implements ExtractingMatcher.Extractor<T> {
+public class ObjectFieldByNameExtractor implements ExtractingMatcher.Extractor {
     private final String fieldName;
 
     public ObjectFieldByNameExtractor(String fieldName) {
@@ -14,9 +14,9 @@ public class ObjectFieldByNameExtractor<T> implements ExtractingMatcher.Extracto
     }
 
     @Override
-    public ExtractedValue<T> extractFrom(Object item) {
+    public ExtractedValue extractFrom(Object item) {
         try {
-            return normal((T) FieldUtils.readField(item, fieldName, true));
+            return normal(FieldUtils.readField(item, fieldName, true));
         } catch (IllegalAccessException e) {
             return broken(e);
         }

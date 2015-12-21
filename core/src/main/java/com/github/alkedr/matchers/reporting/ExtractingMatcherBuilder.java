@@ -10,51 +10,50 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcherAdapter.toRep
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class ExtractingMatcherBuilder<T, U> extends ExtractingMatcher<T, U> {
-    public ExtractingMatcherBuilder(String name, Extractor<U> extractor, ReportingMatcher<U> matcher) {
+public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
+    public ExtractingMatcherBuilder(String name, Extractor extractor, ReportingMatcher<?> matcher) {
         super(name, extractor, matcher);
     }
 
 
-    public ExtractingMatcherBuilder<T, U> displayedAs(String name) {
+    public ExtractingMatcherBuilder<T> displayedAs(String name) {
         return new ExtractingMatcherBuilder<>(name, getExtractor(), getMatcher());
     }
 
     // этот метод обычно не нужен
-    public ExtractingMatcherBuilder<T, U> extractor(Extractor<U> extractor) {
+    public ExtractingMatcherBuilder<T> extractor(Extractor extractor) {
         return new ExtractingMatcherBuilder<>(getName(), extractor, getMatcher());
     }
 
-    public ExtractingMatcherBuilder<T, U> is(U value) {
+    public ExtractingMatcherBuilder<T> is(Object value) {
         return is(equalTo(value));
     }
 
     // Заменяет, а не добавляет матчеры?
-    public ExtractingMatcherBuilder<T, U> is(Matcher<U> matcher) {
+    public ExtractingMatcherBuilder<T> is(Matcher<?> matcher) {
         return is(toReportingMatcher(matcher));
     }
 
-    public ExtractingMatcherBuilder<T, U> is(ReportingMatcher<U> matcher) {
+    public ExtractingMatcherBuilder<T> is(ReportingMatcher<?> matcher) {
         return new ExtractingMatcherBuilder<>(getName(), getExtractor(), matcher);
     }
 
     @SafeVarargs
-    public final ExtractingMatcherBuilder<T, U> is(Matcher<? extends U>... matchers) {
+    public final <U> ExtractingMatcherBuilder<T> is(Matcher<? super U>... matchers) {
         return is(new SequenceMatcher<>(convertIterableOfMatchersToIterableOfReportingMatchers(asList(matchers))));
     }
 
     // TODO: сделать кучу перегрузок для is, в т. ч. для сравнения с конкретными значениями
 
-
-    public static <T, U> ExtractingMatcherBuilder<T, U> extractedValue(String name, Extractor<U> extractor) {
+    public static <T> ExtractingMatcherBuilder<T> extractedValue(String name, Extractor extractor) {
         return new ExtractingMatcherBuilder<>(name, extractor, noOp());
     }
 
 
-    private static <U> Iterable<ReportingMatcher<? extends U>> convertIterableOfMatchersToIterableOfReportingMatchers(
-            Iterable<Matcher<? extends U>> matchers) {
-        Collection<ReportingMatcher<? extends U>> result = new ArrayList<>();
-        for (Matcher<? extends U> matcher : matchers) {
+    private static <U> Iterable<ReportingMatcher<? super U>> convertIterableOfMatchersToIterableOfReportingMatchers(
+            Iterable<Matcher<? super U>> matchers) {
+        Collection<ReportingMatcher<? super U>> result = new ArrayList<>();
+        for (Matcher<? super U> matcher : matchers) {
             result.add(toReportingMatcher(matcher));
         }
         return result;

@@ -4,7 +4,7 @@ import com.github.alkedr.matchers.reporting.ExtractingMatcher;
 
 import java.util.Map;
 
-public class ValueExtractor<T> implements ExtractingMatcher.Extractor<T> {
+public class ValueExtractor implements ExtractingMatcher.Extractor {
     private final Object key;
 
     public ValueExtractor(Object key) {
@@ -12,8 +12,8 @@ public class ValueExtractor<T> implements ExtractingMatcher.Extractor<T> {
     }
 
     @Override
-    public ExtractedValue<T> extractFrom(Object item) {
+    public ExtractedValue extractFrom(Object item) {
         // TODO: missing, broken
-        return ExtractedValue.normal(((Map<?, T>)item).get(key));
+        return ExtractedValue.normal(((Map<?, ?>)item).get(key));
     }
 }

@@ -4,7 +4,7 @@ import com.github.alkedr.matchers.reporting.ExtractingMatcher;
 
 import java.lang.reflect.Method;
 
-public class ObjectMethodByNameExtractor<T> implements ExtractingMatcher.Extractor<T> {
+public class ObjectMethodByNameExtractor implements ExtractingMatcher.Extractor {
     private final String methodName;
     private final Object[] arguments;
 
@@ -14,7 +14,7 @@ public class ObjectMethodByNameExtractor<T> implements ExtractingMatcher.Extract
     }
 
     @Override
-    public ExtractedValue<T> extractFrom(Object item) {
+    public ExtractedValue extractFrom(Object item) {
         return null;
     }
 

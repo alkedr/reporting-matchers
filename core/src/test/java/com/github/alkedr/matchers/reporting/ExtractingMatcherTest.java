@@ -17,9 +17,9 @@ import static org.mockito.Mockito.when;
 public class ExtractingMatcherTest {
     private static final String NAME = "NAME";
     private static final String BROKEN_ERROR_MESSAGE = "BROKEN_ERROR_MESSAGE";
-    private final ExtractingMatcher.Extractor<Object> normalExtractor = mock(ExtractingMatcher.Extractor.class);
-    private final ExtractingMatcher.Extractor<Object> missingExtractor = mock(ExtractingMatcher.Extractor.class);
-    private final ExtractingMatcher.Extractor<Object> brokenExtractor = mock(ExtractingMatcher.Extractor.class);
+    private final ExtractingMatcher.Extractor normalExtractor = mock(ExtractingMatcher.Extractor.class);
+    private final ExtractingMatcher.Extractor missingExtractor = mock(ExtractingMatcher.Extractor.class);
+    private final ExtractingMatcher.Extractor brokenExtractor = mock(ExtractingMatcher.Extractor.class);
 
     private final Object item = new Object();
     private final Object extractedItem = new Object();

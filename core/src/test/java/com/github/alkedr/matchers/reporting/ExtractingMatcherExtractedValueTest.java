@@ -18,7 +18,7 @@ public class ExtractingMatcherExtractedValueTest {
     public void extractedValue_normalWithCustomValueAsString() {
         String valueAsString = "123";
         Object value = new Object();
-        ExtractedValue<Object> extractor = normal(valueAsString, value);
+        ExtractedValue extractor = normal(valueAsString, value);
         assertEquals(NORMAL, extractor.getStatus());
         assertSame(valueAsString, extractor.getValueAsString());
         assertSame(value, extractor.getValue());
@@ -28,7 +28,7 @@ public class ExtractingMatcherExtractedValueTest {
 
     @Test
     public void extractedValue_missing() {
-        ExtractedValue<Object> extractor = missing();
+        ExtractedValue extractor = missing();
         assertEquals(MISSING, extractor.getStatus());
         assertEquals("", extractor.getValueAsString());
         assertNull(extractor.getValue());
@@ -37,7 +37,7 @@ public class ExtractingMatcherExtractedValueTest {
     @Test
     public void extractedValue_brokenWithCustomErrorMessage() {
         String errorMessage = "123";
-        ExtractedValue<Object> extractor = broken(errorMessage);
+        ExtractedValue extractor = broken(errorMessage);
         assertEquals(BROKEN, extractor.getStatus());
         assertSame(errorMessage, extractor.getValueAsString());
         assertNull(extractor.getValue());

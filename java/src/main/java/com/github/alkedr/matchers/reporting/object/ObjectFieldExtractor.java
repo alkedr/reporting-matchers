@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
 
-public class ObjectFieldExtractor<T> implements ExtractingMatcher.Extractor<T> {
+public class ObjectFieldExtractor implements ExtractingMatcher.Extractor {
     private final Field field;
 
     public ObjectFieldExtractor(Field field) {
@@ -15,10 +15,10 @@ public class ObjectFieldExtractor<T> implements ExtractingMatcher.Extractor<T> {
     }
 
     @Override
-    public ExtractedValue<T> extractFrom(Object item) {
+    public ExtractedValue extractFrom(Object item) {
         try {
             // TODO: тестировать что будет если поле имеет неправильный тип
-            return normal((T) field.get(item));
+            return normal(field.get(item));
         } catch (IllegalArgumentException e) {
             return broken(e);
         } catch (IllegalAccessException e) {

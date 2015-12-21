@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting.object.array;
 
 import com.github.alkedr.matchers.reporting.ExtractingMatcher;
 
-public class ElementExtractor<T> implements ExtractingMatcher.Extractor<T> {
+public class ElementExtractor implements ExtractingMatcher.Extractor {
     private final int index;
 
     public ElementExtractor(int index) {
@@ -10,8 +10,8 @@ public class ElementExtractor<T> implements ExtractingMatcher.Extractor<T> {
     }
 
     @Override
-    public ExtractedValue<T> extractFrom(Object item) {
+    public ExtractedValue extractFrom(Object item) {
         // TODO: missing - выходит за границы, BROKEN - не массив
-        return ExtractedValue.normal(((T[])item)[index]);
+        return ExtractedValue.normal(((Object[])item)[index]);
     }
 }
