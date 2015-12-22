@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
@@ -25,7 +24,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class ReportingMatcherAdapterTest {
     @Test
     public void toReportingMatcherMethod_shouldNotWrapReportingMatchers() {
-        assertSame(REPORTING_MATCHER, toReportingMatcher(REPORTING_MATCHER));
+        Matcher<?> reportingMatcher = mock(ReportingMatcher.class);
+        assertSame(reportingMatcher, toReportingMatcher(reportingMatcher));
     }
 
 
@@ -73,7 +73,8 @@ public class ReportingMatcherAdapterTest {
         Matcher<Object> throwingMatcher = mock(Matcher.class);
         doThrow(new RuntimeException("blah")).when(throwingMatcher).matches(any());
         toReportingMatcher(throwingMatcher).run(1, reporter);
-        verify(reporter).addCheck(eq(ReportingMatcher.Reporter.CheckStatus.BROKEN), argThat(allOf(containsString("blah"), containsString("run_broken"))));
+        verify(reporter).addCheck(eq(ReportingMatcher.Reporter.CheckStatus.BROKEN),
+                argThat(allOf(containsString("blah"), containsString("run_broken"))));
         verifyNoMoreInteractions(reporter);
     }
 
@@ -85,19 +86,4 @@ public class ReportingMatcherAdapterTest {
         verify(reporter).addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, "is <1>");
         verifyNoMoreInteractions(reporter);
     }
-
-
-    private static final Matcher<?> REPORTING_MATCHER = new BaseReportingMatcher<Object>() {
-        @Override
-        public void describeTo(Description description) {
-        }
-
-        @Override
-        public void run(Object item, Reporter reporter) {
-        }
-
-        @Override
-        public void runForMissingItem(Reporter reporter) {
-        }
-    };
 }

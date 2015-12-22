@@ -113,6 +113,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
     // Если придётся добавлять методы для объединения, то нужно будет написать для них реализации по умолчанию
     // TODO: сделать этот интерфейс абстрактным классом?
+    // TODO: TypeSafeExtractor
     public interface Extractor {
         ExtractedValue extractFrom(Object item);
 
@@ -139,24 +140,24 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
                 return value;
             }
 
-            public static <U> ExtractedValue normal(U value) {
+            public static ExtractedValue normal(Object value) {
                 return normal(String.valueOf(value), value);  // TODO: String.valueOf только для примитивных типов
             }
 
-            public static <U> ExtractedValue normal(String valueAsString, U value) {
+            public static ExtractedValue normal(String valueAsString, Object value) {
                 return new ExtractedValue(Reporter.ValueStatus.NORMAL, valueAsString, value);
             }
 
-            public static <U> ExtractedValue missing() {  // TODO: (missing), (broken)?, исключение там же, где и матчеры
+            public static ExtractedValue missing() {  // TODO: (missing), (broken)?, исключение там же, где и матчеры
                 return new ExtractedValue(Reporter.ValueStatus.MISSING, "", null);   // TODO: static instance
             }
 
-            public static <U> ExtractedValue broken(String errorMessage) {
+            public static ExtractedValue broken(String errorMessage) {
                 return new ExtractedValue(Reporter.ValueStatus.BROKEN, errorMessage, null);
             }
 
             // здесь Throwable, но реализации Extractor'а должны ловить только Exception
-            public static <U> ExtractedValue broken(Throwable throwable) {
+            public static ExtractedValue broken(Throwable throwable) {
                 // TODO: убрать дублирование с ReportingMatcherAdapter.run
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw, true);

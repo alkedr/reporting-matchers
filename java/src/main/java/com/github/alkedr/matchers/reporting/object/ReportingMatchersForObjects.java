@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcherBuilder.extractedValue;
 
 // используй static import
-// TODO: убрать <T> чтобы клиентам не надо было писать ReportingMatchersForObjects.<T>
-// TODO: плевать на type-safety при построении матчера, главное чтобы в результате получился ReportingMatcher<T>
 public class ReportingMatchersForObjects {
 
     public static <T> ExtractingMatcherBuilder<T> field(Field field) {

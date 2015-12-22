@@ -7,6 +7,8 @@ import org.hamcrest.StringDescription;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Обёртка для матчеров, которая позволяет сделать любой матчер ReportingMatcher'ом
@@ -21,6 +23,7 @@ public class ReportingMatcherAdapter<T> extends BaseMatcher<T> implements Report
 
     @Override
     public void run(Object item, Reporter reporter) {
+        // TODO: сделать ловлю исключений настраиваемой
         boolean matches;
         try {
             matches = regularMatcher.matches(item);
@@ -32,6 +35,7 @@ public class ReportingMatcherAdapter<T> extends BaseMatcher<T> implements Report
             return;
         }
         if (matches) {
+            // TODO: подсовывать свой Description, который отлавливает equalTo и is
             reporter.addCheck(Reporter.CheckStatus.PASSED, StringDescription.toString(regularMatcher));
         } else {
             Description stringDescription = new StringDescription()
@@ -68,6 +72,15 @@ public class ReportingMatcherAdapter<T> extends BaseMatcher<T> implements Report
     // оборачивает переданный ему матчер если он не reporting.
     public static <T> ReportingMatcher<T> toReportingMatcher(Matcher<T> matcher) {
         return matcher instanceof ReportingMatcher ? (ReportingMatcher<T>) matcher : new ReportingMatcherAdapter<>(matcher);
+    }
+
+    public static <U> Iterable<ReportingMatcher<? super U>> toReportingMatchers(Iterable<Matcher<? super U>> matchers) {
+        // TODO: конвертировать на лету?
+        Collection<ReportingMatcher<? super U>> result = new ArrayList<>();
+        for (Matcher<? super U> matcher : matchers) {
+            result.add(toReportingMatcher(matcher));
+        }
+        return result;
     }
 
     // TODO: отдельная обёртка для Matcher'ов (?и ReportingMatcher'ов?), которая ловит исключения и делает BROKEN

@@ -1,6 +1,4 @@
-package com.github.alkedr.matchers.reporting.object.list;
-
-import com.github.alkedr.matchers.reporting.ExtractingMatcher;
+package com.github.alkedr.matchers.reporting;
 
 import java.util.List;
 

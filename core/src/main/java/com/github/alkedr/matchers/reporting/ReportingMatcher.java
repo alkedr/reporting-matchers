@@ -50,6 +50,8 @@ public interface ReportingMatcher<T> extends Matcher<T> {
      *
      * TODO: описать структуру отчёта
      * Отчёт имеет древовидную структуру. Каждый узел - пара ключ-значение. Ключ - это
+     *
+     * TODO: пример кода как создать Reporter и запустить на нём ReportingMatcher
      */
     interface Reporter {
 

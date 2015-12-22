@@ -2,14 +2,14 @@ package com.github.alkedr.matchers.reporting;
 
 import org.hamcrest.Matcher;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import static com.github.alkedr.matchers.reporting.NoOpMatcher.noOp;
 import static com.github.alkedr.matchers.reporting.ReportingMatcherAdapter.toReportingMatcher;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+// TODO: описать зачем нужно, пример использования
+// field("qwerty").displayedAs("12345").is(equalTo(1))
+// is заменяет, не добавляет
 public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
     public ExtractingMatcherBuilder(String name, Extractor extractor, ReportingMatcher<?> matcher) {
         super(name, extractor, matcher);
@@ -40,22 +40,15 @@ public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
 
     @SafeVarargs
     public final <U> ExtractingMatcherBuilder<T> is(Matcher<? super U>... matchers) {
-        return is(new SequenceMatcher<>(convertIterableOfMatchersToIterableOfReportingMatchers(asList(matchers))));
+        return is(asList(matchers));
     }
 
-    // TODO: сделать кучу перегрузок для is, в т. ч. для сравнения с конкретными значениями
+    public final <U> ExtractingMatcherBuilder<T> is(Iterable<Matcher<? super U>> matchers) {
+        return is(new SequenceMatcher<>(ReportingMatcherAdapter.toReportingMatchers(matchers)));
+    }
+
 
     public static <T> ExtractingMatcherBuilder<T> extractedValue(String name, Extractor extractor) {
         return new ExtractingMatcherBuilder<>(name, extractor, noOp());
-    }
-
-
-    private static <U> Iterable<ReportingMatcher<? super U>> convertIterableOfMatchersToIterableOfReportingMatchers(
-            Iterable<Matcher<? super U>> matchers) {
-        Collection<ReportingMatcher<? super U>> result = new ArrayList<>();
-        for (Matcher<? super U> matcher : matchers) {
-            result.add(toReportingMatcher(matcher));
-        }
-        return result;
     }
 }

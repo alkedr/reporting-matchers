@@ -21,6 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- TODO: project name здесь и в модулях-->
     <!-- TODO: scm, developers, javadoc etc -->
 
 

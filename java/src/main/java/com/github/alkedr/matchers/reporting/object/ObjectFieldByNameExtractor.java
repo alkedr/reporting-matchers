@@ -1,11 +1,12 @@
 package com.github.alkedr.matchers.reporting.object;
 
 import com.github.alkedr.matchers.reporting.ExtractingMatcher;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
+import static org.apache.commons.lang3.reflect.FieldUtils.readField;
 
+// пробивает доступ к private, protected и package-private полям
 public class ObjectFieldByNameExtractor implements ExtractingMatcher.Extractor {
     private final String fieldName;
 
@@ -16,7 +17,7 @@ public class ObjectFieldByNameExtractor implements ExtractingMatcher.Extractor {
     @Override
     public ExtractedValue extractFrom(Object item) {
         try {
-            return normal(FieldUtils.readField(item, fieldName, true));
+            return normal(readField(item, fieldName, true));
         } catch (IllegalAccessException e) {
             return broken(e);
         }

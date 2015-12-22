@@ -1,13 +1,13 @@
-package com.github.alkedr.matchers.reporting.object.map;
+package com.github.alkedr.matchers.reporting.map;
 
 import com.github.alkedr.matchers.reporting.ExtractingMatcher;
 
 import java.util.Map;
 
-public class ValueExtractor implements ExtractingMatcher.Extractor {
+public class MapValueExtractor implements ExtractingMatcher.Extractor {
     private final Object key;
 
-    public ValueExtractor(Object key) {
+    public MapValueExtractor(Object key) {
         this.key = key;
     }
 

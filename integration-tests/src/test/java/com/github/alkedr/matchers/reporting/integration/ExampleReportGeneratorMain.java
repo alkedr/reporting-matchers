@@ -36,6 +36,9 @@ public class ExampleReportGeneratorMain {
                 reporter.endReport();
             }
         }
+
+        // TODO: missing, broken, другие extractor'ы
+        // TODO: метод, который строит и возвращает матчер, могут возникнуть проблемы с дженериками
     }
 
 

@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
 
+// НЕ пробивает доступ к private, protected и package-private полям
 public class ObjectFieldExtractor implements ExtractingMatcher.Extractor {
     private final Field field;
 

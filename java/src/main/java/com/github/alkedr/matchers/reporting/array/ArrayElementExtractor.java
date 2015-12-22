@@ -1,11 +1,11 @@
-package com.github.alkedr.matchers.reporting.object.array;
+package com.github.alkedr.matchers.reporting.array;
 
 import com.github.alkedr.matchers.reporting.ExtractingMatcher;
 
-public class ElementExtractor implements ExtractingMatcher.Extractor {
+public class ArrayElementExtractor implements ExtractingMatcher.Extractor {
     private final int index;
 
-    public ElementExtractor(int index) {
+    public ArrayElementExtractor(int index) {
         this.index = index;
     }
 

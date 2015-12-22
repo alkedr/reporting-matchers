@@ -9,6 +9,7 @@ import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.E
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.MISSING;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.NORMAL;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -33,6 +34,17 @@ public class ExtractingMatcherTest {
         when(normalExtractor.extractFrom(item)).thenReturn(normal(EXTRACTED_ITEM_AS_STRING, extractedItem));
         when(missingExtractor.extractFrom(item)).thenReturn(missing());
         when(brokenExtractor.extractFrom(item)).thenReturn(broken(BROKEN_ERROR_MESSAGE));
+    }
+
+    @Test
+    public void getters() {
+        String name = "123";
+        ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
+        ReportingMatcher<?> matcher = mock(ReportingMatcher.class);
+        ExtractingMatcher<Object> extractingMatcher = new ExtractingMatcher<>(name, extractor, matcher);
+        assertSame(name, extractingMatcher.getName());
+        assertSame(extractor, extractingMatcher.getExtractor());
+        assertSame(matcher, extractingMatcher.getMatcher());
     }
 
     @Test

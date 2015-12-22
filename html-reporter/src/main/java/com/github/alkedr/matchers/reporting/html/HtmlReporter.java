@@ -9,6 +9,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: сломанное извлечение отображать как матчер (с каким-нибудь поясняющим текстом)
 // TODO: (missing) и (broken) в репортере
 // TODO: эскейпить
+// TODO: три вкладки: actual, diff, expected
 public class HtmlReporter implements ReportingMatcher.Reporter {
     private final Appendable appendable;
     private final String title;
