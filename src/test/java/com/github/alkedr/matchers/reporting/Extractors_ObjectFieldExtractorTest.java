@@ -8,40 +8,39 @@ import java.lang.reflect.Field;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
 import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.createFieldExtractor;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-public class ReportingMatchers_ObjectFieldExtractorTest {
+public class Extractors_ObjectFieldExtractorTest {
     private final Field inaccessibleField;
     private final MyClass item = new MyClass();
 
-    public ReportingMatchers_ObjectFieldExtractorTest() throws NoSuchFieldException {
+    public Extractors_ObjectFieldExtractorTest() throws NoSuchFieldException {
         inaccessibleField = MyClass.class.getDeclaredField("myInaccessibleField");
     }
 
 
     @Test(expected = NullPointerException.class)
     public void nullField() {
-        createFieldExtractor(null);
+        new Extractors.FieldExtractor((Field) null);
     }
 
     @Test
     public void nullItem() {
-        assertReflectionEquals(missing(), createFieldExtractor(inaccessibleField).extractFrom(null));
+        assertReflectionEquals(missing(), new Extractors.FieldExtractor(inaccessibleField).extractFrom(null));
     }
 
     @Test
     public void inaccessibleField() {
-        assertReflectionEquals(normal("2", 2), createFieldExtractor(inaccessibleField).extractFrom(item));
+        assertReflectionEquals(normal("2", 2), new Extractors.FieldExtractor(inaccessibleField).extractFrom(item));
     }
 
     @Test
     public void itemHasWrongClass() {
-        ExtractedValue actual = createFieldExtractor(inaccessibleField).extractFrom(new Object());
+        ExtractedValue actual = new Extractors.FieldExtractor(inaccessibleField).extractFrom(new Object());
         assertEquals(BROKEN, actual.getStatus());
         assertThat(actual.getValueAsString(), containsString("IllegalArgumentException"));
         assertNull(actual.getValue());

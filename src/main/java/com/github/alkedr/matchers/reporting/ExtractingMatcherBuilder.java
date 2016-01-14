@@ -2,6 +2,8 @@ package com.github.alkedr.matchers.reporting;
 
 import org.hamcrest.Matcher;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatcherAdapter.toReportingMatchers;
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -42,7 +44,7 @@ public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
     }
 
     public final <U> ExtractingMatcherBuilder<T> is(Iterable<Matcher<? super U>> matchers) {
-        return is(new SequenceMatcher<>(ReportingMatcherAdapter.toReportingMatchers(matchers)));
+        return is(sequence(toReportingMatchers(matchers)));
     }
 
 

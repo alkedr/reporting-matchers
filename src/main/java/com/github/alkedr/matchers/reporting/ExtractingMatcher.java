@@ -119,7 +119,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
         class ExtractedValue {
             private final Reporter.ValueStatus status;
-            private final String valueAsString;  // TODO: вынести преобразование значения и исключения в репортер?
+            private final String valueAsString;  // TODO: вынести преобразование значения и исключения в строку в репортер?
             private final Object value;
 
             private ExtractedValue(Reporter.ValueStatus status, String valueAsString, Object value) {

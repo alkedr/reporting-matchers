@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.field;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.getter;
-import static java.util.Arrays.asList;
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -20,22 +20,25 @@ public class IntegrationTestMain {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                 ReportingMatcher.Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 reporter.beginReport();
-                new SequenceMatcher<>(asList(
-                        field("id").is(123),
-                        field("login").is("login"),
-                        field("password").is("drowssap"),
-                        getter("getBirthDate").is(
-                                field("year").is(greaterThan(1900), lessThan(2016)),
-                                field("month").is(greaterThan(0), lessThan(13)),
-                                field("day").is(greaterThan(0), lessThan(32))
-                        )
-                )).run(USER, reporter);
+                isCorrectUser().run(USER, reporter);
                 reporter.endReport();
             }
         }
 
         // TODO: missing, broken, другие extractor'ы
-        // TODO: метод, который строит и возвращает матчер, могут возникнуть проблемы с дженериками
+    }
+
+    static ReportingMatcher<User> isCorrectUser() {
+        return sequence(
+                field("id").is(123),
+                field("login").is("login"),
+                field("password").is("drowssap"),
+                getter("getBirthDate").is(
+                        field("year").is(greaterThan(1900), lessThan(2016)),
+                        field("month").is(greaterThan(0), lessThan(13)),
+                        field("day").is(greaterThan(0), lessThan(32))
+                )
+        );
     }
 
 

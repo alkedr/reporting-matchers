@@ -21,7 +21,7 @@ public class ReportingMatchersTest {
     @Test
     public void fieldMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("myField", createFieldExtractor(myField), noOp()),
+                new ExtractingMatcherBuilder<>("myField", new Extractors.FieldExtractor(myField), noOp()),
                 field(myField)
         );
     }
@@ -29,7 +29,7 @@ public class ReportingMatchersTest {
     @Test
     public void fieldByNameMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("myField", createFieldByNameExtractor("myField"), noOp()),
+                new ExtractingMatcherBuilder<>("myField", new Extractors.FieldByNameExtractor("myField"), noOp()),
                 field("myField")
         );
     }
@@ -37,7 +37,7 @@ public class ReportingMatchersTest {
     @Test
     public void methodMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("getSomething(1, 2)", createMethodExtractor(getSomethingMethod), noOp()),
+                new ExtractingMatcherBuilder<>("getSomething(1, 2)", new Extractors.MethodExtractor(getSomethingMethod, 1, 2), noOp()),
                 method(getSomethingMethod, 1, 2)
         );
     }
@@ -45,7 +45,7 @@ public class ReportingMatchersTest {
     @Test
     public void methodByNameMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("getSomething(1, 2)", createMethodByNameExtractor("getSomething"), noOp()),
+                new ExtractingMatcherBuilder<>("getSomething(1, 2)", new Extractors.MethodByNameExtractor("getSomething", 1, 2), noOp()),
                 method("getSomething", 1, 2)
         );
     }
@@ -53,7 +53,7 @@ public class ReportingMatchersTest {
     @Test
     public void getterMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("something", createMethodExtractor(getSomethingMethod), noOp()),
+                new ExtractingMatcherBuilder<>("something", new Extractors.MethodExtractor(getSomethingMethod), noOp()),
                 getter(getSomethingMethod)
         );
     }
@@ -61,7 +61,7 @@ public class ReportingMatchersTest {
     @Test
     public void getterByNameMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("something", createMethodByNameExtractor("getSomething"), noOp()),
+                new ExtractingMatcherBuilder<>("something", new Extractors.MethodByNameExtractor("getSomething"), noOp()),
                 getter("getSomething")
         );
     }
@@ -69,7 +69,7 @@ public class ReportingMatchersTest {
     @Test
     public void arrayElementMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("1", createArrayElementExtractor(1), noOp()),
+                new ExtractingMatcherBuilder<>("1", new Extractors.ArrayElementExtractor(1), noOp()),
                 arrayElement(1)
         );
     }
@@ -77,7 +77,7 @@ public class ReportingMatchersTest {
     @Test
     public void listElementMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("1", createListElementExtractor(1), noOp()),
+                new ExtractingMatcherBuilder<>("1", new Extractors.ListElementExtractor(1), noOp()),
                 element(1)
         );
     }
@@ -85,7 +85,7 @@ public class ReportingMatchersTest {
     @Test
     public void valueForKeyMatcher() {
         assertReflectionEquals(
-                new ExtractingMatcherBuilder<>("1", createValueForKeyExtractor(1), noOp()),
+                new ExtractingMatcherBuilder<>("1", new Extractors.ValueForKeyExtractor(1), noOp()),
                 valueForKey(1)
         );
     }
