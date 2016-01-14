@@ -4,15 +4,6 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
 public class Extractors_ObjectMethodExtractorTest {
     private final Method inaccessibleMethod;
     private final Method inaccessibleStaticMethod;
@@ -36,7 +27,7 @@ public class Extractors_ObjectMethodExtractorTest {
         new Extractors.MethodExtractor(inaccessibleMethod, (Object[]) null);
     }
 
-    @Test
+    /*@Test
     public void nullItem() {
         assertReflectionEquals(missing(), new Extractors.MethodExtractor(inaccessibleMethod, 1).extractFrom(null));
     }
@@ -86,7 +77,7 @@ public class Extractors_ObjectMethodExtractorTest {
         assertEquals(BROKEN, actual.getStatus());
         assertThat(actual.getValueAsString(), containsString("RuntimeException"));
         assertNull(actual.getValue());
-    }
+    }*/
 
 
     private static class MyClass {

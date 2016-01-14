@@ -6,8 +6,8 @@ import org.hamcrest.Matcher;
 import java.util.Iterator;
 
 public interface ReportingMatcher2<T> extends Matcher<T> {
-    Iterator<ExtractedValue2> getKeyMatchersPairs(Object item);
-    Iterator<ExtractedValue2> getKeyMatchersPairsForMissingItem();
+//    Iterator<ExtractedValue2> getKeyMatchersPairs(Object item);
+//    Iterator<ExtractedValue2> getKeyMatchersPairsForMissingItem();
 
     /*
     TODO:
@@ -31,7 +31,7 @@ public interface ReportingMatcher2<T> extends Matcher<T> {
 
     // Позволяет объединять
     // TODO: Написать документацию о том, какие поля когда могут быть нулл
-    interface ExtractedValue2 {
+    /*interface ExtractedValue2 {
         String getName();
         ExtractionStatus getExtractionStatus();
         PresenceStatus getPresenceStatus();  // разделить на expected и actual?
@@ -47,7 +47,7 @@ public interface ReportingMatcher2<T> extends Matcher<T> {
         boolean equals(Object other);
         @Override
         int hashCode();
-    }
+    }*/
 
 
 

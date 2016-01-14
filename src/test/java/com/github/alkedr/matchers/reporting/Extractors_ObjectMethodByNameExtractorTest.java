@@ -2,15 +2,6 @@ package com.github.alkedr.matchers.reporting;
 
 import org.junit.Test;
 
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
 public class Extractors_ObjectMethodByNameExtractorTest {
     private final MyClass item = new MyClass();
 
@@ -24,7 +15,7 @@ public class Extractors_ObjectMethodByNameExtractorTest {
         new Extractors.MethodByNameExtractor("returnArg", (Object[]) null);
     }
 
-    @Test
+    /*@Test
     public void nullItem() {
         assertReflectionEquals(missing(), new Extractors.MethodByNameExtractor("returnArg", 1).extractFrom(null));
     }
@@ -69,7 +60,7 @@ public class Extractors_ObjectMethodByNameExtractorTest {
         assertEquals(BROKEN, actual.getStatus());
         assertThat(actual.getValueAsString(), containsString("RuntimeException"));
         assertNull(actual.getValue());
-    }
+    }*/
 
 
     public static class MyClass {

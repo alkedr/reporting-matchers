@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.field;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.getter;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
+import static com.github.alkedr.matchers.reporting.ReportingMatchersRunningUtils.runReportingMatcher;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -20,7 +21,7 @@ public class IntegrationTestMain {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                 ReportingMatcher.Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 reporter.beginReport();
-                isCorrectUser().run(USER, reporter);
+                runReportingMatcher(reporter, USER, isCorrectUser());
                 reporter.endReport();
             }
         }
@@ -28,7 +29,7 @@ public class IntegrationTestMain {
         // TODO: missing, broken, другие extractor'ы
     }
 
-    static ReportingMatcher<User> isCorrectUser() {
+    static ReportingMatcher<? super User> isCorrectUser() {
         return sequence(
                 field("id").is(123),
                 field("login").is("login"),

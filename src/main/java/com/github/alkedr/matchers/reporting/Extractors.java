@@ -1,5 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -7,16 +8,19 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
+import static com.github.alkedr.matchers.reporting.ExtractedValueNameUtils.createMethodValueName;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
 import static java.lang.reflect.Modifier.isStatic;
 
 class Extractors {
-    static class FieldExtractor implements ExtractingMatcher.Extractor {
+    static class FieldExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Field field;
 
         FieldExtractor(Field field) {
@@ -25,17 +29,42 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
-            try {
-                return item == null ? missing() : normal(FieldUtils.readField(field, item, true));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                return broken(e);  // TODO: rethrow?
+        public KeyValue extractFrom(Object item) {
+            if (item == null) {
+                return new KeyValue(this, missing());
             }
+            try {
+                return new KeyValue(this, present(FieldUtils.readField(field, item, true)));
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                return new KeyValue(this, broken(e));  // TODO: rethrow?
+            }
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+
+        @Override
+        public int hashCode() {
+            return field.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            // FIXME: warning правильный
+            return field.equals(obj);
+        }
+
+        @Override
+        public String asString() {
+            return field.getName();
         }
     }
 
 
-    static class FieldByNameExtractor implements ExtractingMatcher.Extractor {
+    static class FieldByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final String fieldName;
 
         FieldByNameExtractor(String fieldName) {
@@ -44,17 +73,40 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
-            try {
-                return item == null ? missing() : normal(FieldUtils.readField(item, fieldName, true));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                return broken(e);  // TODO: rethrow?
+        public KeyValue extractFrom(Object item) {
+            if (item == null) {
+                return new KeyValue(this, missing());
             }
+            Field field = FieldUtils.getField(item.getClass(), fieldName, true);  // TODO: проверить исключения, null
+            return new FieldExtractor(field).extractFrom(item);
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FieldByNameExtractor that = (FieldByNameExtractor) o;
+            return Objects.equals(fieldName, that.fieldName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fieldName);
+        }
+
+        @Override
+        public String asString() {
+            return fieldName;
         }
     }
 
 
-    static class MethodExtractor implements ExtractingMatcher.Extractor {
+    static class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Method method;
         private final Object[] arguments;
 
@@ -66,20 +118,47 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
+        public KeyValue extractFrom(Object item) {
+            if (item == null && !isStatic(method.getModifiers())) {
+                return new KeyValue(this, missing());
+            }
             try {
                 method.setAccessible(true);
-                return item == null && !isStatic(method.getModifiers()) ? missing() : normal(method.invoke(item, arguments));
+                return new KeyValue(this, present(method.invoke(item, arguments)));
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                return broken(e);  // TODO: rethrow?
+                return new KeyValue(this, broken(e));  // TODO: rethrow?
             } catch (InvocationTargetException e) {
-                return broken(e.getCause());
+                return new KeyValue(this, broken(e.getCause()));
             }
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public String asString() {
+            return createMethodValueName(method.getName(), arguments);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MethodExtractor that = (MethodExtractor) o;
+            return Objects.equals(method, that.method) &&
+                    Arrays.equals(arguments, that.arguments);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(method, arguments);
         }
     }
 
 
-    static class MethodByNameExtractor implements ExtractingMatcher.Extractor {
+    static class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final String methodName;
         private final Object[] arguments;
 
@@ -91,19 +170,41 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
-            try {
-                return item == null ? missing() : normal(MethodUtils.invokeMethod(item, methodName, arguments));
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchMethodException e) {
-                return broken(e);  // TODO: rethrow?
-            } catch (InvocationTargetException e) {
-                return broken(e.getCause());
+        public KeyValue extractFrom(Object item) {
+            if (item == null) {
+                return new KeyValue(this, missing());
             }
+            Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));   // TODO: исключения, null
+            return new MethodExtractor(method, arguments).extractFrom(item);
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public String asString() {
+            return createMethodValueName(methodName, arguments);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MethodByNameExtractor that = (MethodByNameExtractor) o;
+            return Objects.equals(methodName, that.methodName) &&
+                    Arrays.equals(arguments, that.arguments);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(methodName, arguments);
         }
     }
 
 
-    static class ArrayElementExtractor implements ExtractingMatcher.Extractor {
+    static class ArrayElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final int index;
 
         ArrayElementExtractor(int index) {
@@ -112,18 +213,44 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
+        public KeyValue extractFrom(Object item) {
             try {
                 Object[] array = (Object[]) item;
-                return item == null || index < 0 || index >= array.length ? missing() : normal(array[index]);
+                if (item == null || index < 0 || index >= array.length) {
+                    return new KeyValue(this, missing());
+                }
+                return new KeyValue(this, present(array[index]));
             } catch (ClassCastException e) {
-                return broken(e);
+                return new KeyValue(this, broken(e));
             }
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public String asString() {
+            return "[" + index + "]";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ArrayElementExtractor that = (ArrayElementExtractor) o;
+            return index == that.index;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(index);
         }
     }
 
 
-    static class ListElementExtractor implements ExtractingMatcher.Extractor {
+    static class ListElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final int index;
 
         ListElementExtractor(int index) {
@@ -132,18 +259,44 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
+        public KeyValue extractFrom(Object item) {
             try {
                 List<?> list = (List<?>) item;
-                return item == null || index < 0 || index >= list.size() ? missing() : normal(list.get(index));
+                if (item == null || index < 0 || index >= list.size()) {
+                    return new KeyValue(this, missing());
+                }
+                return new KeyValue(this, present(list.get(index)));
             } catch (ClassCastException e) {
-                return broken(e);
+                return new KeyValue(this, broken(e));
             }
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public String asString() {
+            return "[" + index + "]";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ListElementExtractor that = (ListElementExtractor) o;
+            return index == that.index;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(index);
         }
     }
 
 
-    static class ValueForKeyExtractor implements ExtractingMatcher.Extractor {
+    static class ValueForKeyExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Object key;
 
         ValueForKeyExtractor(Object key) {
@@ -151,15 +304,38 @@ class Extractors {
         }
 
         @Override
-        public ExtractedValue extractFrom(Object item) {
+        public KeyValue extractFrom(Object item) {
             try {
                 if (item == null || !((Map<?, ?>) item).containsKey(key)) {
-                    return missing();
+                    return new KeyValue(this, missing());
                 }
-                return normal(((Map<?, ?>) item).get(key));
+                return new KeyValue(this, present(((Map<?, ?>) item).get(key)));
             } catch (ClassCastException e) {
-                return broken(e);
+                return new KeyValue(this, broken(e));
             }
+        }
+
+        @Override
+        public KeyValue extractFromMissingItem() {
+            return new KeyValue(this, missing());
+        }
+
+        @Override
+        public String asString() {
+            return String.valueOf(key);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ValueForKeyExtractor that = (ValueForKeyExtractor) o;
+            return Objects.equals(key, that.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key);
         }
     }
 }

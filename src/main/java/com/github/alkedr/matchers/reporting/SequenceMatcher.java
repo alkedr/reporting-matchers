@@ -1,6 +1,9 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
+
+import java.util.Iterator;
 
 /**
  * "Склеивает" несколько ReportingMatcher'ов (при вызове run или matches запускает их последовательно)
@@ -13,17 +16,13 @@ public class SequenceMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
-        for (ReportingMatcher<? super T> matcher : matchers) {
-            matcher.run(item, reporter);
-        }
+    public Iterator<Object> run(Object item) {
+        return Iterators.concat(Iterators.transform(matchers.iterator(), reportingMatcher -> reportingMatcher.run(item)));
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
-        for (ReportingMatcher<? super T> matcher : matchers) {
-            matcher.runForMissingItem(reporter);
-        }
+    public Iterator<Object> runForMissingItem() {
+        return Iterators.concat(Iterators.transform(matchers.iterator(), ReportingMatcher::runForMissingItem));
     }
 
     @Override

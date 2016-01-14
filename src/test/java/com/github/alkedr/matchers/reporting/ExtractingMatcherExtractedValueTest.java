@@ -1,20 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue;
-import org.junit.Test;
-
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.broken;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.missing;
-import static com.github.alkedr.matchers.reporting.ExtractingMatcher.Extractor.ExtractedValue.normal;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.BROKEN;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.MISSING;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Reporter.ValueStatus.NORMAL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-
 public class ExtractingMatcherExtractedValueTest {
-    @Test
+    /*@Test
     public void extractedValue_normalWithCustomValueAsString() {
         String valueAsString = "123";
         Object value = new Object();
@@ -41,7 +28,7 @@ public class ExtractingMatcherExtractedValueTest {
         assertEquals(BROKEN, extractor.getStatus());
         assertSame(errorMessage, extractor.getValueAsString());
         assertNull(extractor.getValue());
-    }
+    }*/
 
     // TODO: brokenWithException
 }

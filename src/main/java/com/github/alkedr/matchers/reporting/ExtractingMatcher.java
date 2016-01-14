@@ -1,9 +1,9 @@
 package com.github.alkedr.matchers.reporting;
 
+import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Description;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.util.Iterator;
 
 /*
 Объединение:
@@ -62,107 +62,54 @@ public class MergeableMatcher {
 
  */
 public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
-    private final String name;
     private final Extractor extractor;
-    private final ReportingMatcher<?> matcher;
+    private final Checks checks;
 
-    public ExtractingMatcher(String name, Extractor extractor, ReportingMatcher<?> matcher) {
-        this.name = name;
+    public ExtractingMatcher(Extractor extractor, Checks checks) {
         this.extractor = extractor;
-        this.matcher = matcher;
+        this.checks = checks;
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
-        run(extractor.extractFrom(item), reporter);
+    public Iterator<Object> run(Object item) {
+        Extractor.KeyValue keyValue = extractor.extractFrom(item);
+        return new SingletonIterator<>(new SingletonIterator<>(new KeyValueChecks(keyValue.key, keyValue.value, checks)));
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
-        run(Extractor.ExtractedValue.missing(), reporter);
+    public Iterator<Object> runForMissingItem() {
+        Extractor.KeyValue keyValue = extractor.extractFromMissingItem();
+        return new SingletonIterator<>(new SingletonIterator<>(new KeyValueChecks(keyValue.key, keyValue.value, checks)));
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(name);
+//        description.appendText(name);
         // TODO: append matcher.describeTo()
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Extractor getExtractor() {
         return extractor;
     }
 
-    public ReportingMatcher<?> getMatcher() {
-        return matcher;
-    }
-
-    private void run(Extractor.ExtractedValue extractedValue, Reporter reporter) {
-        reporter.beginKeyValuePair(name, extractedValue.getStatus(), extractedValue.getValueAsString());
-        if (extractedValue.getStatus() == Reporter.ValueStatus.NORMAL) {
-            matcher.run(extractedValue.getValue(), reporter);
-        } else {
-            matcher.runForMissingItem(reporter);
-        }
-        reporter.endKeyValuePair();
+    public Checks getChecks() {
+        return checks;
     }
 
 
-    // Если придётся добавлять методы для объединения, то нужно будет написать для них реализации по умолчанию
-    // TODO: сделать этот интерфейс абстрактным классом?
-    // TODO: TypeSafeExtractor
+    // TODO: TypeSafeExtractor ?
+    // TODO: объединить Extractor, ExtractingMatcher и ExtractingMatcherBuilder?
     public interface Extractor {
-        ExtractedValue extractFrom(Object item);
+        KeyValue extractFrom(Object item);
+        KeyValue extractFromMissingItem();
 
-        class ExtractedValue {
-            private final Reporter.ValueStatus status;
-            private final String valueAsString;  // TODO: вынести преобразование значения и исключения в строку в репортер?
-            private final Object value;
+        class KeyValue {
+            final Key key;
+            final Value value;
 
-            private ExtractedValue(Reporter.ValueStatus status, String valueAsString, Object value) {
-                this.status = status;
-                this.valueAsString = valueAsString;
+            public KeyValue(Key key, Value value) {
+                this.key = key;
                 this.value = value;
-            }
-
-            public Reporter.ValueStatus getStatus() {
-                return status;
-            }
-
-            public String getValueAsString() {
-                return valueAsString;
-            }
-
-            public Object getValue() {
-                return value;
-            }
-
-            public static ExtractedValue normal(Object value) {
-                return normal(String.valueOf(value), value);  // TODO: String.valueOf только для примитивных типов
-            }
-
-            public static ExtractedValue normal(String valueAsString, Object value) {
-                return new ExtractedValue(Reporter.ValueStatus.NORMAL, valueAsString, value);
-            }
-
-            public static ExtractedValue missing() {  // TODO: (missing), (broken)?, исключение там же, где и матчеры
-                return new ExtractedValue(Reporter.ValueStatus.MISSING, "", null);   // TODO: static instance
-            }
-
-            public static ExtractedValue broken(String errorMessage) {
-                return new ExtractedValue(Reporter.ValueStatus.BROKEN, errorMessage, null);
-            }
-
-            // здесь Throwable, но реализации Extractor'а должны ловить только Exception
-            public static ExtractedValue broken(Throwable throwable) {
-                // TODO: убрать дублирование с ReportingMatcherAdapter.run
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw, true);
-                throwable.printStackTrace(pw);
-                return broken(sw.getBuffer().toString());
             }
         }
     }

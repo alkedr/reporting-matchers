@@ -1,24 +1,15 @@
 package com.github.alkedr.matchers.reporting;
 
-import org.junit.Test;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import static com.github.alkedr.matchers.reporting.NoOpMatcher.noOp;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
 public class ReportingMatchersTest {
-    private final Field myField;
-    private final Method getSomethingMethod;
+//    private final Field myField;
+//    private final Method getSomethingMethod;
 
-    public ReportingMatchersTest() throws NoSuchFieldException, NoSuchMethodException {
+    /*public ReportingMatchersTest() throws NoSuchFieldException, NoSuchMethodException {
         myField = MyClass.class.getDeclaredField("myField");
         getSomethingMethod = MyClass.class.getDeclaredMethod("getSomething");
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void fieldMatcher() {
         assertReflectionEquals(
                 new ExtractingMatcherBuilder<>("myField", new Extractors.FieldExtractor(myField), noOp()),
@@ -95,5 +86,5 @@ public class ReportingMatchersTest {
 
         public void getSomething() {
         }
-    }
+    }*/
 }

@@ -12,7 +12,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.github.alkedr.matchers.reporting.ReportingMatcherAdapter.toReportingMatcher;
 import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.lang.reflect.Modifier.isTransient;
@@ -34,9 +33,9 @@ public class ComparingReportingMatcherBuilder<T> {
     }
 
 
-    public ReportingMatcher<T> with(T expected) {
-        return toReportingMatcher((Matcher<T>) findMatcherFactoryFor(expected.getClass()).apply(expected.getClass()));
-    }
+//    public ReportingMatcher<T> with(T expected) {
+//        return toReportingMatcher((Matcher<T>) findMatcherFactoryFor(expected.getClass()).apply(expected.getClass()));
+//    }
 
 
     private Function<Object, Matcher<?>> findMatcherFactoryFor(Class<?> clazz) {

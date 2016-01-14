@@ -2,6 +2,8 @@ package com.github.alkedr.matchers.reporting;
 
 import org.hamcrest.Matcher;
 
+import java.util.Iterator;
+
 /**
  * ReportingMatcher - матчер, который умеет строить отчёт о результатах проверок.
  *
@@ -22,13 +24,14 @@ import org.hamcrest.Matcher;
  */
 public interface ReportingMatcher<T> extends Matcher<T> {
 
+    // Matcher<?> и Iterator<KeyValueChecks>
     /**
      * Проверяет item, добавляет всю информацию о проверках в reporter.
      *
      * @param item объект, который нужно проверить
      * @param reporter reporter, в который нужно добавить информацию о проверках
      */
-    void run(Object item, Reporter reporter);
+    Iterator<Object> run(Object item);
 
     /**
      * Добавляет в reporter информацию о проверках, которые были бы выполнены если бы был вызван метод
@@ -42,9 +45,105 @@ public interface ReportingMatcher<T> extends Matcher<T> {
      *
      * @param reporter reporter, в который нужно добавить информацию о проверках
      */
-    void runForMissingItem(Reporter reporter);
+    Iterator<Object> runForMissingItem();
 
 
+    // TODO: Написать документацию о том, какие поля когда могут быть нулл
+    class KeyValueChecks {
+        public final Key key;
+        public final Value value;
+        public final Checks checks;
+
+        public KeyValueChecks(Key key, Value value, Checks checks) {
+            this.key = key;
+            this.value = value;
+            this.checks = checks;
+        }
+    }
+
+
+    interface Key {     // Extractor
+        String asString();
+        @Override boolean equals(Object other);
+        @Override int hashCode();
+    }
+
+
+    class Value {     // Extractor
+        private final PresenceStatus presenceStatus;
+        private final Object object;
+        private final String asString;
+        private final Throwable extractionThrowable;
+
+        Value(PresenceStatus presenceStatus, Object object, String asString, Throwable extractionThrowable) {
+            this.presenceStatus = presenceStatus;
+            this.object = object;
+            this.asString = asString;
+            this.extractionThrowable = extractionThrowable;
+        }
+
+        public PresenceStatus getPresenceStatus() {
+            return presenceStatus;
+        }
+
+        public Object get() {
+            return object;
+        }
+
+        public String asString() {
+            return asString;
+        }
+
+        public Throwable getExtractionThrowable() {
+            return extractionThrowable;
+        }
+
+        public static Value present(Object object) {
+            return present(object, null);
+        }
+
+        public static Value present(Object object, String asString) {
+            return new Value(PresenceStatus.PRESENT, object, asString, null);
+        }
+
+        public static Value missing() {
+            return new Value(PresenceStatus.MISSING, null, null, null);
+        }
+
+        public static Value broken(Throwable extractionThrowable) {
+            return new Value(null, null, null, extractionThrowable);
+        }
+    }
+
+
+    class Checks {    // ExtractingMatcher
+        private final PresenceStatus expectedPresenceStatus;
+        private final ReportingMatcher<?> matcher;
+
+        public Checks(PresenceStatus expectedPresenceStatus, ReportingMatcher<?> matcher) {
+            this.expectedPresenceStatus = expectedPresenceStatus;
+            this.matcher = matcher;
+        }
+
+        public PresenceStatus getExpectedPresenceStatus() {
+            return expectedPresenceStatus;
+        }
+
+        public ReportingMatcher<?> getMatcher() {
+            return matcher;
+        }
+    }
+
+
+    enum PresenceStatus {
+        PRESENT,
+        MISSING,
+    }
+
+
+
+
+    // TODO: вынести Reporter отсюда
     /**
      * Reporter - объект, который каким-то образом обрабатывает информацию о проверках от ReportingMatcher'а.
      *
