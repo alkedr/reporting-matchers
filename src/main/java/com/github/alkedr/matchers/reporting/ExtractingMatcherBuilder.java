@@ -2,10 +2,6 @@ package com.github.alkedr.matchers.reporting;
 
 import org.hamcrest.Matcher;
 
-import static com.github.alkedr.matchers.reporting.NoOpMatcher.noOp;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
-import static com.github.alkedr.matchers.reporting.ReportingMatchersAdapter.toReportingMatcher;
-import static com.github.alkedr.matchers.reporting.ReportingMatchersAdapter.toReportingMatchers;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -13,7 +9,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // field("qwerty").displayedAs("12345").is(equalTo(1))
 // is заменяет, не добавляет
 public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
-    public ExtractingMatcherBuilder(Extractor extractor, Checks checks) {
+    public ExtractingMatcherBuilder(Extractor extractor, ReportingMatcher.Checks checks) {
         super(extractor, checks);
     }
 
@@ -33,7 +29,7 @@ public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
 
     // Заменяет, а не добавляет матчеры?
     public ExtractingMatcherBuilder<T> is(Matcher<?> matcher) {
-        return new ExtractingMatcherBuilder<>(getExtractor(), new Checks(PresenceStatus.PRESENT, toReportingMatcher(matcher)));
+        return new ExtractingMatcherBuilder<>(getExtractor(), new ReportingMatcher.Checks(ReportingMatcher.PresenceStatus.PRESENT, ReportingMatchersAdapter.toReportingMatcher(matcher)));
     }
 
     @SafeVarargs
@@ -42,7 +38,7 @@ public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
     }
 
     public final <U> ExtractingMatcherBuilder<T> is(Iterable<? extends Matcher<? super U>> matchers) {
-        return is(new MergingMatcher<>(sequence(toReportingMatchers(matchers))));
+        return is(new MergingMatcher<>(ReportingMatchers.sequence(ReportingMatchersAdapter.toReportingMatchers(matchers))));
     }
 
 
@@ -50,6 +46,6 @@ public class ExtractingMatcherBuilder<T> extends ExtractingMatcher<T> {
 
 
     public static <T> ExtractingMatcherBuilder<T> extractedValue(Extractor extractor) {
-        return new ExtractingMatcherBuilder<>(extractor, new Checks(PresenceStatus.PRESENT, noOp()));
+        return new ExtractingMatcherBuilder<>(extractor, new ReportingMatcher.Checks(ReportingMatcher.PresenceStatus.PRESENT, NoOpMatcher.noOp()));
     }
 }

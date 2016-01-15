@@ -19,11 +19,11 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missin
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
 import static java.lang.reflect.Modifier.isStatic;
 
-class Extractors {
-    static class FieldExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+public class Extractors {
+    public static class FieldExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Field field;
 
-        FieldExtractor(Field field) {
+        public FieldExtractor(Field field) {
             Validate.notNull(field, "field");
             this.field = field;
         }
@@ -64,10 +64,10 @@ class Extractors {
     }
 
 
-    static class FieldByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    public static class FieldByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final String fieldName;
 
-        FieldByNameExtractor(String fieldName) {
+        public FieldByNameExtractor(String fieldName) {
             Validate.notNull(fieldName, "fieldName");
             this.fieldName = fieldName;
         }
@@ -106,11 +106,11 @@ class Extractors {
     }
 
 
-    static class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    public static class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Method method;
         private final Object[] arguments;
 
-        MethodExtractor(Method method, Object... arguments) {
+        public MethodExtractor(Method method, Object... arguments) {
             Validate.notNull(method, "method");
             Validate.notNull(arguments, "arguments");
             this.method = method;
@@ -158,11 +158,11 @@ class Extractors {
     }
 
 
-    static class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    public static class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final String methodName;
         private final Object[] arguments;
 
-        MethodByNameExtractor(String methodName, Object... arguments) {
+        public MethodByNameExtractor(String methodName, Object... arguments) {
             Validate.notNull(methodName, "methodName");
             Validate.notNull(arguments, "arguments");
             this.methodName = methodName;
@@ -204,10 +204,10 @@ class Extractors {
     }
 
 
-    static class ArrayElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    public static class ArrayElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final int index;
 
-        ArrayElementExtractor(int index) {
+        public ArrayElementExtractor(int index) {
             Validate.isTrue(index >= 0, "index must be positive");
             this.index = index;
         }
@@ -250,10 +250,11 @@ class Extractors {
     }
 
 
-    static class ListElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    // TODO: сделать универсальным (array, iterable, random access list)
+    public static class ListElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final int index;
 
-        ListElementExtractor(int index) {
+        public ListElementExtractor(int index) {
             Validate.isTrue(index >= 0, "index must be positive");
             this.index = index;
         }
@@ -296,10 +297,10 @@ class Extractors {
     }
 
 
-    static class ValueForKeyExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+    public static class ValueForKeyExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
         private final Object key;
 
-        ValueForKeyExtractor(Object key) {
+        public ValueForKeyExtractor(Object key) {
             this.key = key;
         }
 
