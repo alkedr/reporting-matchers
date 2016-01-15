@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: (missing) и (broken) в репортере
 // TODO: эскейпить
 // TODO: три вкладки: actual, diff, expected
-public class HtmlReporter implements ReportingMatcher.Reporter {
+public class HtmlReporter implements Reporter {
     private final Appendable appendable;
     private final String title;
 

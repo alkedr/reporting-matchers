@@ -15,11 +15,11 @@ import static java.util.Collections.emptyIterator;
 public class ReportingMatchersRunningUtils {
 
 
-    public static void runReportingMatcher(ReportingMatcher.Reporter reporter, Object item, ReportingMatcher<?> reportingMatcher) {
+    public static void runReportingMatcher(Reporter reporter, Object item, ReportingMatcher<?> reportingMatcher) {
         runReportingMatcherChecks(reporter, item, reportingMatcher.run(item));
     }
 
-    public static void runReportingMatcherChecks(ReportingMatcher.Reporter reporter, Object item, Iterator<Object> iterator) {
+    public static void runReportingMatcherChecks(Reporter reporter, Object item, Iterator<Object> iterator) {
         while (iterator.hasNext()) {
             Object next = iterator.next();
             if (next instanceof Matcher) {
@@ -27,12 +27,12 @@ public class ReportingMatchersRunningUtils {
             } else if (next instanceof Iterator) {
                 runKeyValueCheckses(reporter, item, (Iterator<?>) next);
             } else {
-                throw new RuntimeException(next.getClass().getName());  // FIXME
+                throw new RuntimeException("БАГА: " + next.getClass().getName());  // FIXME
             }
         }
     }
 
-    private static void runSimpleMatcher(ReportingMatcher.Reporter reporter, Object item, Matcher<?> matcher) {
+    private static void runSimpleMatcher(Reporter reporter, Object item, Matcher<?> matcher) {
         boolean matches;
         try {
             matches = matcher.matches(item);
@@ -40,23 +40,23 @@ public class ReportingMatchersRunningUtils {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw, true);
             e.printStackTrace(pw);
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.BROKEN, sw.getBuffer().toString());
+            reporter.addCheck(Reporter.CheckStatus.BROKEN, sw.getBuffer().toString());
             return;
         }
         if (matches) {
             // TODO: подсовывать свой Description, который отлавливает equalTo и is
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.PASSED, StringDescription.toString(matcher));
+            reporter.addCheck(Reporter.CheckStatus.PASSED, StringDescription.toString(matcher));
         } else {
             Description stringDescription = new StringDescription()
                     .appendText("Expected: ")
                     .appendDescriptionOf(matcher)
                     .appendText("\n     but: ");
             matcher.describeMismatch(item, stringDescription);
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, stringDescription.toString());
+            reporter.addCheck(Reporter.CheckStatus.FAILED, stringDescription.toString());
         }
     }
 
-    private static void runKeyValueCheckses(ReportingMatcher.Reporter reporter, Object item, Iterator<?> iterator) {
+    private static void runKeyValueCheckses(Reporter reporter, Object item, Iterator<?> iterator) {
         while (iterator.hasNext()) {
             Object next = iterator.next();
             if (next instanceof ReportingMatcher.KeyValueChecks) {
@@ -67,9 +67,9 @@ public class ReportingMatchersRunningUtils {
         }
     }
 
-    private static void runKeyValueChecks(ReportingMatcher.Reporter reporter, Object item, ReportingMatcher.KeyValueChecks kvc) {
-        reporter.beginKeyValuePair(kvc.key.asString(), null, kvc.value.asString());
-        runReportingMatcher(reporter, kvc.value.get(), kvc.checks.getMatcher());   // TODO: missing, broken etc
+    private static void runKeyValueChecks(Reporter reporter, Object item, ReportingMatcher.KeyValueChecks kvc) {
+        reporter.beginKeyValuePair(kvc.key().asString(), null, kvc.value().asString());
+        runReportingMatcher(reporter, kvc.value().get(), kvc.checks().getMatcher());   // TODO: missing, broken etc
         reporter.endKeyValuePair();
     }
 
@@ -147,7 +147,7 @@ public class ReportingMatchersRunningUtils {
         private static void addToMap(Map<ReportingMatcher.Key, ReportingMatcher.KeyValueChecks> map,
                                      Iterator<ReportingMatcher.KeyValueChecks> keyValueChecksIterator) {
             keyValueChecksIterator.forEachRemaining(kvc -> map.merge(
-                    kvc.key,
+                    kvc.key(),
                     kvc,
                     (kvc1, kvc2) -> {
                         throw new RuntimeException("merge");

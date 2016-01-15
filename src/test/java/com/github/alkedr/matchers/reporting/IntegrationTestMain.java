@@ -19,7 +19,7 @@ public class IntegrationTestMain {
     public static void main(String... args) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(args[0])) {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-                ReportingMatcher.Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
+                Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 reporter.beginReport();
                 runReportingMatcher(reporter, USER, isCorrectUser());
                 reporter.endReport();

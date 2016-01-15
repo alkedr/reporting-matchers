@@ -14,7 +14,7 @@ public class ExtractingMatcherTest {
     private static final String EXTRACTED_ITEM_AS_STRING = "EXTRACTED_ITEM_AS_STRING";
 
     private final ReportingMatcher<Object> matcher = mock(ReportingMatcher.class);
-    private final ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
+    private final Reporter reporter = mock(Reporter.class);
 
     /*@Before
     public void setUp() {

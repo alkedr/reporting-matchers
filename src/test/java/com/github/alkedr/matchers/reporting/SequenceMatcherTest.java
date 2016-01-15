@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 
 // TODO: test nulls? concatenateMatchers(null)  concatenateMatchers([null])
 public class SequenceMatcherTest {
-    private final ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
+    private final Reporter reporter = mock(Reporter.class);
     private final ReportingMatcher<Object> m1 = mock(ReportingMatcher.class);
     private final ReportingMatcher<Object> m2 = mock(ReportingMatcher.class);
     private final ReportingMatcher<Object> m3 = mock(ReportingMatcher.class);

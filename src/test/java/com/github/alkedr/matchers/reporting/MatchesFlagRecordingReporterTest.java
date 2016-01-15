@@ -22,19 +22,19 @@ public class MatchesFlagRecordingReporterTest {
 
     @Test
     public void beginMethod_withValueStatusNormal_shouldLeaveMatchesFlagEqualToTrue() {
-        reporter.beginKeyValuePair(null, ReportingMatcher.Reporter.ValueStatus.NORMAL, null);
+        reporter.beginKeyValuePair(null, Reporter.ValueStatus.NORMAL, null);
         assertTrue(reporter.getMatchesFlag());
     }
 
     @Test
     public void beginMethod_withValueStatusMissing_shouldSetMatchesFlagToFalse() {
-        reporter.beginKeyValuePair(null, ReportingMatcher.Reporter.ValueStatus.MISSING, null);
+        reporter.beginKeyValuePair(null, Reporter.ValueStatus.MISSING, null);
         assertFalse(reporter.getMatchesFlag());
     }
 
     @Test
     public void beginMethod_withValueStatusBroken_shouldSetMatchesFlagToFalse() {
-        reporter.beginKeyValuePair(null, ReportingMatcher.Reporter.ValueStatus.BROKEN, null);
+        reporter.beginKeyValuePair(null, Reporter.ValueStatus.BROKEN, null);
         assertFalse(reporter.getMatchesFlag());
     }
 
@@ -47,19 +47,19 @@ public class MatchesFlagRecordingReporterTest {
 
     @Test
     public void checkMethod_withCheckStatusPassed_shouldLeaveMatchesFlagEqualToTrue() {
-        reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.PASSED, null);
+        reporter.addCheck(Reporter.CheckStatus.PASSED, null);
         assertTrue(reporter.getMatchesFlag());
     }
 
     @Test
     public void checkMethod_withCheckStatusFailed_shouldSetMatchesFlagToFalse() {
-        reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, null);
+        reporter.addCheck(Reporter.CheckStatus.FAILED, null);
         assertFalse(reporter.getMatchesFlag());
     }
 
     @Test
     public void checkMethod_withCheckStatusBroken_shouldSetMatchesFlagToFalse() {
-        reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.BROKEN, null);
+        reporter.addCheck(Reporter.CheckStatus.BROKEN, null);
         assertFalse(reporter.getMatchesFlag());
     }
 

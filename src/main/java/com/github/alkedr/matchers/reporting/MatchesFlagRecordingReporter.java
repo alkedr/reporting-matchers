@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-public class MatchesFlagRecordingReporter implements ReportingMatcher.Reporter {
+public class MatchesFlagRecordingReporter implements Reporter {
     private boolean matchesFlag = true;
 
     @Override
