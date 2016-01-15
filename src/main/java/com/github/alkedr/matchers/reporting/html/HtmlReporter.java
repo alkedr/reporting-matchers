@@ -1,4 +1,6 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.html;
+
+import com.github.alkedr.matchers.reporting.Reporter;
 
 import java.io.IOException;
 

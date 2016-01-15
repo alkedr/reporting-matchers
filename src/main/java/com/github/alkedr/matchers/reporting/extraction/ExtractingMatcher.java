@@ -1,9 +1,12 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.base.BaseReportingMatcher;
 import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Description;
 
 import java.util.Iterator;
+
+import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
 
 /*
 Объединение:
@@ -61,25 +64,32 @@ public class MergeableMatcher {
 объединять матчер, извлекающий непроверенные значения с остальными матчерами
 
  */
-public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
-    private final Extractor extractor;
+// TODO: TypeSafeExtractingMatcher ?
+// TODO: displayedAs, is, etc
+public abstract class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
+    private final String name;
     private final Checks checks;
 
-    public ExtractingMatcher(Extractor extractor, Checks checks) {
-        this.extractor = extractor;
+    protected ExtractingMatcher() {
+        this(null, null);
+    }
+
+    protected ExtractingMatcher(String name, Checks checks) {
+        this.name = name;
         this.checks = checks;
     }
 
+    protected abstract KeyValue extractFrom(Object item);
+    protected abstract KeyValue extractFromMissingItem();
+
     @Override
     public Iterator<Object> run(Object item) {
-        Extractor.KeyValue keyValue = extractor.extractFrom(item);
-        return new SingletonIterator<>(new SingletonIterator<>(new KeyValueChecks(keyValue.key, keyValue.value, checks)));
+        return createRunResult(extractFrom(item));
     }
 
     @Override
     public Iterator<Object> runForMissingItem() {
-        Extractor.KeyValue keyValue = extractor.extractFromMissingItem();
-        return new SingletonIterator<>(new SingletonIterator<>(new KeyValueChecks(keyValue.key, keyValue.value, checks)));
+        return createRunResult(extractFromMissingItem());
     }
 
     @Override
@@ -88,29 +98,52 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
         // TODO: append matcher.describeTo()
     }
 
-    public Extractor getExtractor() {
-        return extractor;
+
+    private Iterator<Object> createRunResult(KeyValue keyValue) {
+        return new SingletonIterator<>(
+                new SingletonIterator<>(
+                        new KeyValueChecks(
+                                name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
+                                keyValue.value,
+                                checks == null ? new Checks(PresenceStatus.PRESENT, noOp()) : checks
+                        )
+                )
+        );
     }
 
-    public Checks getChecks() {
-        return checks;
+
+    protected static class KeyValue {
+        final Key key;
+        final Value value;
+
+        public KeyValue(Key key, Value value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 
+    private static class RenamedKey implements Key {
+        private final Key key;
+        private final String name;
 
-    // TODO: TypeSafeExtractor ?
-    // TODO: объединить Extractor, ExtractingMatcher и ExtractingMatcherBuilder?
-    public interface Extractor {
-        KeyValue extractFrom(Object item);
-        KeyValue extractFromMissingItem();
+        RenamedKey(Key key, String name) {
+            this.key = key;
+            this.name = name;
+        }
 
-        class KeyValue {
-            final Key key;
-            final Value value;
+        @Override
+        public String asString() {
+            return name;
+        }
 
-            public KeyValue(Key key, Value value) {
-                this.key = key;
-                this.value = value;
-            }
+        @Override
+        public int hashCode() {
+            return key.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return key.equals(obj);
         }
     }
 }

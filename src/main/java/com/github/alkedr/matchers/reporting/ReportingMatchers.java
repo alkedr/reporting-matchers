@@ -1,5 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.comparison.ComparingReportingMatcherBuilder;
+import com.github.alkedr.matchers.reporting.extraction.*;
+import com.github.alkedr.matchers.reporting.utility.SequenceMatcher;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 
@@ -11,8 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.github.alkedr.matchers.reporting.ExtractingMatcherBuilder.extractedValue;
-import static com.github.alkedr.matchers.reporting.Extractors.*;
+import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcherBuilder.extractedValue;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -32,170 +34,53 @@ public class ReportingMatchers {
     // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
 
 
-
-
-    /*public static <T> ExtractingMatcherBuilder<T> field(Field field, Iterable<Matcher<Object>> matchers) {
-        return new ReportingMatcher<T>() {
-            @Override
-            public Checks<T> getChecks(Object item) {
-                try {
-                    return checks(normal(field, field.getName(), field.get(item), ""));
-                } catch (IllegalAccessException e) {
-                    return checks(broken(field, field.getName(), e));
-                }
-            }
-
-            @Override
-            public Checks<T> getChecksForMissingItem() {
-                return checks(missing());
-            }
-        };
-
-
-        return extractedValue(field.getName(), new FieldExtractor(field));
-    }
-
-
-    static <T> ReportingMatcher.Checks<T> checks(ReportingMatcher.ExtractedValueChecksPair.ExtractedValue checks, Iterable<Matcher<Object>> matchers) {
-        return new ReportingMatcher.Checks<T>(
-                Collections.<Matcher<T>>emptyList().iterator(),
-                singletonList(new ReportingMatcher.ExtractedValueChecksPair(checks, checks(matchers))).iterator()
-        );
-    }
-
-    static ReportingMatcher.ExtractedValueChecksPair.Checks checks(Iterable<Matcher<Object>> matchers) {
-        return new ReportingMatcher.ExtractedValueChecksPair.Checks(ReportingMatcher.PresenceStatus.PRESENT, matchers.iterator());
-    }
-
-    static ReportingMatcher.ExtractedValueChecksPair.ExtractedValue normal(Object key, String keyAsString, Object value, String valueAsString) {
-        return new ReportingMatcher.ExtractedValueChecksPair.ExtractedValue(key, keyAsString, ReportingMatcher.PresenceStatus.PRESENT, value, null);
-    }
-
-    static ReportingMatcher.ExtractedValueChecksPair.ExtractedValue broken(Object key, String keyAsString, Throwable throwable) {
-        return new ReportingMatcher.ExtractedValueChecksPair.ExtractedValue(key, keyAsString, null, null, throwable);
-    }
-
-    static ReportingMatcher.ExtractedValueChecksPair.ExtractedValue missing(Object key, String keyAsString) {
-        return new ReportingMatcher.ExtractedValueChecksPair.ExtractedValue(key, keyAsString, ReportingMatcher.PresenceStatus.MISSING, null, null);
-    }
-
-*/
-
-
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcherBuilder<T> field(Field field) {
-        /*return new ReportingMatcher<T>() {
-            @Override
-            public Checks<T> getChecks(Object item) {
-                try {
-                    Object value = field.get(item);
-                    return new Checks<T>(
-                            Collections.<Matcher<T>>emptyList().iterator(),
-                            singletonList(new ExtractedValueChecksPair(
-                                    new ExtractedValueChecksPair.ExtractedValue(
-                                            field,
-                                            field.getName(),
-                                            PresenceStatus.PRESENT,
-                                            value,
-                                            null
-                                    ),
-                                    new ExtractedValueChecksPair.Checks(
-                                            PresenceStatus.PRESENT,
-                                            emptyIterator()    // TODO: матчеры
-                                    )
-                            )).iterator()
-                    );
-                } catch (IllegalAccessException e) {
-                    return new Checks<T>(
-                            Collections.<Matcher<T>>emptyList().iterator(),
-                            singletonList(new ExtractedValueChecksPair(
-                                    new ExtractedValueChecksPair.ExtractedValue(
-                                            field,
-                                            field.getName(),
-                                            null,
-                                            null,
-                                            e
-                                    ),
-                                    new ExtractedValueChecksPair.Checks(
-                                            PresenceStatus.PRESENT,
-                                            emptyIterator()    // TODO: матчеры
-                                    )
-                            )).iterator()
-                    );
-                }
-            }
-
-            @Override
-            public Checks<T> getChecksForMissingItem() {
-                return new Checks<T>(
-                        Collections.<Matcher<T>>emptyList().iterator(),
-                        singletonList(new ExtractedValueChecksPair(
-                                new ExtractedValueChecksPair.ExtractedValue(
-                                        field,
-                                        field.getName(),
-                                        PresenceStatus.MISSING,
-                                        null,
-                                        null
-                                ),
-                                new ExtractedValueChecksPair.Checks(
-                                        PresenceStatus.PRESENT,
-                                        emptyIterator()    // TODO: матчеры
-                                )
-                        )).iterator()
-                );
-            }
-        };*/
-
-
-        return extractedValue(new FieldExtractor(field));
+    public static <T> ExtractingMatcher<T> field(Field field) {
+        return new FieldExtractingMatcher<>(field);
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
-        return extractedValue(new FieldByNameExtractor(fieldName));
+    public static <T> ExtractingMatcher<T> field(String fieldName) {
+        return new FieldByNameExtractingMatcher<>(fieldName);
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
-    public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
-        return extractedValue(new MethodExtractor(method, arguments));
+    public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
+        return new SimpleMethodExtractingMatcher<>(method, arguments);
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
-    public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
-        return extractedValue(new MethodByNameExtractor(methodName, arguments));
+    public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
+        return new SimpleMethodByNameExtractingMatcher<>(methodName, arguments);
     }
 
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
-        return extractedValue(new MethodExtractor(method))
-//                .displayedAs(getterNameToPropertyName(method.getName()))
-                ;
+    public static <T> ExtractingMatcher<T> getter(Method method) {
+        return new GetterMethodExtractingMatcher<>(method);
     }
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
-        return extractedValue(new MethodByNameExtractor(methodName))
-//                .displayedAs(getterNameToPropertyName(methodName))
-                ;
+    public static <T> ExtractingMatcher<T> getter(String methodName) {
+        return new GetterMethodByNameExtractingMatcher<>(methodName);
     }
 
 
-    public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
+    public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
         return extractedValue(new ArrayElementExtractor(index));
     }
 
-    public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
-        return extractedValue(new ListElementExtractor(index));
+    public static <T> ExtractingMatcher<List<T>> element(int index) {
+        return extractedValue(new ElementExtractingMatcher(index));
     }
 
 
-    public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
+    public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
         return extractedValue(new ValueForKeyExtractor(key));
     }
 

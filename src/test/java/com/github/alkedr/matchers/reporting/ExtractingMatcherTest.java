@@ -1,5 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher;
+
 import static org.mockito.Mockito.mock;
 
 public class ExtractingMatcherTest {

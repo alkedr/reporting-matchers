@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.Reporter.CheckStatus;
+import com.github.alkedr.matchers.reporting.html.HtmlReporter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

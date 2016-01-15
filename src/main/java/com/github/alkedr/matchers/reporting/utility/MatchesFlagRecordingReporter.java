@@ -1,4 +1,6 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.utility;
+
+import com.github.alkedr.matchers.reporting.Reporter;
 
 public class MatchesFlagRecordingReporter implements Reporter {
     private boolean matchesFlag = true;

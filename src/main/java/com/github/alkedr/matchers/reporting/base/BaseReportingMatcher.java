@@ -1,5 +1,6 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.base;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import org.hamcrest.BaseMatcher;
 
 public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {

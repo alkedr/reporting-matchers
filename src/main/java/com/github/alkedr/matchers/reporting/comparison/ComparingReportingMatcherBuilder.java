@@ -1,5 +1,7 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.comparison;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.github.alkedr.matchers.reporting.ReportingMatchers;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hamcrest.Matcher;
 

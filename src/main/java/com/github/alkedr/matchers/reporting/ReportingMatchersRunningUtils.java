@@ -98,6 +98,8 @@ public class ReportingMatchersRunningUtils {
         (он будет лежать в first)
 
     Используем LinkedHashMap чтобы сохранять порядок следования матчеров и извлечённых значений
+
+    TODO: всегда игнорировать пустые итераторы
      */
     private static class MergingChecksIterator implements Iterator<Object> {
         private final Iterator<Object> in;

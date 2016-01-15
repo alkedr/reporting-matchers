@@ -8,6 +8,7 @@ package com.github.alkedr.matchers.reporting;
  *
  * TODO: пример кода как создать Reporter и запустить на нём ReportingMatcher
  */
+// TODO: написать в доках интерфейсов как их реализовывать
 public interface Reporter {
 
     /**

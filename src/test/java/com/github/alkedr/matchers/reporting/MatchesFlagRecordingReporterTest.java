@@ -1,5 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.utility.MatchesFlagRecordingReporter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

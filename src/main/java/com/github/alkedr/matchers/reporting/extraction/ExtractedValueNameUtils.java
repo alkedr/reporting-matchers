@@ -1,12 +1,12 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
-class ExtractedValueNameUtils {
+public class ExtractedValueNameUtils {
     // TODO: тесты
     // TODO: что делать с очень большими toString()?
-    static String createMethodValueName(String methodName, Object... arguments) {
+    public static String createMethodValueName(String methodName, Object... arguments) {
         StringBuilder sb = new StringBuilder();
         sb.append(methodName).append('(');
         if (arguments.length > 0) {
@@ -19,7 +19,7 @@ class ExtractedValueNameUtils {
         return sb.toString();
     }
 
-    static String getterNameToPropertyName(String name) {
+    public static String getterNameToPropertyName(String name) {
         if (name == null) {
             return "";
         }

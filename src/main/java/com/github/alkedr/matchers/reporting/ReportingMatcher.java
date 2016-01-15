@@ -24,6 +24,7 @@ import java.util.Iterator;
  *
  * TODO: ссылка на метод, который нужно вызывать чтобы запустить ReportingMatcher, пример кода
  */
+// TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
 
     /**

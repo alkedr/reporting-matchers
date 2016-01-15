@@ -1,5 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.extraction.MethodExtractingMatcher;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -19,12 +20,12 @@ public class Extractors_ObjectMethodExtractorTest {
 
     @Test(expected = NullPointerException.class)
     public void nullMethod() {
-        new Extractors.MethodExtractor(null);
+        new MethodExtractingMatcher(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArgumentsArray() {
-        new Extractors.MethodExtractor(inaccessibleMethod, (Object[]) null);
+        new MethodExtractingMatcher(inaccessibleMethod, (Object[]) null);
     }
 
     /*@Test
