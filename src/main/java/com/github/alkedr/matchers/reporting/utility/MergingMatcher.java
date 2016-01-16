@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting.utility;
 
+import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.base.BaseReportingMatcher;
 import org.hamcrest.Description;
 
 import java.util.Iterator;

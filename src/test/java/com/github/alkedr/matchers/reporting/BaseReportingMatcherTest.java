@@ -1,7 +1,19 @@
 package com.github.alkedr.matchers.reporting;
 
+import org.apache.commons.collections4.iterators.SingletonIterator;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Description;
+import org.junit.Test;
+
+import java.util.Iterator;
+
+import static java.util.Collections.emptyIterator;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class BaseReportingMatcherTest {
-    /*@Test
+    @Test
     public void matchesMethod_shouldReturnTrue_ifRunDoesNotDoAnythingThatChangesMatchesFlag() {
         assertTrue(new BaseReportingMatcherThatDoesNotAddChecks().matches(null));
     }
@@ -12,36 +24,37 @@ public class BaseReportingMatcherTest {
     }
 
 
-    private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
+    private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
-        public void describeTo(Description description) {
+        public Iterator<Object> run(Object item) {
+            return emptyIterator();
+        }
+
+        @Override
+        public Iterator<Object> runForMissingItem() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void run(Object item, Reporter reporter) {
-            reporter.addCheck(Reporter.CheckStatus.FAILED, null);
-        }
-
-        @Override
-        public void runForMissingItem(Reporter reporter) {
+        public void describeTo(Description description) {
             throw new UnsupportedOperationException();
         }
     }
 
-    private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
+    private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
+        @Override
+        public Iterator<Object> run(Object item) {
+            return new SingletonIterator<>(not(CoreMatchers.anything()));
+        }
+
+        @Override
+        public Iterator<Object> runForMissingItem() {
+            throw new UnsupportedOperationException();
+        }
+
         @Override
         public void describeTo(Description description) {
             throw new UnsupportedOperationException();
         }
-
-        @Override
-        public void run(Object item, Reporter reporter) {
-        }
-
-        @Override
-        public void runForMissingItem(Reporter reporter) {
-            throw new UnsupportedOperationException();
-        }
-    }*/
+    }
 }

@@ -1,4 +1,7 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.utility;
+
+import com.github.alkedr.matchers.reporting.Reporter;
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
 import static org.mockito.Mockito.mock;
 

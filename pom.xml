@@ -29,6 +29,7 @@
             <version>3.4</version>
         </dependency>
 
+        <!--TODO: перейти на что-то одно из commons-collections4 и guava-collections-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>

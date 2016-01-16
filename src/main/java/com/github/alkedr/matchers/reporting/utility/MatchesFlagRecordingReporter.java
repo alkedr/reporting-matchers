@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting.base;
+package com.github.alkedr.matchers.reporting.utility;
 
 import com.github.alkedr.matchers.reporting.Reporter;
 

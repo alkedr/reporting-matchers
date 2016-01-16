@@ -1,12 +1,13 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
-import com.github.alkedr.matchers.reporting.base.BaseReportingMatcher;
+import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.extraction.ElementExtractor;
 import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
 import java.util.Iterator;
 
+// TODO: убрать abstract, сделать фабрику чекеров полем
 // TODO: поддерживать массивы, итераторы, итераблы ?мапы?  (это всё обёртки для IteratorMatcher, которые преобразовывают item)
 public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
 

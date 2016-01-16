@@ -1,6 +1,6 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.utility;
 
-import com.github.alkedr.matchers.reporting.base.MatchesFlagRecordingReporter;
+import com.github.alkedr.matchers.reporting.Reporter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

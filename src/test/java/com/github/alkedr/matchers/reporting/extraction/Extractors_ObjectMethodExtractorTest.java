@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
 import java.lang.reflect.Method;
 

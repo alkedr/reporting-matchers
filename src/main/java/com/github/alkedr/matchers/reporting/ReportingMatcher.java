@@ -37,6 +37,8 @@ public interface ReportingMatcher<T> extends Matcher<T> {
      *
      *     TODO: точно ли нужна возможность добавлять простые матчеры отсюда?
      *     может можно sequence(simpleMatcher, reportingMatcher)?
+     *
+     *     не разделено на два метода потому что так надо для эффективного объединения
      */
     Iterator<Object> run(Object item);
 

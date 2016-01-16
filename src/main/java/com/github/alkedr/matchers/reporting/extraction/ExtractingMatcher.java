@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.base.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.utility.MergingMatcher;
 import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Description;
@@ -22,6 +22,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
+    static final Checks DEFAULT_CHECKS = new Checks(PresenceStatus.PRESENT, noOp());
+
     private final String name;
     private final Extractor extractor;
     private final Checks checks;
@@ -30,7 +32,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     public ExtractingMatcher(String name, Extractor extractor, Checks checks) {
         this.name = name;
         this.extractor = extractor;
-        this.checks = checks;
+        this.checks = checks == null ? DEFAULT_CHECKS : checks;
     }
 
 
@@ -91,10 +93,12 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
     private Iterator<Object> createRunResult(KeyValue keyValue) {
         return new SingletonIterator<>(
-                new KeyValueChecks(
-                        name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
-                        keyValue.value,
-                        checks == null ? new Checks(PresenceStatus.PRESENT, noOp()) : checks
+                new SingletonIterator<>(
+                    new KeyValueChecks(
+                            name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
+                            keyValue.value,
+                            checks
+                    )
                 )
         );
     }
@@ -117,6 +121,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
         }
     }
 
+    // TODO: должен ли RenamedKey объединяться с непереименованным Key?
     private static class RenamedKey implements Key {
         private final Key key;
         private final String name;

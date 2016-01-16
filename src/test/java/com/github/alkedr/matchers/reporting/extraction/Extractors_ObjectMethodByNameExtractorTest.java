@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
 public class Extractors_ObjectMethodByNameExtractorTest {
     private final MyClass item = new MyClass();

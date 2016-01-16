@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
 public class ExtractingMatcherBuilderTest {
 //    private static final String NAME = "123";

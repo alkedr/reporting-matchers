@@ -1,46 +1,87 @@
-package com.github.alkedr.matchers.reporting;
+package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import org.apache.commons.collections4.IteratorUtils;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
+import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
+import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher.DEFAULT_CHECKS;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ExtractingMatcherTest {
+    private final Object item = new Object();
+    private final Object extractedItem = new Object();
+    private final String extractedItemAsString = "123";
+    private final ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
+    private final ReportingMatcher.Key key = mock(ReportingMatcher.Key.class);
+    private final ReportingMatcher.Value value = present(extractedItem, extractedItemAsString);
+    private final ExtractingMatcher.KeyValue keyValue = new ExtractingMatcher.KeyValue(key, value);
 
-    static class X {
-        X(int a){}
-
-        int getX() {
-            return 5;
-        }
-    }
-
-    static  {
-        mock(X.class);
-    }
-
-    @Test
-    public void lambda() throws Exception {
-        f(X::getX);
+    @Before
+    public void setUp() {
+        when(extractor.extractFrom(item)).thenReturn(keyValue);
     }
 
     @Test
-    public void inlineClass() throws Exception {
-        f(new Function<X, Object>() {
-            @Override
-            public Object apply(X x) {
-                return x.getX();
-            }
-        });
+    public void run() {
+        checkRunResults(
+                new ExtractingMatcher<>(null, extractor, null).run(item),
+                contains(keyValueChecks(key, value, DEFAULT_CHECKS))
+        );
     }
 
-    <T> void f(Function<T, ?> function) throws InvocationTargetException, IllegalAccessException {
-        System.out.println(function.getClass().getMethods()[0].getGenericParameterTypes()[0]);
-//        function.getClass().getMethods()[0].invoke(function, mock());
-        function.getClass().getMethods()[0].invoke(function, mock(function.getClass().getMethods()[0].getParameterTypes()[0]));
+    private static void checkRunResults(Iterator<Object> runResults, Matcher<?>... matchers) {
+        List<Object> list = IteratorUtils.toList(runResults).stream()
+                .map(o -> o instanceof Iterator ? IteratorUtils.toList((Iterator<?>) o) : o)
+                .collect(Collectors.toList());
+        assertThat(list, new IsIterableContainingInOrder<>((List<Matcher<? super Object>>)(Object) asList(matchers)));
     }
+
+    private static Matcher<ReportingMatcher.KeyValueChecks> keyValueChecks(ReportingMatcher.Key key,
+                                                                           ReportingMatcher.Value value,
+                                                                           ReportingMatcher.Checks checks) {
+        return allOf(
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Key>(sameInstance(key), "key", "key") {
+                    @Override
+                    protected ReportingMatcher.Key featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.key();
+                    }
+                },
+
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Value>(sameInstance(value), "value", "value") {
+                    @Override
+                    protected ReportingMatcher.Value featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.value();
+                    }
+                },
+
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Checks>(sameInstance(checks), "checks", "checks") {
+                    @Override
+                    protected ReportingMatcher.Checks featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.checks();
+                    }
+                }
+        );
+    }
+
+
+
+
+
     /*private static final String NAME = "NAME";
     private static final String BROKEN_ERROR_MESSAGE = "BROKEN_ERROR_MESSAGE";
     private final ExtractingMatcher.Extractor normalExtractor = mock(ExtractingMatcher.Extractor.class);
