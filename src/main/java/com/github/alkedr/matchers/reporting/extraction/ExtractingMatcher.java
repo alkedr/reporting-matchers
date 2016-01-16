@@ -72,39 +72,33 @@ public class MergeableMatcher {
 объединять матчер, извлекающий непроверенные значения с остальными матчерами
 
  */
-// TODO: TypeSafeExtractingMatcher ?
 // TODO: описать зачем нужно, пример использования
 // field("qwerty").displayedAs("12345").is(equalTo(1))
 // is заменяет, не добавляет
 // все методы возвращают новый инстанс
 // TODO: написать в доках интерфейсов как их реализовывать
-// TODO: если вернуться к экстракторам, то можно будет сделать нормальный fluent api
 // TODO: найти способ сделать матчеры типобезопасными в случаях, когда известен их тип
-public abstract class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
-    private String name;
-    private Checks checks;
+public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
+    private final String name;
+    private final Extractor extractor;
+    private final Checks checks;
 
-    protected ExtractingMatcher() {
-        this(null, null);
-    }
-
-    protected ExtractingMatcher(String name, Checks checks) {
+    // name и checks могут быть null
+    public ExtractingMatcher(String name, Extractor extractor, Checks checks) {
         this.name = name;
+        this.extractor = extractor;
         this.checks = checks;
     }
 
-    // TODO: позволять экстрактить несколько значений, применять Checks ко всем?
-    protected abstract KeyValue extractFrom(Object item);
-    protected abstract KeyValue extractFromMissingItem();
 
     @Override
     public Iterator<Object> run(Object item) {
-        return createRunResult(extractFrom(item));
+        return createRunResult(extractor.extractFrom(item));
     }
 
     @Override
     public Iterator<Object> runForMissingItem() {
-        return createRunResult(extractFromMissingItem());
+        return createRunResult(extractor.extractFromMissingItem());
     }
 
     @Override
@@ -115,8 +109,15 @@ public abstract class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
 
     public ExtractingMatcher<T> displayedAs(String newName) {
-        this.name = newName;
-        return this;
+        return new ExtractingMatcher<>(newName, extractor, checks);
+    }
+
+    public ExtractingMatcher<T> extractor(Extractor newExtractor) {
+        return new ExtractingMatcher<>(name, newExtractor, checks);
+    }
+
+    public ExtractingMatcher<T> checks(Checks newChecks) {
+        return new ExtractingMatcher<>(name, extractor, newChecks);
     }
 
     // Заменяет, а не добавляет матчеры?
@@ -129,8 +130,7 @@ public abstract class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     public ExtractingMatcher<T> is(ReportingMatcher<?> matcher) {
-        checks = new Checks(PresenceStatus.PRESENT, matcher);
-        return this;
+        return checks(new Checks(PresenceStatus.PRESENT, matcher));
     }
 
     public <U> ExtractingMatcher<T> is(Matcher<? super U>... matchers) {
@@ -148,18 +148,22 @@ public abstract class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
     private Iterator<Object> createRunResult(KeyValue keyValue) {
         return new SingletonIterator<>(
-                new SingletonIterator<>(
-                        new KeyValueChecks(
-                                name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
-                                keyValue.value,
-                                checks == null ? new Checks(PresenceStatus.PRESENT, noOp()) : checks
-                        )
+                new KeyValueChecks(
+                        name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
+                        keyValue.value,
+                        checks == null ? new Checks(PresenceStatus.PRESENT, noOp()) : checks
                 )
         );
     }
 
 
-    protected static class KeyValue {
+    // TODO: TypeSafeExtractor ?
+    public interface Extractor {
+        KeyValue extractFrom(Object item);
+        KeyValue extractFromMissingItem();
+    }
+
+    public static class KeyValue {
         final Key key;
         final Value value;
 

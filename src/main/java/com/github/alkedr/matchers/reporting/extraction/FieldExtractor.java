@@ -11,29 +11,29 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
 
-public class FieldExtractingMatcher<T> extends ExtractingMatcher<T> implements ReportingMatcher.Key {
+public class FieldExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     private final Field field;
 
-    public FieldExtractingMatcher(Field field) {
+    public FieldExtractor(Field field) {
         Validate.notNull(field, "field");
         this.field = field;
     }
 
     @Override
-    protected KeyValue extractFrom(Object item) {
+    public ExtractingMatcher.KeyValue extractFrom(Object item) {
         if (item == null) {
-            return new KeyValue(this, missing());
+            return new ExtractingMatcher.KeyValue(this, missing());
         }
         try {
-            return new KeyValue(this, present(FieldUtils.readField(field, item, true)));
+            return new ExtractingMatcher.KeyValue(this, present(FieldUtils.readField(field, item, true)));
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            return new KeyValue(this, broken(e));  // TODO: rethrow?
+            return new ExtractingMatcher.KeyValue(this, broken(e));  // TODO: rethrow?
         }
     }
 
     @Override
-    protected KeyValue extractFromMissingItem() {
-        return new KeyValue(this, missing());
+    public ExtractingMatcher.KeyValue extractFromMissingItem() {
+        return new ExtractingMatcher.KeyValue(this, missing());
     }
 
 
@@ -41,7 +41,7 @@ public class FieldExtractingMatcher<T> extends ExtractingMatcher<T> implements R
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FieldExtractingMatcher<?> that = (FieldExtractingMatcher<?>) o;
+        FieldExtractor that = (FieldExtractor) o;
         return Objects.equals(field, that.field);
     }
 

@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
 import com.github.alkedr.matchers.reporting.base.BaseReportingMatcher;
-import com.github.alkedr.matchers.reporting.extraction.ElementExtractingMatcher;
+import com.github.alkedr.matchers.reporting.extraction.ElementExtractor;
 import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
@@ -33,7 +33,7 @@ public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T
                         Iterators.transform(
                                 (Iterator<?>) item,
                                 element -> {
-                                    Key key = new ElementExtractingMatcher(0);  // TODO: индексы
+                                    Key key = new ElementExtractor(0);  // TODO: индексы
                                     Value value = Value.present(item);
                                     return new KeyValueChecks(key, value, checker.element(key, value));
                                 }

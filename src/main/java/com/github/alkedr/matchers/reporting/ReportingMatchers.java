@@ -8,8 +8,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
+import static com.github.alkedr.matchers.reporting.extraction.ExtractedValueNameUtils.getterNameToPropertyName;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -37,45 +37,43 @@ public class ReportingMatchers {
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(Field field) {
-        return new FieldExtractingMatcher<>(field);
+        return new ExtractingMatcher<>(null, new FieldExtractor(field), null);
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(String fieldName) {
-        return new FieldByNameExtractingMatcher<>(fieldName);
+        return new ExtractingMatcher<>(null, new FieldByNameExtractor(fieldName), null);
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
-        return new SimpleMethodExtractingMatcher<>(method, arguments);
+        return new ExtractingMatcher<>(null, new MethodExtractor(method, arguments), null);
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
-        return new SimpleMethodByNameExtractingMatcher<>(methodName, arguments);
+        return new ExtractingMatcher<>(null, new MethodByNameExtractor(methodName, arguments), null);
     }
 
-    // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
-    // если метод не найден, то бросает исключение в matches()
-    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
+//    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
         // Получить класс из параметра function'а?
         // Mockito вроде как не требует конструктора без параметров, значит это возможно
-        return new SimpleMethodByLambdaExtractingMatcher<>(function);
-    }
+//        return new SimpleMethodByLambdaExtractingMatcher<>(function);
+//    }
 
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new GetterMethodExtractingMatcher<>(method);
+        return new ExtractingMatcher<>(getterNameToPropertyName(method.getName()), new MethodExtractor(method), null);
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new GetterMethodByNameExtractingMatcher<>(methodName);
+        return new ExtractingMatcher<>(getterNameToPropertyName(methodName), new MethodByNameExtractor(methodName), null);
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -85,22 +83,22 @@ public class ReportingMatchers {
 
 
     public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
-        return new ElementExtractingMatcher<>(index);
+        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcher<List<T>> element(int index) {
-        return new ElementExtractingMatcher<>(index);
+        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
     }
 
     // O(N)
     public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
-        return new ElementExtractingMatcher<>(index);
+        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
     }
 
 
     public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return new ValueForKeyExtractingMatcher<>(key);
+        return new ExtractingMatcher<>(null, new ValueForKeyExtractingMatcher(key), null);
     }
 
 

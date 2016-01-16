@@ -9,33 +9,33 @@ import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 
-public class FieldByNameExtractingMatcher<T> extends ExtractingMatcher<T> implements ReportingMatcher.Key {
+public class FieldByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     private final String fieldName;
 
-    public FieldByNameExtractingMatcher(String fieldName) {
+    public FieldByNameExtractor(String fieldName) {
         Validate.notNull(fieldName, "fieldName");
         this.fieldName = fieldName;
     }
 
     @Override
-    protected KeyValue extractFrom(Object item) {
+    public ExtractingMatcher.KeyValue extractFrom(Object item) {
         if (item == null) {
-            return new KeyValue(this, missing());
+            return new ExtractingMatcher.KeyValue(this, missing());
         }
         Field field = FieldUtils.getField(item.getClass(), fieldName, true);  // TODO: проверить исключения, null
-        return new FieldExtractingMatcher<>(field).extractFrom(item);
+        return new FieldExtractor(field).extractFrom(item);
     }
 
     @Override
-    protected KeyValue extractFromMissingItem() {
-        return new KeyValue(this, missing());
+    public ExtractingMatcher.KeyValue extractFromMissingItem() {
+        return new ExtractingMatcher.KeyValue(this, missing());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FieldByNameExtractingMatcher<?> that = (FieldByNameExtractingMatcher<?>) o;
+        FieldByNameExtractor that = (FieldByNameExtractor) o;
         return Objects.equals(fieldName, that.fieldName);
     }
 

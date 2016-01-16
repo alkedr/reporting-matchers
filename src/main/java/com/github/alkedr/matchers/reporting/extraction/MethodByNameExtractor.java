@@ -10,37 +10,43 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
+import static com.github.alkedr.matchers.reporting.extraction.ExtractedValueNameUtils.createMethodValueName;
 
-public abstract class MethodByNameExtractingMatcher<T> extends ExtractingMatcher<T> implements ReportingMatcher.Key {
+public class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     protected final String methodName;
     protected final Object[] arguments;
 
-    protected MethodByNameExtractingMatcher(String methodName, Object... arguments) {
+    public MethodByNameExtractor(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
         this.methodName = methodName;
-        this.arguments = arguments;
+        this.arguments = Arrays.copyOf(arguments, arguments.length);
     }
 
     @Override
-    protected KeyValue extractFrom(Object item) {
+    public ExtractingMatcher.KeyValue extractFrom(Object item) {
         if (item == null) {
-            return new KeyValue(this, missing());
+            return new ExtractingMatcher.KeyValue(this, missing());
         }
         Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));   // TODO: исключения, null
-        return new MethodExtractingMatcher<>(method, arguments).extractFrom(item);
+        return new MethodExtractor(method, arguments).extractFrom(item);
     }
 
     @Override
-    protected KeyValue extractFromMissingItem() {
-        return new KeyValue(this, missing());
+    public ExtractingMatcher.KeyValue extractFromMissingItem() {
+        return new ExtractingMatcher.KeyValue(this, missing());
+    }
+
+    @Override
+    public String asString() {
+        return createMethodValueName(methodName, arguments);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MethodByNameExtractingMatcher<?> that = (MethodByNameExtractingMatcher<?>) o;
+        MethodByNameExtractor that = (MethodByNameExtractor) o;
         return Objects.equals(methodName, that.methodName) &&
                 Arrays.equals(arguments, that.arguments);
     }

@@ -14,35 +14,35 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.presen
 import static com.github.alkedr.matchers.reporting.extraction.ExtractedValueNameUtils.createMethodValueName;
 import static java.lang.reflect.Modifier.isStatic;
 
-public class MethodExtractingMatcher<T> extends ExtractingMatcher<T> implements ReportingMatcher.Key {
+public class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     protected final Method method;
     protected final Object[] arguments;
 
-    protected MethodExtractingMatcher(Method method, Object... arguments) {
+    public MethodExtractor(Method method, Object... arguments) {
         Validate.notNull(method, "method");
         Validate.notNull(arguments, "arguments");
         this.method = method;
-        this.arguments = arguments;
+        this.arguments = Arrays.copyOf(arguments, arguments.length);
     }
 
     @Override
-    protected KeyValue extractFrom(Object item) {
+    public ExtractingMatcher.KeyValue extractFrom(Object item) {
         if (item == null && !isStatic(method.getModifiers())) {
-            return new KeyValue(this, missing());
+            return new ExtractingMatcher.KeyValue(this, missing());
         }
         try {
             method.setAccessible(true);
-            return new KeyValue(this, present(method.invoke(item, arguments)));
+            return new ExtractingMatcher.KeyValue(this, present(method.invoke(item, arguments)));
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            return new KeyValue(this, broken(e));  // TODO: rethrow?
+            return new ExtractingMatcher.KeyValue(this, broken(e));  // TODO: rethrow?
         } catch (InvocationTargetException e) {
-            return new KeyValue(this, broken(e.getCause()));
+            return new ExtractingMatcher.KeyValue(this, broken(e.getCause()));
         }
     }
 
     @Override
-    protected KeyValue extractFromMissingItem() {
-        return new KeyValue(this, missing());
+    public ExtractingMatcher.KeyValue extractFromMissingItem() {
+        return new ExtractingMatcher.KeyValue(this, missing());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MethodExtractingMatcher<T> extends ExtractingMatcher<T> implements 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MethodExtractingMatcher<?> that = (MethodExtractingMatcher<?>) o;
+        MethodExtractor that = (MethodExtractor) o;
         return Objects.equals(method, that.method) &&
                 Arrays.equals(arguments, that.arguments);
     }
