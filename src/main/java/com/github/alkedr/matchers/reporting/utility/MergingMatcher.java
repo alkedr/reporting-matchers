@@ -4,10 +4,6 @@ import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import org.hamcrest.Description;
 
-import java.util.Iterator;
-
-import static com.github.alkedr.matchers.reporting.ReportingMatchersRunningUtils.mergeReportingMatcherChecks;
-
 public class MergingMatcher<T> extends BaseReportingMatcher<T> {
     private final ReportingMatcher<T> reportingMatcher;
 
@@ -16,13 +12,17 @@ public class MergingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public Iterator<Object> run(Object item) {
-        return mergeReportingMatcherChecks(reportingMatcher.run(item));
+    public void run(Object item, CheckListener checkListener) {
+        MergingCheckListener mergingCheckListener = new MergingCheckListener(checkListener);
+        reportingMatcher.run(item, mergingCheckListener);
+        mergingCheckListener.flush();
     }
 
     @Override
-    public Iterator<Object> runForMissingItem() {
-        return mergeReportingMatcherChecks(reportingMatcher.runForMissingItem());
+    public void runForMissingItem(CheckListener checkListener) {
+        MergingCheckListener mergingCheckListener = new MergingCheckListener(checkListener);
+        reportingMatcher.runForMissingItem(mergingCheckListener);
+        mergingCheckListener.flush();
     }
 
     @Override

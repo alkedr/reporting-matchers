@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.html.HtmlReporter;
+import com.github.alkedr.matchers.reporting.utility.ReportingCheckListener;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.field;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.getter;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
-import static com.github.alkedr.matchers.reporting.ReportingMatchersRunningUtils.runReportingMatcher;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -23,7 +23,7 @@ public class IntegrationTestMain {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                 Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 reporter.beginReport();
-                runReportingMatcher(reporter, USER, isCorrectUser());
+                isCorrectUser().run(USER, new ReportingCheckListener(reporter));
                 reporter.endReport();
             }
         }

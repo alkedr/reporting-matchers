@@ -1,8 +1,6 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
 import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
-import com.github.alkedr.matchers.reporting.extraction.ElementExtractor;
-import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
 import java.util.Iterator;
@@ -25,8 +23,17 @@ public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T
         Iterator<Object> end2();  // TODO: переименовать
     }
 
+    @Override
+    public void run(Object item, CheckListener checkListener) {
+
+    }
 
     @Override
+    public void runForMissingItem(CheckListener checkListener) {
+
+    }
+
+    /*@Override
     public Iterator<Object> run(Object item) {
         Checker checker = createChecker();
         return Iterators.forArray(
@@ -49,7 +56,7 @@ public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T
     public Iterator<Object> runForMissingItem() {
         Checker checker = createChecker();
         return Iterators.forArray(checker.end(), checker.end2());
-    }
+    }*/
 
     @Override
     public void describeTo(Description description) {

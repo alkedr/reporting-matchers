@@ -11,7 +11,7 @@ import java.util.Objects;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createMethodValueName;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForRegularMethodInvocation;
 import static java.lang.reflect.Modifier.isStatic;
 
 public class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
@@ -47,7 +47,7 @@ public class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMa
 
     @Override
     public String asString() {
-        return createMethodValueName(method.getName(), arguments);
+        return createNameForRegularMethodInvocation(method.getName(), arguments);
     }
 
     @Override

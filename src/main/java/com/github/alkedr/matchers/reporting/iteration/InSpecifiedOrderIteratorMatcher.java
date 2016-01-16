@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
@@ -38,7 +37,8 @@ public class InSpecifiedOrderIteratorMatcher<T> extends IteratorMatcher<T> {
 
         @Override
         public Iterator<Object> end() {
-            return Iterators.concat(Iterators.transform(matchers, ReportingMatcher::runForMissingItem));
+            return null;
+//            return Iterators.concat(Iterators.transform(matchers, ReportingMatcher::runForMissingItem));
         }
 
         @Override

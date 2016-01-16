@@ -2,32 +2,32 @@ package com.github.alkedr.matchers.reporting.extraction;
 
 import org.junit.Test;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.getterNameToPropertyName;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
 import static org.junit.Assert.assertEquals;
 
 public class MethodNameUtils_GetterNameToPropertyNameTest {
     @Test
     public void nullAndEmptyInput() {
-        assertEquals("", getterNameToPropertyName(null));
-        assertEquals("", getterNameToPropertyName(""));
+        assertEquals("", createNameForGetterMethodInvocation(null));
+        assertEquals("", createNameForGetterMethodInvocation(""));
     }
 
     @Test
     public void noChangeNecessary() {
-        assertEquals("qwerty", getterNameToPropertyName("qwerty"));
-        assertEquals("get", getterNameToPropertyName("get"));
-        assertEquals("is", getterNameToPropertyName("is"));
-        assertEquals("getaway", getterNameToPropertyName("getaway"));
-        assertEquals("issue", getterNameToPropertyName("issue"));
+        assertEquals("qwerty", createNameForGetterMethodInvocation("qwerty"));
+        assertEquals("get", createNameForGetterMethodInvocation("get"));
+        assertEquals("is", createNameForGetterMethodInvocation("is"));
+        assertEquals("getaway", createNameForGetterMethodInvocation("getaway"));
+        assertEquals("issue", createNameForGetterMethodInvocation("issue"));
     }
 
     @Test
     public void removeGet() {
-        assertEquals("qwerTy", getterNameToPropertyName("getQwerTy"));
+        assertEquals("qwerTy", createNameForGetterMethodInvocation("getQwerTy"));
     }
 
     @Test
     public void removeIs() {
-        assertEquals("qwerTy", getterNameToPropertyName("isQwerTy"));
+        assertEquals("qwerTy", createNameForGetterMethodInvocation("isQwerTy"));
     }
 }

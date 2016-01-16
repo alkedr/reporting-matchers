@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.getterNameToPropertyName;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -68,12 +68,12 @@ public class ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new ExtractingMatcher<>(getterNameToPropertyName(method.getName()), new MethodExtractor(method), null);
+        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new MethodExtractor(method), null);
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new ExtractingMatcher<>(getterNameToPropertyName(methodName), new MethodByNameExtractor(methodName), null);
+        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new MethodByNameExtractor(methodName), null);
     }
 
     // как method(), только убирает 'get' и 'is'

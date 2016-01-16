@@ -6,7 +6,7 @@ import static java.lang.Character.toLowerCase;
 public class MethodNameUtils {
     // TODO: тесты
     // TODO: что делать с очень большими toString()?
-    public static String createMethodValueName(String methodName, Object... arguments) {
+    public static String createNameForRegularMethodInvocation(String methodName, Object... arguments) {
         StringBuilder sb = new StringBuilder();
         sb.append(methodName).append('(');
         if (arguments.length > 0) {
@@ -19,7 +19,7 @@ public class MethodNameUtils {
         return sb.toString();
     }
 
-    public static String getterNameToPropertyName(String name) {
+    public static String createNameForGetterMethodInvocation(String name) {
         if (name == null) {
             return "";
         }

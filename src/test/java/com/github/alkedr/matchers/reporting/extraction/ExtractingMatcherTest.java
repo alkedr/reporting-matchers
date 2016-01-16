@@ -1,29 +1,7 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import org.apache.commons.collections4.IteratorUtils;
-import org.hamcrest.FeatureMatcher;
-import org.hamcrest.Matcher;
-import org.hamcrest.collection.IsIterableContainingInOrder;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
-import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher.DEFAULT_CHECKS;
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class ExtractingMatcherTest {
-    private final Object item = new Object();
+    /*private final Object item = new Object();
     private final Object extractedItem = new Object();
     private final String extractedItemAsString = "123";
     private final ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
@@ -76,7 +54,7 @@ public class ExtractingMatcherTest {
                     }
                 }
         );
-    }
+    }*/
 
 
 

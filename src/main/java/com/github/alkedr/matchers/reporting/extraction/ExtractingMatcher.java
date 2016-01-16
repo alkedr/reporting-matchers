@@ -7,8 +7,6 @@ import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import java.util.Iterator;
-
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
 import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
 import static com.github.alkedr.matchers.reporting.utility.ReportingMatchersAdapter.toReportingMatcher;
@@ -37,13 +35,13 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
 
     @Override
-    public Iterator<Object> run(Object item) {
-        return createRunResult(extractor.extractFrom(item));
+    public void run(Object item, CheckListener checkListener) {
+        runImpl(extractor.extractFrom(item), checkListener);
     }
 
     @Override
-    public Iterator<Object> runForMissingItem() {
-        return createRunResult(extractor.extractFromMissingItem());
+    public void runForMissingItem(CheckListener checkListener) {
+        runImpl(extractor.extractFromMissingItem(), checkListener);
     }
 
     @Override
@@ -91,16 +89,15 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
 
 
-    private Iterator<Object> createRunResult(KeyValue keyValue) {
-        return new SingletonIterator<>(
-                new SingletonIterator<>(
-                    new KeyValueChecks(
-                            name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
-                            keyValue.value,
-                            checks
-                    )
+
+    private void runImpl(KeyValue keyValue, CheckListener checkListener) {
+        checkListener.keyValueChecksGroup(new SingletonIterator<>(
+                new KeyValueChecks(
+                        name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
+                        keyValue.value,
+                        checks
                 )
-        );
+        ));
     }
 
 

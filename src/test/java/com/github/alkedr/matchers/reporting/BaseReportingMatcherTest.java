@@ -1,13 +1,9 @@
 package com.github.alkedr.matchers.reporting;
 
-import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.junit.Test;
 
-import java.util.Iterator;
-
-import static java.util.Collections.emptyIterator;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -26,12 +22,11 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
-        public Iterator<Object> run(Object item) {
-            return emptyIterator();
+        public void run(Object item, CheckListener checkListener) {
         }
 
         @Override
-        public Iterator<Object> runForMissingItem() {
+        public void runForMissingItem(CheckListener checkListener) {
             throw new UnsupportedOperationException();
         }
 
@@ -43,12 +38,12 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
         @Override
-        public Iterator<Object> run(Object item) {
-            return new SingletonIterator<>(not(CoreMatchers.anything()));
+        public void run(Object item, CheckListener checkListener) {
+            checkListener.simpleMatcher(item, not(CoreMatchers.anything()));
         }
 
         @Override
-        public Iterator<Object> runForMissingItem() {
+        public void runForMissingItem(CheckListener checkListener) {
             throw new UnsupportedOperationException();
         }
 

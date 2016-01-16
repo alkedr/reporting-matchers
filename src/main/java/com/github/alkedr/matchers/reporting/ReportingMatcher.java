@@ -27,6 +27,16 @@ import java.util.Iterator;
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
 
+    interface CheckListener {
+        void simpleMatcher(Object item, Matcher<?> matcher);
+        void simpleMatcherForMissingItem(Matcher<?> matcher);
+
+        // KeyValueChecks внутри группы не объединяются MergingCheckListener'ом
+        // Если матчер не может гарантировать, что его KeyValueChecks не нуждаются в объединении, он должен
+        // сделать несколько вызовов keyValueChecksGroup
+        void keyValueChecksGroup(Iterator<KeyValueChecks> keyValueChecksGroup);
+    }
+
     /**
      * Проверяет item, добавляет всю информацию о проверках в reporter.
      *
@@ -40,7 +50,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
      *
      *     не разделено на два метода потому что так надо для эффективного объединения
      */
-    Iterator<Object> run(Object item);
+    void run(Object item, CheckListener checkListener);
 
     /**
      * Добавляет в reporter информацию о проверках, которые были бы выполнены если бы был вызван метод
@@ -54,7 +64,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
      *
      * @return
      */
-    Iterator<Object> runForMissingItem();
+    void runForMissingItem(CheckListener checkListener);
 
 
     // TODO: Написать документацию о том, какие поля когда могут быть нулл
@@ -103,10 +113,11 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             this.extractionThrowable = extractionThrowable;
         }
 
-        public PresenceStatus getPresenceStatus() {
+        public PresenceStatus presenceStatus() {
             return presenceStatus;
         }
 
+        // TODO: переименовать
         public Object get() {
             return object;
         }
@@ -115,7 +126,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             return asString;
         }
 
-        public Throwable getExtractionThrowable() {
+        public Throwable extractionThrowable() {
             return extractionThrowable;
         }
 
@@ -146,11 +157,11 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             this.matcher = matcher;
         }
 
-        public PresenceStatus getExpectedPresenceStatus() {
+        public PresenceStatus expectedPresenceStatus() {
             return expectedPresenceStatus;
         }
 
-        public ReportingMatcher<?> getMatcher() {
+        public ReportingMatcher<?> matcher() {
             return matcher;
         }
     }

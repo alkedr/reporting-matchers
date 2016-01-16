@@ -7,9 +7,6 @@ import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-
-import static org.apache.commons.collections4.IteratorUtils.singletonIterator;
 
 /**
  * Обёртка для матчеров, которая позволяет сделать любой матчер ReportingMatcher'ом
@@ -38,13 +35,13 @@ public class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements Repor
     }
 
     @Override
-    public Iterator<Object> run(Object item) {
-        return singletonIterator(regularMatcher);
+    public void run(Object item, CheckListener checkListener) {
+        checkListener.simpleMatcher(item, regularMatcher);
     }
 
     @Override
-    public Iterator<Object> runForMissingItem() {
-        return singletonIterator(regularMatcher);
+    public void runForMissingItem(CheckListener checkListener) {
+        checkListener.simpleMatcherForMissingItem(regularMatcher);
     }
 
 
