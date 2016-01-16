@@ -104,8 +104,8 @@ public class ReportingMatchers {
 
 
 
+    // TODO: рекурсивный матчер, который работает как equalTo
     // TODO: compare().fields().getters().with(expected)
-
     public static <T> ComparingReportingMatcherBuilder<T> compare() {
         return new ComparingReportingMatcherBuilder<>();
     }
@@ -162,5 +162,4 @@ public class ReportingMatchers {
 
     // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 
-    // TODO: рекурсивный матчер, который работает как equalTo
 }

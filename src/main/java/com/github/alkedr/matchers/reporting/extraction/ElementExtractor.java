@@ -12,7 +12,7 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
 
-// TODO: сделать универсальным (array, iterable, random access list)
+// умеет работать с массивами, итераблами и списками
 public class ElementExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     private final int index;
 

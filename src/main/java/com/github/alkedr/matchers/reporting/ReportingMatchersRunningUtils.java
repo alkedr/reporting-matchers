@@ -32,6 +32,10 @@ public class ReportingMatchersRunningUtils {
         }
     }
 
+
+    // TODO: отдельная обёртка для Matcher'ов (?и ReportingMatcher'ов?), которая ловит исключения и делает BROKEN
+    // TODO: (сделать ловлю исключений опциональной/настраиваемой)
+    // TODO: м. б. в Iterator<Object> сделать не Matcher, а объект, который умеет добавляться в отчёт?
     private static void runSimpleMatcher(Reporter reporter, Object item, Matcher<?> matcher) {
         boolean matches;
         try {
@@ -159,137 +163,4 @@ public class ReportingMatchersRunningUtils {
             ));
         }
     }
-
-
-
-
-
-
-
-    /*public static void runMatchersAndBuildReport(ReportingMatcher.Reporter reporter, Object item, Matcher<?>... matchers) {
-        runMatchersAndBuildReport(reporter, item, asList(matchers));
-    }
-
-    public static void runMatchersAndBuildReport(ReportingMatcher.Reporter reporter, Object item, Iterable<? extends Matcher<?>> matchers) {
-        runMatchersAndBuildReport(reporter, item, matchers.iterator());
-    }
-
-    public static void runMatchersAndBuildReport(ReportingMatcher.Reporter reporter, Object item, Iterator<? extends Matcher<?>> matchers) {
-        while (matchers.hasNext()) {
-            Matcher<?> matcher = matchers.next();
-            if (matcher instanceof ReportingMatcher) {
-                ReportingMatcher.Checks checks = ((ReportingMatcher<?>) matcher).getChecks(item);
-                runSimpleMatchers(reporter, item, checks.getMatcherIterator());
-                runMatchersAndBuildReport(reporter, item, checks.getKeyValueChecksIterator(), matchers);
-            } else {
-                runSimpleMatcher(reporter, item, matcher);
-            }
-        }
-    }
-
-    private static void runMatchersAndBuildReport(ReportingMatcher.Reporter reporter, Object item,
-                                                  Iterator<ReportingMatcher.KeyValueChecks> firstReportingMatcherKeyValueChecks,
-                                                  Iterator<? extends Matcher<?>> matchers) {
-        while (matchers.hasNext()) {
-            Matcher<?> matcher = matchers.next();
-            if (matcher instanceof ReportingMatcher) {
-                ReportingMatcher.Checks checks = ((ReportingMatcher<?>) matcher).getChecks(item);
-                runSimpleMatchers(reporter, item, checks.getMatcherIterator());
-                runMatchersAndBuildReport(reporter, item, firstReportingMatcherKeyValueChecks, checks.getKeyValueChecksIterator(), matchers);
-            } else {
-                runSimpleMatcher(reporter, item, matcher);
-            }
-        }
-        runKeyValueChecks(reporter, firstReportingMatcherKeyValueChecks);
-    }
-
-    private static void runMatchersAndBuildReport(ReportingMatcher.Reporter reporter, Object item,
-                                                  Iterator<ReportingMatcher.KeyValueChecks> firstReportingMatcherKeyValueChecks,
-                                                  Iterator<ReportingMatcher.KeyValueChecks> secondReportingMatcherKeyValueChecks,
-                                                  Iterator<? extends Matcher<?>> matchers) {
-        Map<ReportingMatcher.KeyValueChecks.Key, ReportingMatcher.KeyValueChecks> keyValueChecksMap = new LinkedHashMap<>();
-        addKeyValueChecksToSet(keyValueChecksMap, firstReportingMatcherKeyValueChecks);
-        addKeyValueChecksToSet(keyValueChecksMap, secondReportingMatcherKeyValueChecks);
-        while (matchers.hasNext()) {
-            Matcher<?> matcher = matchers.next();
-            if (matcher instanceof ReportingMatcher) {
-                ReportingMatcher.Checks checks = ((ReportingMatcher<?>) matcher).getChecks(item);
-                runSimpleMatchers(reporter, item, checks.getMatcherIterator());
-                addKeyValueChecksToSet(keyValueChecksMap, checks.getKeyValueChecksIterator());
-            } else {
-                runSimpleMatcher(reporter, item, matcher);
-            }
-        }
-        runKeyValueChecks(reporter, keyValueChecksMap.values().iterator());
-    }
-
-    private static void addKeyValueChecksToSet(Map<ReportingMatcher.KeyValueChecks.Key, ReportingMatcher.KeyValueChecks> keyValueChecksMap,
-                                               Iterator<ReportingMatcher.KeyValueChecks> keyValueChecksIterator) {
-        keyValueChecksIterator.forEachRemaining(keyValueChecks -> addKeyValueChecksToSet(keyValueChecksMap, keyValueChecks));
-    }
-
-    private static void addKeyValueChecksToSet(Map<ReportingMatcher.KeyValueChecks.Key, ReportingMatcher.KeyValueChecks> keyValueChecksMap,
-                                               ReportingMatcher.KeyValueChecks keyValueChecks) {
-        keyValueChecksMap.merge(
-                keyValueChecks.getKey(),
-                keyValueChecks,
-                (v1, v2) -> {
-                    // TODO: merge
-                    return new ReportingMatcher.KeyValueChecks(
-                            v1.getKey(),
-                            v1.getValue(),  // TODO: проверить на несоответствия
-                            new ReportingMatcher.KeyValueChecks.Checks() {
-                                @Override
-                                public ReportingMatcher.PresenceStatus getExpectedPresenceStatus() {
-                                    return v1.getChecks().getExpectedPresenceStatus();  // TODO: проверить на несоответствия
-                                }
-
-                                @Override
-                                public Iterator<? extends Matcher<?>> getMatcherIterator() {
-                                    return chainedIterator(v1.getChecks().getMatcherIterator(), v2.getChecks().getMatcherIterator());
-                                }
-                            }
-                    );
-                }
-        );
-    }
-
-    private static void runSimpleMatchers(ReportingMatcher.Reporter reporter, Object item, Iterator<Matcher<?>> matcherIterator) {
-        matcherIterator.forEachRemaining(matcher -> runSimpleMatcher(reporter, item, matcher));
-    }
-
-    private static void runSimpleMatcher(ReportingMatcher.Reporter reporter, Object item, Matcher<?> matcher) {
-        // TODO: сделать ловлю исключений настраиваемой?
-        boolean matches;
-        try {
-            matches = matcher.matches(item);
-        } catch (RuntimeException e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw, true);
-            e.printStackTrace(pw);
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.BROKEN, sw.getBuffer().toString());
-            return;
-        }
-        if (matches) {
-            // TODO: подсовывать свой Description, который отлавливает equalTo и is
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.PASSED, StringDescription.toString(matcher));
-        } else {
-            Description stringDescription = new StringDescription()
-                    .appendText("Expected: ")
-                    .appendDescriptionOf(matcher)
-                    .appendText("\n     but: ");
-            matcher.describeMismatch(item, stringDescription);
-            reporter.addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, stringDescription.toString());
-        }
-    }
-
-    private static void runKeyValueChecks(ReportingMatcher.Reporter reporter, Iterator<ReportingMatcher.KeyValueChecks> keyValueCheckses) {
-        keyValueCheckses.forEachRemaining(keyValueChecks -> runKeyValueChecks(reporter, keyValueChecks));
-    }
-
-    private static void runKeyValueChecks(ReportingMatcher.Reporter reporter, ReportingMatcher.KeyValueChecks keyValueChecks) {
-        reporter.beginKeyValuePair(keyValueChecks.getKey().asString(), null, keyValueChecks.getValue().asString());
-        runMatchersAndBuildReport(reporter, keyValueChecks.getValue().get(), keyValueChecks.getChecks().getMatcherIterator());
-        reporter.endKeyValuePair();
-    }*/
 }

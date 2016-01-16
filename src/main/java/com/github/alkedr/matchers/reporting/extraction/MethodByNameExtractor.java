@@ -28,6 +28,7 @@ public class MethodByNameExtractor implements ExtractingMatcher.Extractor, Repor
         if (item == null) {
             return new ExtractingMatcher.KeyValue(this, missing());
         }
+        // TODO: исключения, null
         Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));   // TODO: исключения, null
         return new MethodExtractor(method, arguments).extractFrom(item);
     }
