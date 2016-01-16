@@ -3,21 +3,17 @@ package com.github.alkedr.matchers.reporting;
 import com.github.alkedr.matchers.reporting.comparison.ComparingReportingMatcherBuilder;
 import com.github.alkedr.matchers.reporting.extraction.*;
 import com.github.alkedr.matchers.reporting.utility.SequenceMatcher;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
-import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcherBuilder.extractedValue;
 import static java.util.Arrays.asList;
 
 // используй static import
+// TODO: использовать здесь только интерфейсы из корневого пакета?
 public class ReportingMatchers {
 
     @SafeVarargs
@@ -31,7 +27,11 @@ public class ReportingMatchers {
 
 
     // TODO: noOp() ?
+    // TODO: merge() ?
     // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
+    // TODO: everyElement(), everyArrayElement()
+    // TODO: elementsThatAre(predicate/matcher).alsoAre()
+    // TODO: method(lambda), getter(lambda)
 
 
     // пробивает доступ к private, protected и package-private полям
@@ -59,6 +59,14 @@ public class ReportingMatchers {
         return new SimpleMethodByNameExtractingMatcher<>(methodName, arguments);
     }
 
+    // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
+    // если метод не найден, то бросает исключение в matches()
+    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
+        // Получить класс из параметра function'а?
+        // Mockito вроде как не требует конструктора без параметров, значит это возможно
+        return new SimpleMethodByLambdaExtractingMatcher<>(function);
+    }
+
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
@@ -70,18 +78,29 @@ public class ReportingMatchers {
         return new GetterMethodByNameExtractingMatcher<>(methodName);
     }
 
+    // как method(), только убирает 'get' и 'is'
+//    public static <T> ExtractingMatcher<T> getter(Function<T, ?> function) {
+//        return new GetterMethodByLambdaExtractingMatcher<>(function);
+//    }
+
 
     public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
-        return extractedValue(new ArrayElementExtractor(index));
+        return new ElementExtractingMatcher<>(index);
     }
 
+    // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcher<List<T>> element(int index) {
-        return extractedValue(new ElementExtractingMatcher(index));
+        return new ElementExtractingMatcher<>(index);
+    }
+
+    // O(N)
+    public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
+        return new ElementExtractingMatcher<>(index);
     }
 
 
     public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return extractedValue(new ValueForKeyExtractor(key));
+        return new ValueForKeyExtractingMatcher<>(key);
     }
 
 
@@ -123,25 +142,25 @@ public class ReportingMatchers {
 
     // TODO: метод, который принимает мапу и лямбду, которая преобразовывает значение в матчер, то же для массивов и списков?
 
-    public static <E> ReportingMatcher<List<E>> listWithElements(Collection<E> elements) {
+    /*public static <E> ReportingMatcher<List<E>> listWithElements(Collection<E> elements) {
         return listWithElementsMatching(
                 elements.stream()
                         .map(CoreMatchers::equalTo)
                         .collect(Collectors.toList())
         );
     }
-
+*/
     // TODO: пробовать пропускать элементы чтобы лишний элемент в начале списка не сделал весь список красным?
     // если не использовать uncheckedIsFail() и извлекатель непроверенных элементов, то непроверенные элементы в конце
     // будут проигнорированы, даже в отчёт не попадут, в будущем поведение может измениться
-    public static <E> ReportingMatcher<List<E>> listWithElementsMatching(Iterable<Matcher<E>> matchers) {
+    /*public static <E> ReportingMatcher<List<E>> listWithElementsMatching(Iterable<Matcher<E>> matchers) {
         Collection<ReportingMatcher<List<E>>> elementMatchers = new ArrayList<>();
         int i = 0;
         for (Matcher<E> matcher : matchers) {
             elementMatchers.add(ReportingMatchers.<E>element(i++).is(matcher));
         }
         return sequence(elementMatchers);
-    }
+    }*/
 
     // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 

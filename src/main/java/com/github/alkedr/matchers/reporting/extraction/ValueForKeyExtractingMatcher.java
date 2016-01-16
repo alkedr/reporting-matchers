@@ -9,15 +9,15 @@ import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
 
-public class ValueForKeyExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
+public class ValueForKeyExtractingMatcher<T extends Map<?, ?>> extends ExtractingMatcher<T> implements ReportingMatcher.Key {
     private final Object key;
 
-    public ValueForKeyExtractor(Object key) {
+    public ValueForKeyExtractingMatcher(Object key) {
         this.key = key;
     }
 
     @Override
-    public KeyValue extractFrom(Object item) {
+    protected KeyValue extractFrom(Object item) {
         try {
             if (item == null || !((Map<?, ?>) item).containsKey(key)) {
                 return new KeyValue(this, missing());
@@ -29,7 +29,7 @@ public class ValueForKeyExtractor implements ExtractingMatcher.Extractor, Report
     }
 
     @Override
-    public KeyValue extractFromMissingItem() {
+    protected KeyValue extractFromMissingItem() {
         return new KeyValue(this, missing());
     }
 
@@ -42,7 +42,7 @@ public class ValueForKeyExtractor implements ExtractingMatcher.Extractor, Report
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ValueForKeyExtractor that = (ValueForKeyExtractor) o;
+        ValueForKeyExtractingMatcher<?> that = (ValueForKeyExtractingMatcher<?>) o;
         return Objects.equals(key, that.key);
     }
 

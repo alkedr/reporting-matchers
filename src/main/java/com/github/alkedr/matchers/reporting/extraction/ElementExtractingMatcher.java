@@ -40,11 +40,11 @@ public class ElementExtractingMatcher<T> extends ExtractingMatcher<T> implements
         if (item instanceof Iterable) {
             item = ((Iterable<?>) item).iterator();
         }
-        if (item instanceof Iterator) {
+        if (item instanceof Iterator) {  // iterator не нужен потмоу что по нему можно пройти только 1 раз?
             // TODO: missing если выход за границы
             return new KeyValue(this, present(IteratorUtils.get((Iterator<?>) item, index)));
         }
-        return new KeyValue(this, broken(new RuntimeException()));   // FIXME
+        return new KeyValue(this, broken(new RuntimeException()));   // FIXME ClassCastException? своё исключение?
     }
 
     @Override

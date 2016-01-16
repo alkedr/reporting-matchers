@@ -1,25 +1,10 @@
 package com.github.alkedr.matchers.reporting.comparison;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.ReportingMatchers;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hamcrest.Matcher;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
-
-import static java.lang.Character.isUpperCase;
-import static java.lang.reflect.Modifier.isStatic;
-import static java.lang.reflect.Modifier.isTransient;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 // сравнивает два объекта рекурсивно с пом. рефлексии
 // позволяет задавать некоторые правила проверки для отдельных классов и их полей
@@ -57,7 +42,7 @@ public class ComparingReportingMatcherBuilder<T> {
 
 
 
-    public static class FieldsMatcherBuilder<T> {
+    /*public static class FieldsMatcherBuilder<T> {
         private final Predicate<Field> predicate;
 
         public FieldsMatcherBuilder(Predicate<Field> predicate) {
@@ -127,5 +112,5 @@ public class ComparingReportingMatcherBuilder<T> {
                             ((method.getName().length() > 3 && method.getName().startsWith("get") && isUpperCase(method.getName().charAt(3))) ||
                                     (method.getName().length() > 2 && method.getName().startsWith("is") && isUpperCase(method.getName().charAt(2))));
         }
-    }
+    }*/
 }

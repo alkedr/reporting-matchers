@@ -1,17 +1,11 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher;
-import com.github.alkedr.matchers.reporting.extraction.ExtractingMatcherBuilder;
-import org.junit.Test;
-
-import static org.mockito.Mockito.mock;
-
 public class ExtractingMatcherBuilderTest {
-    private static final String NAME = "123";
-    private static final String NAME2 = "234";
-    private static final ExtractingMatcher.Extractor EXTRACTOR = mock(ExtractingMatcher.Extractor.class);
-    private static final ExtractingMatcher.Extractor EXTRACTOR2 = mock(ExtractingMatcher.Extractor.class);
-    private static final ReportingMatcher<?> MATCHER = mock(ReportingMatcher.class);
+//    private static final String NAME = "123";
+//    private static final String NAME2 = "234";
+//    private static final ExtractingMatcher.Extractor EXTRACTOR = mock(ExtractingMatcher.Extractor.class);
+//    private static final ExtractingMatcher.Extractor EXTRACTOR2 = mock(ExtractingMatcher.Extractor.class);
+//    private static final ReportingMatcher<?> MATCHER = mock(ReportingMatcher.class);
 
 //    private final ExtractingMatcherBuilder<Object> emb = new ExtractingMatcherBuilder<>(NAME, EXTRACTOR, MATCHER);
 
@@ -39,7 +33,7 @@ public class ExtractingMatcherBuilderTest {
 //    public void is_matcher() {
 //        checkEqualToOne(NAME, EXTRACTOR, emb.is(equalTo(1)));
 //    }
-
+/*
     @Test
     public void is_reportingMatcher() {
 //        checkEqualToOne(NAME, EXTRACTOR, emb.is(toReportingMatcher(equalTo(1))));
@@ -67,5 +61,5 @@ public class ExtractingMatcherBuilderTest {
 //        assertSame(expectedExtractor, emb.getExtractor());
 //        assertTrue(emb.getMatcher().matches(1));
 //        assertFalse(emb.getMatcher().matches(2));
-    }
+    }*/
 }

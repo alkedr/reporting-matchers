@@ -1,12 +1,9 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extraction.MethodByNameExtractingMatcher;
-import org.junit.Test;
-
 public class Extractors_ObjectMethodByNameExtractorTest {
     private final MyClass item = new MyClass();
 
-    @Test(expected = NullPointerException.class)
+    /*@Test(expected = NullPointerException.class)
     public void nullMethod() {
         new MethodByNameExtractingMatcher(null);
     }
@@ -15,7 +12,7 @@ public class Extractors_ObjectMethodByNameExtractorTest {
     public void nullArgumentsArray() {
         new MethodByNameExtractingMatcher("returnArg", (Object[]) null);
     }
-
+*/
     /*@Test
     public void nullItem() {
         assertReflectionEquals(missing(), new Extractors.MethodByNameExtractor("returnArg", 1).extractFrom(null));

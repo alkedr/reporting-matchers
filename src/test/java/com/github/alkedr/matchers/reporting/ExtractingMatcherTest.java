@@ -1,11 +1,47 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher;
+import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
 import static org.mockito.Mockito.mock;
 
 public class ExtractingMatcherTest {
-    private static final String NAME = "NAME";
+
+    static class X {
+        X(int a){}
+
+        int getX() {
+            return 5;
+        }
+    }
+
+    static  {
+        mock(X.class);
+    }
+
+    @Test
+    public void lambda() throws Exception {
+        f(X::getX);
+    }
+
+    @Test
+    public void inlineClass() throws Exception {
+        f(new Function<X, Object>() {
+            @Override
+            public Object apply(X x) {
+                return x.getX();
+            }
+        });
+    }
+
+    <T> void f(Function<T, ?> function) throws InvocationTargetException, IllegalAccessException {
+        System.out.println(function.getClass().getMethods()[0].getGenericParameterTypes()[0]);
+//        function.getClass().getMethods()[0].invoke(function, mock());
+        function.getClass().getMethods()[0].invoke(function, mock(function.getClass().getMethods()[0].getParameterTypes()[0]));
+    }
+    /*private static final String NAME = "NAME";
     private static final String BROKEN_ERROR_MESSAGE = "BROKEN_ERROR_MESSAGE";
     private final ExtractingMatcher.Extractor normalExtractor = mock(ExtractingMatcher.Extractor.class);
     private final ExtractingMatcher.Extractor missingExtractor = mock(ExtractingMatcher.Extractor.class);
@@ -16,7 +52,7 @@ public class ExtractingMatcherTest {
     private static final String EXTRACTED_ITEM_AS_STRING = "EXTRACTED_ITEM_AS_STRING";
 
     private final ReportingMatcher<Object> matcher = mock(ReportingMatcher.class);
-    private final Reporter reporter = mock(Reporter.class);
+    private final Reporter reporter = mock(Reporter.class);*/
 
     /*@Before
     public void setUp() {
