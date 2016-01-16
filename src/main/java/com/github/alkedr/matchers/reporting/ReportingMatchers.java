@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.extraction.ExtractedValueNameUtils.getterNameToPropertyName;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.getterNameToPropertyName;
 import static java.util.Arrays.asList;
 
 // используй static import

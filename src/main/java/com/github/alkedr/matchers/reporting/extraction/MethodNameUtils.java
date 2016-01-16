@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting.extraction;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
-public class ExtractedValueNameUtils {
+public class MethodNameUtils {
     // TODO: тесты
     // TODO: что делать с очень большими toString()?
     public static String createMethodValueName(String methodName, Object... arguments) {

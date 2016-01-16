@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
-import static com.github.alkedr.matchers.reporting.extraction.ExtractedValueNameUtils.createMethodValueName;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createMethodValueName;
 
 public class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     protected final String methodName;
