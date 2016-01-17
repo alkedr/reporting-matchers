@@ -38,6 +38,12 @@ import java.util.Iterator;
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
 
+
+    Checks run(Value value);
+
+
+
+
     // Обёртки не имеют права менять порядок, в котором обходятся итераторы, потому что итераторы IteratorMatcher'а
     // влияют друг на друга
     // Даже hasNext() нельзя вызывать
@@ -139,6 +145,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         }
 
         // TODO: переименовать
+        // TODO: throw если presenceStatus != PRESENT?  Optional?
         public Object get() {
             return object;
         }
@@ -170,8 +177,10 @@ public interface ReportingMatcher<T> extends Matcher<T> {
 
 
     class Checks {
-        private final PresenceStatus expectedPresenceStatus;
-        private final ReportingMatcher<?> matcher;
+        private final PresenceStatus expectedPresenceStatus;   // nullable
+        private final Iterator<Matcher<?>> matcherIterator;
+        private final Iterator<KeyValueChecks> keyValueChecksIterator;
+//        private final ReportingMatcher<?> matcher;
 
         public Checks(PresenceStatus expectedPresenceStatus, ReportingMatcher<?> matcher) {
             this.expectedPresenceStatus = expectedPresenceStatus;

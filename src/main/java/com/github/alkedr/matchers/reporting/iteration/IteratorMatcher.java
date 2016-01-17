@@ -17,14 +17,14 @@ public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T
 
 
     /*
-    Сначала вызываются element(), потом getMissingKeyValueChecksIterator(), потому end()
+    Сначала вызываются begin(), потом element(), потом getMissingElements(), потому end()
     То, что возвращает getMissingKeyValueChecksIterator присоединяется к основной группе (в которой все элементы)
      */
     public interface Checker {
+        Checks begin();
         Checks element(Key key, Value value);
-        // Вызывается после element()
-        Iterator<KeyValueChecks> getMissingKeyValueChecksIterator();
-        void end(CheckListener checkListener);
+        Iterator<KeyValueChecks> getMissingElements();
+        Checks end();
     }
 
 
