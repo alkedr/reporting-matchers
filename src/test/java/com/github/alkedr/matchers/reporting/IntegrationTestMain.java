@@ -23,7 +23,7 @@ public class IntegrationTestMain {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                 Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 reporter.beginReport();
-                isCorrectUser().run(USER, new ReportingCheckListener(reporter));
+                isCorrectUser().getChecks(USER, new ReportingCheckListener(reporter));
                 reporter.endReport();
             }
         }

@@ -9,7 +9,7 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
     @Override
     public boolean matches(Object item) {
         MatchesFlagRecordingReporter reporter = new MatchesFlagRecordingReporter();
-        run(item, new ReportingCheckListener(reporter));
+        getChecks(item, new ReportingCheckListener(reporter));
         return reporter.getMatchesFlag();
     }
 }

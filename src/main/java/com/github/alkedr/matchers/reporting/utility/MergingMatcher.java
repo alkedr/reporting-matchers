@@ -14,7 +14,7 @@ public class MergingMatcher<T> extends BaseReportingMatcher<T> {
     @Override
     public void run(Object item, CheckListener checkListener) {
         MergingCheckListener mergingCheckListener = new MergingCheckListener(checkListener);
-        reportingMatcher.run(item, mergingCheckListener);
+        reportingMatcher.getChecks(item, mergingCheckListener);
         mergingCheckListener.flush();
     }
 

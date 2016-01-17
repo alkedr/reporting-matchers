@@ -39,59 +39,7 @@ import java.util.Iterator;
 public interface ReportingMatcher<T> extends Matcher<T> {
 
 
-    Checks run(Value value);
-
-
-
-
-    // Обёртки не имеют права менять порядок, в котором обходятся итераторы, потому что итераторы IteratorMatcher'а
-    // влияют друг на друга
-    // Даже hasNext() нельзя вызывать
-    interface CheckListener {
-        void simpleMatcher(Object item, Matcher<?> matcher);
-        void simpleMatcherForMissingItem(Matcher<?> matcher);
-
-        // KeyValueChecks внутри группы не объединяются MergingCheckListener'ом
-        // Если матчер не может гарантировать, что его KeyValueChecks не нуждаются в объединении, он должен
-        // сделать несколько вызовов keyValueChecksGroup
-        void keyValueChecksGroup(Iterator<KeyValueChecks> keyValueChecksGroup);
-
-
-        // TODO: сделать KeyValueChecksGroup классом с equals() и hashCode?
-        // Или KeyGroup?
-        // KeyGroup - набор элементов, по которым можно итерироваться
-        // Например "все поля", "все методы без параметров", "все элементы массива/итерабла/мапы" и пр.
-        // Объединять
-    }
-
-    /**
-     * Проверяет item, добавляет всю информацию о проверках в reporter.
-     *
-     * Обычно этот метод не нужно вызывать напрямую.
-     *
-     * @param item объект, который нужно проверить
-     * @return TODO: описать Matcher<?> и Iterator<KeyValueChecks>
-     *
-     *     TODO: точно ли нужна возможность добавлять простые матчеры отсюда?
-     *     может можно sequence(simpleMatcher, reportingMatcher)?
-     *
-     *     не разделено на два метода потому что так надо для эффективного объединения
-     */
-    void run(Object item, CheckListener checkListener);
-
-    /**
-     * Добавляет в reporter информацию о проверках, которые были бы выполнены если бы был вызван метод
-     * {@link #run(Object)}.
-     *
-     * Этот метод используется в случаях наподобие "хотели проверить элемент массива №3, но в массиве было два
-     * элемента". В таком случае в отчёте будет отображён элемент №3 и все проверки, которые должны были запуститься
-     * на нём.
-     *
-     * Обычно этот метод не нужно вызывать напрямую.
-     *
-     * @return
-     */
-    void runForMissingItem(CheckListener checkListener);
+    Checks getChecks(Value value);
 
 
     // TODO: Написать документацию о том, какие поля когда могут быть нулл
@@ -177,28 +125,125 @@ public interface ReportingMatcher<T> extends Matcher<T> {
 
 
     class Checks {
+        // TODO: сделать Iterator<Object>, но спрятать его в этом классе? даже перенести сюда объединение?
+        // abstract class Checks implements Iterator<Object>, несколько более дружелюбных реализаций
+
+        // Iterator<Matcher<PresenceStatus>> ?
         private final PresenceStatus expectedPresenceStatus;   // nullable
         private final Iterator<Matcher<?>> matcherIterator;
         private final Iterator<KeyValueChecks> keyValueChecksIterator;
-//        private final ReportingMatcher<?> matcher;
 
-        public Checks(PresenceStatus expectedPresenceStatus, ReportingMatcher<?> matcher) {
+        public Checks(PresenceStatus expectedPresenceStatus, Iterator<Matcher<?>> matcherIterator,
+                      Iterator<KeyValueChecks> keyValueChecksIterator) {
             this.expectedPresenceStatus = expectedPresenceStatus;
-            this.matcher = matcher;
+            this.matcherIterator = matcherIterator;
+            this.keyValueChecksIterator = keyValueChecksIterator;
         }
 
         public PresenceStatus expectedPresenceStatus() {
             return expectedPresenceStatus;
         }
 
-        public ReportingMatcher<?> matcher() {
-            return matcher;
+        public Iterator<Matcher<?>> getMatcherIterator() {
+            return matcherIterator;
         }
+
+        public Iterator<KeyValueChecks> getKeyValueChecksIterator() {
+            return keyValueChecksIterator;
+        }
+
+
+        // TODO: run(item, reporter)?
     }
 
 
     enum PresenceStatus {
         PRESENT,
         MISSING,
+    }
+
+
+
+    abstract class Checks2 implements Iterator<Object> {
+
+        // TODO: run(item, reporter)?
+    }
+
+    // TODO: если сделать поле, то будет проще, можно будет заюзать Iterators.*
+
+    // TODO: переименовать
+    class SequencedChecks extends Checks2 {
+        public SequencedChecks(Iterator<Checks2> checks2s) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            return null;
+        }
+    }
+
+    class MergedChecks extends Checks2 {
+        public MergedChecks(Iterator<Checks2> checks2s) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            return null;
+        }
+    }
+
+    class PresenceCheck extends Checks2 {
+        public PresenceCheck(PresenceStatus presenceStatus) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            return null;
+        }
+    }
+
+    class SimpleMatchersCheck extends Checks2 {
+        public SimpleMatchersCheck(Iterator<Matcher<?>> matcherIterator) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            return null;
+        }
+    }
+
+    class KeyValueChecksCheck extends Checks2 {
+        public KeyValueChecksCheck(Iterator<KeyValueChecks> matcherIterator) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            return null;
+        }
     }
 }

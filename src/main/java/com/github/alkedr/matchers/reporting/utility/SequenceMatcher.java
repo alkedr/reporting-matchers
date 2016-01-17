@@ -17,7 +17,7 @@ public class SequenceMatcher<T> extends BaseReportingMatcher<T> {
     @Override
     public void run(Object item, CheckListener checkListener) {
         for (ReportingMatcher<? super T> reportingMatcher : matchers) {
-            reportingMatcher.run(item, checkListener);
+            reportingMatcher.getChecks(item, checkListener);
         }
     }
 
