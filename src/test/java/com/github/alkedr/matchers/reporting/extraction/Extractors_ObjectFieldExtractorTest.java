@@ -1,6 +1,24 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
+import org.junit.Test;
+
+import java.util.function.Function;
+
 public class Extractors_ObjectFieldExtractorTest {
+
+    static class X {
+        int y = 1;
+    }
+
+    @Test
+    public void test() {
+        new FieldByLambdaExtractor<>((X x) -> x.y).extractFrom(new Object());
+        f((X x) -> x.y);
+    }
+
+    private <T> void f(Function<T, Object> function) {
+    }
+    
     /*private final Field inaccessibleField;
     private final MyClass item = new MyClass();
 

@@ -3,6 +3,7 @@ package com.github.alkedr.matchers.reporting.extraction;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
+@Deprecated
 public class MethodNameUtils {
     // TODO: тесты
     // TODO: что делать с очень большими toString()?

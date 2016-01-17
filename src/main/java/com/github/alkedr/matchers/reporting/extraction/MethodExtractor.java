@@ -11,16 +11,19 @@ import java.util.Objects;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForRegularMethodInvocation;
 import static java.lang.reflect.Modifier.isStatic;
 
 public class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
-    protected final Method method;
-    protected final Object[] arguments;
+    private final MethodKind methodKind;
+    private final Method method;
+    private final Object[] arguments;
 
-    public MethodExtractor(Method method, Object... arguments) {
+    public MethodExtractor(MethodKind methodKind, Method method, Object... arguments) {
+        Validate.notNull(methodKind, "methodKind");
         Validate.notNull(method, "method");
         Validate.notNull(arguments, "arguments");
+        // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
+        this.methodKind = methodKind;
         this.method = method;
         this.arguments = Arrays.copyOf(arguments, arguments.length);
     }
@@ -47,7 +50,7 @@ public class MethodExtractor implements ExtractingMatcher.Extractor, ReportingMa
 
     @Override
     public String asString() {
-        return createNameForRegularMethodInvocation(method.getName(), arguments);
+        return methodKind.invocationToString(method.getName(), arguments);
     }
 
     @Override

@@ -9,7 +9,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
+import static com.github.alkedr.matchers.reporting.extraction.MethodKind.GETTER_METHOD;
+import static com.github.alkedr.matchers.reporting.extraction.MethodKind.REGULAR_METHOD;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -37,26 +38,26 @@ public class ReportingMatchers {
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(Field field) {
-        return new ExtractingMatcher<>(null, new FieldExtractor(field), null);
+        return new ExtractingMatcher<>(new FieldExtractor(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(String fieldName) {
-        return new ExtractingMatcher<>(null, new FieldByNameExtractor(fieldName), null);
+        return new ExtractingMatcher<>(new FieldByNameExtractor(fieldName));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(null, new MethodExtractor(method, arguments), null);
+        return new ExtractingMatcher<>(new MethodExtractor(REGULAR_METHOD, method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(null, new MethodByNameExtractor(methodName, arguments), null);
+        return new ExtractingMatcher<>(new MethodByNameExtractor(REGULAR_METHOD, methodName, arguments));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -68,12 +69,12 @@ public class ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new MethodExtractor(method), null);
+        return new ExtractingMatcher<>(new MethodExtractor(GETTER_METHOD, method));
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new MethodByNameExtractor(methodName), null);
+        return new ExtractingMatcher<>(new MethodByNameExtractor(GETTER_METHOD, methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -83,22 +84,22 @@ public class ReportingMatchers {
 
 
     public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
+        return new ExtractingMatcher<>(new ElementExtractor(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcher<List<T>> element(int index) {
-        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
+        return new ExtractingMatcher<>(new ElementExtractor(index));
     }
 
     // O(N)
     public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(null, new ElementExtractor(index), null);
+        return new ExtractingMatcher<>(new ElementExtractor(index));
     }
 
 
     public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(null, new ValueForKeyExtractingMatcher(key), null);
+        return new ExtractingMatcher<>(new ValueForKeyExtractingMatcher(key));
     }
 
 

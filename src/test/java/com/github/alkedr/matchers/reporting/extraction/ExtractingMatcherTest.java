@@ -1,151 +1,81 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.github.alkedr.matchers.reporting.testutils.CheckListenerUtils;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.PresenceStatus.MISSING;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
+import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher.DEFAULT_CHECKS;
+import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 public class ExtractingMatcherTest {
-    /*private final Object item = new Object();
-    private final Object extractedItem = new Object();
-    private final String extractedItemAsString = "123";
+    private final Object item = new Object();
     private final ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
     private final ReportingMatcher.Key key = mock(ReportingMatcher.Key.class);
-    private final ReportingMatcher.Value value = present(extractedItem, extractedItemAsString);
-    private final ExtractingMatcher.KeyValue keyValue = new ExtractingMatcher.KeyValue(key, value);
+    private final ReportingMatcher.Value value1 = present(new Object(), "1");
+    private final ReportingMatcher.Value value2 = present(new Object(), "2");
+    private final ReportingMatcher.CheckListener checkListener = mock(ReportingMatcher.CheckListener.class);
 
     @Before
     public void setUp() {
-        when(extractor.extractFrom(item)).thenReturn(keyValue);
+        when(extractor.extractFrom(item)).thenReturn(new ExtractingMatcher.KeyValue(key, value1));
+        when(extractor.extractFromMissingItem()).thenReturn(new ExtractingMatcher.KeyValue(key, value2));
     }
+
 
     @Test
     public void run() {
-        checkRunResults(
-                new ExtractingMatcher<>(null, extractor, null).run(item),
-                contains(keyValueChecks(key, value, DEFAULT_CHECKS))
-        );
-    }
-
-    private static void checkRunResults(Iterator<Object> runResults, Matcher<?>... matchers) {
-        List<Object> list = IteratorUtils.toList(runResults).stream()
-                .map(o -> o instanceof Iterator ? IteratorUtils.toList((Iterator<?>) o) : o)
-                .collect(Collectors.toList());
-        assertThat(list, new IsIterableContainingInOrder<>((List<Matcher<? super Object>>)(Object) asList(matchers)));
-    }
-
-    private static Matcher<ReportingMatcher.KeyValueChecks> keyValueChecks(ReportingMatcher.Key key,
-                                                                           ReportingMatcher.Value value,
-                                                                           ReportingMatcher.Checks checks) {
-        return allOf(
-                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Key>(sameInstance(key), "key", "key") {
-                    @Override
-                    protected ReportingMatcher.Key featureValueOf(ReportingMatcher.KeyValueChecks actual) {
-                        return actual.key();
-                    }
-                },
-
-                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Value>(sameInstance(value), "value", "value") {
-                    @Override
-                    protected ReportingMatcher.Value featureValueOf(ReportingMatcher.KeyValueChecks actual) {
-                        return actual.value();
-                    }
-                },
-
-                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Checks>(sameInstance(checks), "checks", "checks") {
-                    @Override
-                    protected ReportingMatcher.Checks featureValueOf(ReportingMatcher.KeyValueChecks actual) {
-                        return actual.checks();
-                    }
-                }
-        );
-    }*/
-
-
-
-
-
-    /*private static final String NAME = "NAME";
-    private static final String BROKEN_ERROR_MESSAGE = "BROKEN_ERROR_MESSAGE";
-    private final ExtractingMatcher.Extractor normalExtractor = mock(ExtractingMatcher.Extractor.class);
-    private final ExtractingMatcher.Extractor missingExtractor = mock(ExtractingMatcher.Extractor.class);
-    private final ExtractingMatcher.Extractor brokenExtractor = mock(ExtractingMatcher.Extractor.class);
-
-    private final Object item = new Object();
-    private final Object extractedItem = new Object();
-    private static final String EXTRACTED_ITEM_AS_STRING = "EXTRACTED_ITEM_AS_STRING";
-
-    private final ReportingMatcher<Object> matcher = mock(ReportingMatcher.class);
-    private final Reporter reporter = mock(Reporter.class);*/
-
-    /*@Before
-    public void setUp() {
-        when(normalExtractor.extractFrom(item)).thenReturn(normal(EXTRACTED_ITEM_AS_STRING, extractedItem));
-        when(missingExtractor.extractFrom(item)).thenReturn(missing());
-        when(brokenExtractor.extractFrom(item)).thenReturn(broken(BROKEN_ERROR_MESSAGE));
+        new ExtractingMatcher<>(null, extractor, null).run(item, checkListener);
+        CheckListenerUtils.verifyKvcGroup(checkListener, CheckListenerUtils.kvc(key, value1, DEFAULT_CHECKS));
+        verifyNoMoreInteractions(checkListener);
     }
 
     @Test
-    public void getters() {
-        String name = "123";
-        ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
-        ReportingMatcher<?> matcher = mock(ReportingMatcher.class);
-        ExtractingMatcher<Object> extractingMatcher = new ExtractingMatcher<>(name, extractor, matcher);
-        assertSame(name, extractingMatcher.getName());
-        assertSame(extractor, extractingMatcher.getExtractor());
-        assertSame(matcher, extractingMatcher.getMatcher());
+    public void runForMissingItem() {
+        new ExtractingMatcher<>(null, extractor, null).runForMissingItem(checkListener);
+        CheckListenerUtils.verifyKvcGroup(checkListener, CheckListenerUtils.kvc(key, value2, DEFAULT_CHECKS));
+        verifyNoMoreInteractions(checkListener);
+    }
+
+
+    @Test
+    public void nameInConstructor() {
+        String customName = "12345";
+        new ExtractingMatcher<>(customName, extractor, null).runForMissingItem(checkListener);
+        CheckListenerUtils.verifyKvcGroup(checkListener, CheckListenerUtils.kvc(renamedKey(customName, key), sameInstance(value2), sameInstance(DEFAULT_CHECKS)));
+        verifyNoMoreInteractions(checkListener);
     }
 
     @Test
-    public void run_normal() {
-        new ExtractingMatcher<>(NAME, normalExtractor, matcher).run(item, reporter);
-        verifyNormal();
-    }
-
-    @Test
-    public void run_missing() {
-        new ExtractingMatcher<>(NAME, missingExtractor, matcher).run(item, reporter);
-        verifyMissing();
-    }
-
-    @Test
-    public void run_broken() {
-        new ExtractingMatcher<>(NAME, brokenExtractor, matcher).run(item, reporter);
-        verifyBroken();
-    }
-
-    @Test
-    public void runForMissingItem_normal() {
-        new ExtractingMatcher<>(NAME, normalExtractor, matcher).runForMissingItem(reporter);
-        verifyMissing();
-    }
-
-    @Test
-    public void runForMissingItem_missing() {
-        new ExtractingMatcher<>(NAME, missingExtractor, matcher).runForMissingItem(reporter);
-        verifyMissing();
-    }
-
-    @Test
-    public void runForMissingItem_broken() {
-        new ExtractingMatcher<>(NAME, brokenExtractor, matcher).runForMissingItem(reporter);
-        verifyMissing();
+    public void checksInConstructor() {
+        ReportingMatcher.Checks customChecks = new ReportingMatcher.Checks(MISSING, noOp());
+        new ExtractingMatcher<>(null, extractor, customChecks).runForMissingItem(checkListener);
+        CheckListenerUtils.verifyKvcGroup(checkListener, CheckListenerUtils.kvc(key, value2, customChecks));
+        verifyNoMoreInteractions(checkListener);
     }
 
 
-    private void verifyNormal() {
-        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, NORMAL, EXTRACTED_ITEM_AS_STRING);
-        inOrder(matcher, reporter).verify(matcher).run(extractedItem, reporter);
-        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
-        verifyNoMoreInteractions(matcher, reporter);
-    }
+    // TODO: тесты на fluent API
+    // TODO: тесты на RenamedKey
 
-    private void verifyMissing() {
-        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, MISSING, "");
-        inOrder(matcher, reporter).verify(matcher).runForMissingItem(reporter);
-        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
-        verifyNoMoreInteractions(matcher, reporter);
-    }
 
-    private void verifyBroken() {
-        inOrder(matcher, reporter).verify(reporter).beginKeyValuePair(NAME, BROKEN, BROKEN_ERROR_MESSAGE);
-        inOrder(matcher, reporter).verify(matcher).runForMissingItem(reporter);
-        inOrder(matcher, reporter).verify(reporter).endKeyValuePair();
-        verifyNoMoreInteractions(matcher, reporter);
-    }*/
+    public static Matcher<ReportingMatcher.Key> renamedKey(String customName, ReportingMatcher.Key key) {
+        return new CustomMatcher<ReportingMatcher.Key>("RenamedKey{" + customName + ", " + key + "}") {
+            @Override
+            public boolean matches(Object item) {
+                return item instanceof ExtractingMatcher.RenamedKey
+                        && ((ExtractingMatcher.RenamedKey) item).name == customName
+                        && ((ExtractingMatcher.RenamedKey) item).key == key
+                        ;
+            }
+        };
+    }
 }

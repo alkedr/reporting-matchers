@@ -10,15 +10,17 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForRegularMethodInvocation;
 
 public class MethodByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
-    protected final String methodName;
-    protected final Object[] arguments;
+    private final MethodKind methodKind;
+    private final String methodName;
+    private final Object[] arguments;
 
-    public MethodByNameExtractor(String methodName, Object... arguments) {
+    public MethodByNameExtractor(MethodKind methodKind, String methodName, Object... arguments) {
+        Validate.notNull(methodKind, "methodKind");
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
+        this.methodKind = methodKind;
         this.methodName = methodName;
         this.arguments = Arrays.copyOf(arguments, arguments.length);
     }
@@ -29,8 +31,9 @@ public class MethodByNameExtractor implements ExtractingMatcher.Extractor, Repor
             return new ExtractingMatcher.KeyValue(this, missing());
         }
         // TODO: исключения, null
+        // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
         Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));   // TODO: исключения, null
-        return new MethodExtractor(method, arguments).extractFrom(item);
+        return new MethodExtractor(methodKind, method, arguments).extractFrom(item);
     }
 
     @Override
@@ -40,7 +43,7 @@ public class MethodByNameExtractor implements ExtractingMatcher.Extractor, Repor
 
     @Override
     public String asString() {
-        return createNameForRegularMethodInvocation(methodName, arguments);
+        return methodKind.invocationToString(methodName, arguments);
     }
 
     @Override

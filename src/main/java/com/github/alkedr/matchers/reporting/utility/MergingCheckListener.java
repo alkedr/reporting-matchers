@@ -65,7 +65,7 @@ public class MergingCheckListener implements ReportingMatcher.CheckListener {
         if (first.hasNext()) {
             next.keyValueChecksGroup(first);
         }
-        if (!map.isEmpty()) {
+        if (map != null && !map.isEmpty()) {
             next.keyValueChecksGroup(map.values().iterator());
         }
     }

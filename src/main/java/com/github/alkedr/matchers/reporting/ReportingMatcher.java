@@ -5,6 +5,17 @@ import org.hamcrest.Matcher;
 import java.util.Iterator;
 
 /**
+ *
+ * 2 виде матчеров:
+ *   ExtractingMatcher - извлекает 1 значение и проверяет его
+ *   IteratingMatcher - перечисляет все значения, передаёт их своим миньонам, которые добавляют проверки
+ *
+ *   ExtractingMatcher можно рассматривать как частный случай IteratingMatcher'а
+ *   Он перечисляет все значения (одно), и добавляет для него одну проверку
+ *
+ *
+ *
+ *
  * ----ReportingMatcher - матчер, который умеет строить отчёт о результатах проверок.----
  *
  * -------
@@ -27,6 +38,9 @@ import java.util.Iterator;
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
 
+    // Обёртки не имеют права менять порядок, в котором обходятся итераторы, потому что итераторы IteratorMatcher'а
+    // влияют друг на друга
+    // Даже hasNext() нельзя вызывать
     interface CheckListener {
         void simpleMatcher(Object item, Matcher<?> matcher);
         void simpleMatcherForMissingItem(Matcher<?> matcher);
@@ -35,6 +49,13 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         // Если матчер не может гарантировать, что его KeyValueChecks не нуждаются в объединении, он должен
         // сделать несколько вызовов keyValueChecksGroup
         void keyValueChecksGroup(Iterator<KeyValueChecks> keyValueChecksGroup);
+
+
+        // TODO: сделать KeyValueChecksGroup классом с equals() и hashCode?
+        // Или KeyGroup?
+        // KeyGroup - набор элементов, по которым можно итерироваться
+        // Например "все поля", "все методы без параметров", "все элементы массива/итерабла/мапы" и пр.
+        // Объединять
     }
 
     /**
@@ -123,7 +144,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         }
 
         public String asString() {
-            return asString;
+            return asString == null ? String.valueOf(object) : asString;
         }
 
         public Throwable extractionThrowable() {

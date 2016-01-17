@@ -26,6 +26,10 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     private final Extractor extractor;
     private final Checks checks;
 
+    public ExtractingMatcher(Extractor extractor) {
+        this(null, extractor, null);
+    }
+
     // name и checks могут быть null
     public ExtractingMatcher(String name, Extractor extractor, Checks checks) {
         this.name = name;
@@ -119,9 +123,9 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     // TODO: должен ли RenamedKey объединяться с непереименованным Key?
-    private static class RenamedKey implements Key {
-        private final Key key;
-        private final String name;
+    static class RenamedKey implements Key {
+        final Key key;
+        final String name;
 
         RenamedKey(Key key, String name) {
             this.key = key;
