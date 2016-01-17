@@ -1,15 +1,7 @@
 package com.github.alkedr.matchers.reporting.utility;
 
-import com.github.alkedr.matchers.reporting.Reporter;
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.StringDescription;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Iterator;
-
+/*
+@Deprecated
 public class ReportingCheckListener implements ReportingMatcher.CheckListener {
     private final Reporter reporter;
     private final ReportingMatcher.CheckListener checkListenerForRecursiveCalls;  // для многоступенчатых обёрток
@@ -69,3 +61,4 @@ public class ReportingCheckListener implements ReportingMatcher.CheckListener {
         reporter.endKeyValuePair();
     }
 }
+*/

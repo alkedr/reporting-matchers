@@ -2,31 +2,39 @@ package com.github.alkedr.matchers.reporting.utility;
 
 import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
+// TODO: поддерживать простые матчеры
 public class MergingMatcher<T> extends BaseReportingMatcher<T> {
-    private final ReportingMatcher<T> reportingMatcher;
+    private final Iterable<? extends ReportingMatcher<? super T>> matchers;
 
-    public MergingMatcher(ReportingMatcher<T> reportingMatcher) {
-        this.reportingMatcher = reportingMatcher;
+    public MergingMatcher(Iterable<? extends ReportingMatcher<? super T>> matchers) {
+        this.matchers = matchers;
     }
 
     @Override
-    public void run(Object item, CheckListener checkListener) {
-        MergingCheckListener mergingCheckListener = new MergingCheckListener(checkListener);
-        reportingMatcher.getChecks(item, mergingCheckListener);
-        mergingCheckListener.flush();
+    public Checks getChecks(Object item) {
+        return Checks.merge(
+                Iterators.transform(
+                        matchers.iterator(),
+                        matcher -> matcher.getChecks(item)
+                )
+        );
     }
 
     @Override
-    public void runForMissingItem(CheckListener checkListener) {
-        MergingCheckListener mergingCheckListener = new MergingCheckListener(checkListener);
-        reportingMatcher.runForMissingItem(mergingCheckListener);
-        mergingCheckListener.flush();
+    public Checks getChecksForMissingItem() {
+        return Checks.merge(
+                Iterators.transform(
+                        matchers.iterator(),
+                        matcher -> matcher.getChecksForMissingItem()
+                )
+        );
     }
 
     @Override
     public void describeTo(Description description) {
-        reportingMatcher.describeTo(description);
+//        reportingMatcher.describeTo(description);
     }
 }

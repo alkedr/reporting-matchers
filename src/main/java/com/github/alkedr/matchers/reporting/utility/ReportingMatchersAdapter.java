@@ -20,6 +20,16 @@ public class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements Repor
     }
 
     @Override
+    public Checks getChecks(Object item) {
+        return Checks.matchers(regularMatcher);
+    }
+
+    @Override
+    public Checks getChecksForMissingItem() {
+        return Checks.matchers(regularMatcher);
+    }
+
+    @Override
     public boolean matches(Object item) {
         return regularMatcher.matches(item);
     }
@@ -32,16 +42,6 @@ public class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements Repor
     @Override
     public void describeMismatch(Object item, Description description) {
         regularMatcher.describeMismatch(item, description);
-    }
-
-    @Override
-    public void run(Object item, CheckListener checkListener) {
-        checkListener.simpleMatcher(item, regularMatcher);
-    }
-
-    @Override
-    public void runForMissingItem(CheckListener checkListener) {
-        checkListener.simpleMatcherForMissingItem(regularMatcher);
     }
 
 

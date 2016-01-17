@@ -22,11 +22,12 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
-        public void run(Object item, CheckListener checkListener) {
+        public Checks getChecks(Object item) {
+            return Checks.noOp();
         }
 
         @Override
-        public void runForMissingItem(CheckListener checkListener) {
+        public Checks getChecksForMissingItem() {
             throw new UnsupportedOperationException();
         }
 
@@ -38,12 +39,12 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
         @Override
-        public void run(Object item, CheckListener checkListener) {
-            checkListener.simpleMatcher(item, not(CoreMatchers.anything()));
+        public Checks getChecks(Object item) {
+            return Checks.matchers(not(CoreMatchers.anything()));
         }
 
         @Override
-        public void runForMissingItem(CheckListener checkListener) {
+        public Checks getChecksForMissingItem() {
             throw new UnsupportedOperationException();
         }
 

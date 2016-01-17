@@ -3,11 +3,9 @@ package com.github.alkedr.matchers.reporting.extraction;
 import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import com.github.alkedr.matchers.reporting.utility.MergingMatcher;
-import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
 import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
 import static com.github.alkedr.matchers.reporting.utility.ReportingMatchersAdapter.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.utility.ReportingMatchersAdapter.toReportingMatchers;
@@ -20,33 +18,49 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
-    static final Checks DEFAULT_CHECKS = new Checks(PresenceStatus.PRESENT, noOp());
-
     private final String name;
     private final Extractor extractor;
-    private final Checks checks;
+    private final ReportingMatcher<?> matcher;
 
     public ExtractingMatcher(Extractor extractor) {
-        this(null, extractor, null);
+        this(null, extractor, noOp());
     }
 
     // name и checks могут быть null
-    public ExtractingMatcher(String name, Extractor extractor, Checks checks) {
+    public ExtractingMatcher(String name, Extractor extractor, ReportingMatcher<?> matcher) {
         this.name = name;
         this.extractor = extractor;
-        this.checks = checks == null ? DEFAULT_CHECKS : checks;
+        this.matcher = matcher;
     }
 
 
     @Override
-    public void run(Object item, CheckListener checkListener) {
-        runImpl(extractor.extractFrom(item), checkListener);
+    public Checks getChecks(Object item) {
+        KeyValue keyValue = extractor.extractFrom(item);
+        return getChecksImpl(
+                keyValue,
+                keyValue.value.presenceStatus() == PresenceStatus.PRESENT
+                        ? matcher.getChecks(keyValue.value.get())
+                        : matcher.getChecksForMissingItem()
+        );
     }
 
     @Override
-    public void runForMissingItem(CheckListener checkListener) {
-        runImpl(extractor.extractFromMissingItem(), checkListener);
+    public Checks getChecksForMissingItem() {
+        return getChecksImpl(extractor.extractFromMissingItem(), matcher.getChecksForMissingItem());
     }
+
+
+    private Checks getChecksImpl(KeyValue keyValue, Checks checks) {
+        return Checks.keyValueChecks(
+                new KeyValueChecks(
+                        name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
+                        keyValue.value,
+                        checks
+                )
+        );
+    }
+
 
     @Override
     public void describeTo(Description description) {
@@ -56,16 +70,13 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
 
 
     public ExtractingMatcher<T> displayedAs(String newName) {
-        return new ExtractingMatcher<>(newName, extractor, checks);
+        return new ExtractingMatcher<>(newName, extractor, matcher);
     }
 
     public ExtractingMatcher<T> extractor(Extractor newExtractor) {
-        return new ExtractingMatcher<>(name, newExtractor, checks);
+        return new ExtractingMatcher<>(name, newExtractor, matcher);
     }
 
-    public ExtractingMatcher<T> checks(Checks newChecks) {
-        return new ExtractingMatcher<>(name, extractor, newChecks);
-    }
 
     // Заменяет, а не добавляет матчеры?
     public ExtractingMatcher<T> is(Object value) {
@@ -73,36 +84,22 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     public ExtractingMatcher<T> is(Matcher<?> matcher) {
-        return is(toReportingMatcher(matcher));
+        return new ExtractingMatcher<>(name, extractor, toReportingMatcher(matcher));
     }
 
-    public ExtractingMatcher<T> is(ReportingMatcher<?> matcher) {
-        return checks(new Checks(PresenceStatus.PRESENT, matcher));
-    }
-
-    public <U> ExtractingMatcher<T> is(Matcher<? super U>... matchers) {
+    @SafeVarargs
+    public final <U> ExtractingMatcher<T> is(Matcher<? super U>... matchers) {
         return is(asList(matchers));
     }
 
     public <U> ExtractingMatcher<T> is(Iterable<? extends Matcher<? super U>> matchers) {
-        return is(new MergingMatcher<>(sequence(toReportingMatchers(matchers))));
+        return is(new MergingMatcher<>(toReportingMatchers(matchers)));
     }
 
     // TODO: are, returns
     // TODO: isPresent(), isAbsent()
 
 
-
-
-    private void runImpl(KeyValue keyValue, CheckListener checkListener) {
-        checkListener.keyValueChecksGroup(new SingletonIterator<>(
-                new KeyValueChecks(
-                        name == null ? keyValue.key : new RenamedKey(keyValue.key, name),
-                        keyValue.value,
-                        checks
-                )
-        ));
-    }
 
 
     // TODO: TypeSafeExtractor ?

@@ -1,14 +1,5 @@
 package com.github.alkedr.matchers.reporting.utility;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import org.hamcrest.Matcher;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static java.util.Collections.emptyIterator;
-
 /*
 Объединяет KeyValueChecks с объединяемыми ключами
 Переносит простые матчеры в начало
@@ -27,6 +18,7 @@ import static java.util.Collections.emptyIterator;
 
 TODO: всегда игнорировать пустые итераторы
  */
+/*
 public class MergingCheckListener implements ReportingMatcher.CheckListener {
     private final ReportingMatcher.CheckListener next;
     private Iterator<ReportingMatcher.KeyValueChecks> first = emptyIterator();
@@ -83,3 +75,4 @@ public class MergingCheckListener implements ReportingMatcher.CheckListener {
         ));
     }
 }
+*/

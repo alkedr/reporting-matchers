@@ -1,8 +1,17 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.google.common.collect.Iterators;
+import org.apache.commons.collections4.iterators.SingletonIterator;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyIterator;
 
 /**
  *
@@ -38,8 +47,8 @@ import java.util.Iterator;
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
 
-
-    Checks getChecks(Value value);
+    Checks getChecks(Object item);
+    Checks getChecksForMissingItem();
 
 
     // TODO: Написать документацию о том, какие поля когда могут быть нулл
@@ -68,6 +77,12 @@ public interface ReportingMatcher<T> extends Matcher<T> {
     }
 
 
+    enum PresenceStatus {
+        PRESENT,
+        MISSING,
+    }
+
+
     interface Key {
         String asString();
         @Override boolean equals(Object other);
@@ -79,7 +94,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         private final PresenceStatus presenceStatus;
         private final Object object;
         private final String asString;
-        private final Throwable extractionThrowable;
+        private final Throwable extractionThrowable;  // FIXME: это штука ExtractingMatcher'а
 
         Value(PresenceStatus presenceStatus, Object object, String asString, Throwable extractionThrowable) {
             this.presenceStatus = presenceStatus;
@@ -93,7 +108,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         }
 
         // TODO: переименовать
-        // TODO: throw если presenceStatus != PRESENT?  Optional?
+        // TODO: throw если presenceStatus != PRESENT?
         public Object get() {
             return object;
         }
@@ -105,6 +120,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         public Throwable extractionThrowable() {
             return extractionThrowable;
         }
+
 
         public static Value present(Object object) {
             return present(object, null);
@@ -124,126 +140,176 @@ public interface ReportingMatcher<T> extends Matcher<T> {
     }
 
 
+    // TODO: непонятно что делать с expectedPresenceStatus
+    // как его объединять?
+    // как передать его репортеру в самом начале?
+    // отображать presenceStatus как матчер?
+    // TODO: Visitor?
     class Checks {
-        // TODO: сделать Iterator<Object>, но спрятать его в этом классе? даже перенести сюда объединение?
-        // abstract class Checks implements Iterator<Object>, несколько более дружелюбных реализаций
+        private final Iterator<?> checksIterator;
 
-        // Iterator<Matcher<PresenceStatus>> ?
-        private final PresenceStatus expectedPresenceStatus;   // nullable
-        private final Iterator<Matcher<?>> matcherIterator;
-        private final Iterator<KeyValueChecks> keyValueChecksIterator;
-
-        public Checks(PresenceStatus expectedPresenceStatus, Iterator<Matcher<?>> matcherIterator,
-                      Iterator<KeyValueChecks> keyValueChecksIterator) {
-            this.expectedPresenceStatus = expectedPresenceStatus;
-            this.matcherIterator = matcherIterator;
-            this.keyValueChecksIterator = keyValueChecksIterator;
+        public Checks(Iterator<?> checksIterator) {
+            this.checksIterator = checksIterator;
         }
 
-        public PresenceStatus expectedPresenceStatus() {
-            return expectedPresenceStatus;
-        }
-
-        public Iterator<Matcher<?>> getMatcherIterator() {
-            return matcherIterator;
-        }
-
-        public Iterator<KeyValueChecks> getKeyValueChecksIterator() {
-            return keyValueChecksIterator;
+        public void run(Object item, Reporter reporter) {
+            while (checksIterator.hasNext()) {
+                Object next = checksIterator.next();
+                if (next instanceof PresenceStatus) {   // TODO: вынести if'ы в метод, принимающий лямбды?
+                    runPresenceStatusForPresentItem(item, reporter, (PresenceStatus) next);
+                } else if (next instanceof Matcher) {
+                    runMatcherForPresentItem(item, reporter, (Matcher<?>) next);
+                } else if (next instanceof KeyValueChecks) {
+                    runKeyValueChecksForPresentItem(item, reporter, (KeyValueChecks) next);
+                } else {
+                    throw new RuntimeException();  // FIXME
+                }
+            }
         }
 
 
-        // TODO: run(item, reporter)?
-    }
-
-
-    enum PresenceStatus {
-        PRESENT,
-        MISSING,
-    }
-
-
-
-    abstract class Checks2 implements Iterator<Object> {
-
-        // TODO: run(item, reporter)?
-    }
-
-    // TODO: если сделать поле, то будет проще, можно будет заюзать Iterators.*
-
-    // TODO: переименовать
-    class SequencedChecks extends Checks2 {
-        public SequencedChecks(Iterator<Checks2> checks2s) {
+        public static Checks noOp() {
+            return new Checks(emptyIterator());
         }
 
-        @Override
-        public boolean hasNext() {
-            return false;
+
+        public static Checks presenceStatus(PresenceStatus expectedPresenceStatus) {
+            return new Checks(new SingletonIterator<>(expectedPresenceStatus));
         }
 
-        @Override
-        public Object next() {
-            return null;
-        }
-    }
-
-    class MergedChecks extends Checks2 {
-        public MergedChecks(Iterator<Checks2> checks2s) {
+        public static Checks present() {
+            return presenceStatus(PresenceStatus.PRESENT);
         }
 
-        @Override
-        public boolean hasNext() {
-            return false;
+        public static Checks missing() {
+            return presenceStatus(PresenceStatus.MISSING);
         }
 
-        @Override
-        public Object next() {
-            return null;
-        }
-    }
 
-    class PresenceCheck extends Checks2 {
-        public PresenceCheck(PresenceStatus presenceStatus) {
+        public static Checks matchers(Iterator<Matcher<?>> matchersIterator) {
+            return new Checks(matchersIterator);
         }
 
-        @Override
-        public boolean hasNext() {
-            return false;
+        public static Checks matchers(Iterable<Matcher<?>> matchersIterable) {
+            return matchers(matchersIterable.iterator());
         }
 
-        @Override
-        public Object next() {
-            return null;
-        }
-    }
-
-    class SimpleMatchersCheck extends Checks2 {
-        public SimpleMatchersCheck(Iterator<Matcher<?>> matcherIterator) {
+        public static Checks matchers(Matcher<?>... matchersArray) {
+            return matchers(asList(matchersArray));
         }
 
-        @Override
-        public boolean hasNext() {
-            return false;
+
+        public static Checks keyValueChecks(Iterator<KeyValueChecks> keyValueChecksIterator) {
+            return new Checks(keyValueChecksIterator);
         }
 
-        @Override
-        public Object next() {
-            return null;
-        }
-    }
-
-    class KeyValueChecksCheck extends Checks2 {
-        public KeyValueChecksCheck(Iterator<KeyValueChecks> matcherIterator) {
+        public static Checks keyValueChecks(Iterable<KeyValueChecks> keyValueChecksIterable) {
+            return keyValueChecks(keyValueChecksIterable.iterator());
         }
 
-        @Override
-        public boolean hasNext() {
-            return false;
+        public static Checks keyValueChecks(KeyValueChecks... keyValueChecksArray) {
+            return keyValueChecks(asList(keyValueChecksArray));
         }
 
-        @Override
-        public Object next() {
-            return null;
+
+        public static Checks sequence(Iterator<Checks> checksIterator) {
+            return new Checks(
+                    Iterators.concat(
+                            Iterators.transform(
+                                    checksIterator,
+                                    checks -> checks.checksIterator
+                            )
+                    )
+            );
+        }
+
+        public static Checks sequence(Iterable<Checks> checksIterable) {
+            return sequence(checksIterable.iterator());
+        }
+
+        public static Checks sequence(Checks... checksArray) {
+            return sequence(asList(checksArray));
+        }
+
+
+        public static Checks merge(Iterator<Checks> checksIterator) {
+            return sequence(checksIterator);  //TODO
+        }
+
+        public static Checks merge(Iterable<Checks> checksIterable) {
+            return sequence(checksIterable.iterator());
+        }
+
+        public static Checks merge(Checks... checksArray) {
+            return sequence(asList(checksArray));
+        }
+
+
+
+        private static void runPresenceStatusForPresentItem(Object item, Reporter reporter, PresenceStatus next) {
+            // TODO
+        }
+
+        private static void runMatcherForPresentItem(Object item, Reporter reporter, Matcher<?> matcher) {
+            boolean matches;
+            try {
+                matches = matcher.matches(item);
+            } catch (RuntimeException e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw, true);
+                e.printStackTrace(pw);
+                reporter.addCheck(Reporter.CheckStatus.BROKEN, sw.getBuffer().toString());
+                return;
+            }
+            if (matches) {
+                // TODO: подсовывать свой Description, который отлавливает equalTo и is
+                reporter.addCheck(Reporter.CheckStatus.PASSED, StringDescription.toString(matcher));
+            } else {
+                Description stringDescription = new StringDescription()
+                        .appendText("Expected: ")
+                        .appendDescriptionOf(matcher)
+                        .appendText("\n     but: ");
+                matcher.describeMismatch(item, stringDescription);
+                reporter.addCheck(Reporter.CheckStatus.FAILED, stringDescription.toString());
+            }
+        }
+
+        private static void runKeyValueChecksForPresentItem(Object item, Reporter reporter, KeyValueChecks kvc) {
+            reporter.beginKeyValuePair(kvc.key().asString(), null, kvc.value().asString());
+            // TODO: missing, broken etc
+            if (kvc.value().presenceStatus() == PresenceStatus.PRESENT) {
+                kvc.checks().run(kvc.value().get(), reporter);
+            } else {
+                kvc.checks().runForMissingItem(reporter);
+            }
+            reporter.endKeyValuePair();
+        }
+
+        private void runForMissingItem(Reporter reporter) {
+            while (checksIterator.hasNext()) {
+                Object next = checksIterator.next();
+                if (next instanceof PresenceStatus) {
+                    runPresenceStatusForMissingItem(reporter, (PresenceStatus) next);
+                } else if (next instanceof Matcher) {
+                    runMatcherForMissingItem(reporter, (Matcher<?>) next);
+                } else if (next instanceof KeyValueChecks) {
+                    runKeyValueChecksForMissingItem(reporter, (KeyValueChecks) next);
+                } else {
+                    throw new RuntimeException();  // FIXME
+                }
+            }
+        }
+
+        private void runPresenceStatusForMissingItem(Reporter reporter, PresenceStatus presenceStatus) {
+
+        }
+
+        private void runMatcherForMissingItem(Reporter reporter, Matcher<?> matcher) {
+
+        }
+
+        private void runKeyValueChecksForMissingItem(Reporter reporter, KeyValueChecks kvc) {
+
         }
     }
 }

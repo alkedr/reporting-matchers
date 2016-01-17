@@ -8,16 +8,16 @@ import org.hamcrest.Description;
 public class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     private static final NoOpMatcher<?> INSTANCE = new NoOpMatcher<>();
 
-
     @Override
-    public void run(Object item, CheckListener checkListener) {
-
+    public Checks getChecks(Object item) {
+        return Checks.noOp();
     }
 
     @Override
-    public void runForMissingItem(CheckListener checkListener) {
-
+    public Checks getChecksForMissingItem() {
+        return Checks.noOp();
     }
+
 
     @Override
     public boolean matches(Object item) {

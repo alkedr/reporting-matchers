@@ -1,23 +1,7 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.testutils.CheckListenerUtils;
-import org.hamcrest.CustomMatcher;
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.PresenceStatus.MISSING;
-import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
-import static com.github.alkedr.matchers.reporting.extraction.ExtractingMatcher.DEFAULT_CHECKS;
-import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 public class ExtractingMatcherTest {
-    private final Object item = new Object();
+    /*private final Object item = new Object();
     private final ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
     private final ReportingMatcher.Key key = mock(ReportingMatcher.Key.class);
     private final ReportingMatcher.Value value1 = present(new Object(), "1");
@@ -77,5 +61,5 @@ public class ExtractingMatcherTest {
                         ;
             }
         };
-    }
+    }*/
 }

@@ -1,12 +1,7 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-
-import java.util.Iterator;
-
-import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
-
 // TODO: возможность пропускать элементы если это позволяет уменьшить кол-во красного
+/*
 public class InSpecifiedOrderIteratorMatcher<T> extends IteratorMatcher<T> {
     private final Iterable<ReportingMatcher<T>> matchers;
 
@@ -44,7 +39,8 @@ public class InSpecifiedOrderIteratorMatcher<T> extends IteratorMatcher<T> {
             return null;
         }
 
-        /*@Override
+        */
+/*@Override
         public Iterator<Object> end() {
             return null;
 //            return Iterators.concat(Iterators.transform(matchers, ReportingMatcher::runForMissingItem));
@@ -53,6 +49,8 @@ public class InSpecifiedOrderIteratorMatcher<T> extends IteratorMatcher<T> {
         @Override
         public Iterator<Object> end2() {
             return emptyIterator();
-        }*/
+        }*//*
+
     }
 }
+*/

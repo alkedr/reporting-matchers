@@ -1,19 +1,6 @@
 package com.github.alkedr.matchers.reporting.testutils;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import org.apache.commons.collections4.IteratorUtils;
-import org.hamcrest.FeatureMatcher;
-import org.hamcrest.Matcher;
-import org.mockito.ArgumentCaptor;
-
-import java.util.Iterator;
-
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.inOrder;
-
+/*
 public class CheckListenerUtils {
     @SafeVarargs
     public static void verifyKvcGroup(ReportingMatcher.CheckListener checkListener,
@@ -58,3 +45,4 @@ public class CheckListenerUtils {
         );
     }
 }
+*/

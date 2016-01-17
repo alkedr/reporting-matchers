@@ -1,8 +1,6 @@
 package com.github.alkedr.matchers.reporting.iteration;
 
 import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
-import com.github.alkedr.matchers.reporting.extraction.ElementExtractor;
-import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
 import java.util.Iterator;
@@ -12,14 +10,14 @@ import java.util.Iterator;
 // TODO: поддерживать массивы, итераторы, итераблы ?мапы?  (это всё обёртки для IteratorMatcher, которые преобразовывают item)
 public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
 
-    protected abstract Checker createChecker();
+   /* protected abstract Checker createChecker();
 
 
 
-    /*
+    *//*
     Сначала вызываются begin(), потом element(), потом getMissingElements(), потому end()
     То, что возвращает getMissingKeyValueChecksIterator присоединяется к основной группе (в которой все элементы)
-     */
+     *//*
     public interface Checker {
         Checks begin();
         Checks element(Key key, Value value);
@@ -130,7 +128,7 @@ public abstract class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T
 
     private static Iterator<KeyValueChecks> createSecondKeyValueChecksGroupElementsIterator(Checker checker) {
         return null;
-    }
+    }*/
 
     /*@Override
     public Iterator<Object> run(Object item) {
