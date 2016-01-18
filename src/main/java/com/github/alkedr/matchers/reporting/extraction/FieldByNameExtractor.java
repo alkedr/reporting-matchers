@@ -5,6 +5,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 
 public class FieldByNameExtractor extends FieldByNameKey implements ExtractingMatcher.Extractor {
@@ -17,8 +18,14 @@ public class FieldByNameExtractor extends FieldByNameKey implements ExtractingMa
         if (item == null) {
             return new ExtractingMatcher.KeyValue(this, missing());
         }
-        Field field = FieldUtils.getField(item.getClass(), getFieldName(), true);  // TODO: проверить исключения, null
-        return new FieldExtractor(field).extractFrom(item);
+        Field field;
+        try {
+            field = FieldUtils.getField(item.getClass(), getFieldName(), true);  // TODO: проверить исключения, null
+        } catch (IllegalArgumentException e) {
+            return new ExtractingMatcher.KeyValue(this, broken(e));
+        }
+        // TODO: broken если нет такого поля?
+        return field == null ? new ExtractingMatcher.KeyValue(this, missing()) : new FieldExtractor(field).extractFrom(item);
     }
 
     @Override

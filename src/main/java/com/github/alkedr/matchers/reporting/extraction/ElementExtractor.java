@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
 import com.github.alkedr.matchers.reporting.keys.ElementKey;
-import org.apache.commons.collections4.IteratorUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,13 +32,17 @@ public class ElementExtractor extends ElementKey implements ExtractingMatcher.Ex
             return new ExtractingMatcher.KeyValue(this, present(list.get(getIndex())));
         }
         if (item instanceof Iterable) {
-            item = ((Iterable<?>) item).iterator();
+            Iterator<?> iterator = ((Iterable<?>) item).iterator();
+            int currentIndex = 0;
+            while (iterator.hasNext()) {
+                Object currentElement = iterator.next();
+                if (currentIndex == getIndex()) {
+                    return new ExtractingMatcher.KeyValue(this, present(currentElement));
+                }
+            }
+            return new ExtractingMatcher.KeyValue(this, missing());
         }
-        if (item instanceof Iterator) {  // iterator не нужен потмоу что по нему можно пройти только 1 раз?
-            // TODO: missing если выход за границы
-            return new ExtractingMatcher.KeyValue(this, present(IteratorUtils.get((Iterator<?>) item, getIndex())));
-        }
-        return new ExtractingMatcher.KeyValue(this, broken(new RuntimeException()));   // FIXME ClassCastException? своё исключение?
+        return new ExtractingMatcher.KeyValue(this, broken(new ClassCastException()));   // FIXME ClassCastException? своё исключение?
     }
 
     @Override

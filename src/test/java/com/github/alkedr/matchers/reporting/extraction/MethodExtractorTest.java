@@ -1,6 +1,15 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.github.alkedr.matchers.reporting.keys.MethodKey;
+import org.junit.Test;
+
 import java.lang.reflect.Method;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 public class MethodExtractorTest {
     private final Method inaccessibleMethod;
@@ -14,68 +23,94 @@ public class MethodExtractorTest {
         throwingMethod = MyClass.class.getDeclaredMethod("throwingMethod");
     }
 
+    // TODO преобразование метода наследника к методу родителя для объединения?
 
-    /*@Test(expected = NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void nullMethod() {
-        new MethodExtractingMatcher(null);
+        new MethodExtractor(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArgumentsArray() {
-        new MethodExtractingMatcher(inaccessibleMethod, (Object[]) null);
+        new MethodExtractor(inaccessibleMethod, (Object[]) null);
     }
-*/
-    /*@Test
+
+    @Test
     public void nullItem() {
-        assertReflectionEquals(missing(), new Extractors.MethodExtractor(inaccessibleMethod, 1).extractFrom(null));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new MethodKey(inaccessibleMethod, 1), ReportingMatcher.Value.missing()),
+                new MethodExtractor(inaccessibleMethod, 1).extractFrom(null)
+        );
     }
 
     @Test
     public void inaccessibleMethodWithArguments() {
-        assertReflectionEquals(normal("2", 2), new Extractors.MethodExtractor(inaccessibleMethod, 2).extractFrom(item));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new MethodKey(inaccessibleMethod, 2), ReportingMatcher.Value.present(2)),
+                new MethodExtractor(inaccessibleMethod, 2).extractFrom(item)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments() {
-        assertReflectionEquals(normal("3", 3), new Extractors.MethodExtractor(inaccessibleStaticMethod, 3).extractFrom(item));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new MethodKey(inaccessibleStaticMethod, 3), ReportingMatcher.Value.present(3)),
+                new MethodExtractor(inaccessibleStaticMethod, 3).extractFrom(item)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments_nullItem() {
-        assertReflectionEquals(normal("3", 3), new Extractors.MethodExtractor(inaccessibleStaticMethod, 3).extractFrom(null));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new MethodKey(inaccessibleStaticMethod, 3), ReportingMatcher.Value.present(3)),
+                new MethodExtractor(inaccessibleStaticMethod, 3).extractFrom(null)
+        );
     }
 
     @Test
     public void itemHasWrongClass() {
-        ExtractingMatcher.Extractor.ExtractedValue actual = new Extractors.MethodExtractor(inaccessibleMethod, 1).extractFrom(new Object());
-        assertEquals(BROKEN, actual.getStatus());
-        assertThat(actual.getValueAsString(), containsString("IllegalArgumentException"));
-        assertNull(actual.getValue());
+        ExtractingMatcher.KeyValue actual = new MethodExtractor(inaccessibleMethod, 1).extractFrom(new Object());
+        assertEquals(new MethodKey(inaccessibleMethod, 1), actual.key);
+        assertEquals(ReportingMatcher.PresenceStatus.MISSING, actual.value.presenceStatus());
+        assertNull(actual.value.get());
+        assertSame(IllegalArgumentException.class, actual.value.extractionThrowable().getClass());
     }
 
     @Test
     public void wrongParameterCount() {
-        ExtractingMatcher.Extractor.ExtractedValue actual = new Extractors.MethodExtractor(inaccessibleMethod).extractFrom(item);
-        assertEquals(BROKEN, actual.getStatus());
-        assertThat(actual.getValueAsString(), containsString("IllegalArgumentException"));
-        assertNull(actual.getValue());
+        ExtractingMatcher.KeyValue actual = new MethodExtractor(inaccessibleMethod).extractFrom(item);
+        assertEquals(new MethodKey(inaccessibleMethod), actual.key);
+        assertEquals(ReportingMatcher.PresenceStatus.MISSING, actual.value.presenceStatus());
+        assertNull(actual.value.get());
+        assertSame(IllegalArgumentException.class, actual.value.extractionThrowable().getClass());
     }
 
     @Test
     public void wrongParameterType() {
-        ExtractingMatcher.Extractor.ExtractedValue actual = new Extractors.MethodExtractor(inaccessibleMethod, "1").extractFrom(item);
-        assertEquals(BROKEN, actual.getStatus());
-        assertThat(actual.getValueAsString(), containsString("IllegalArgumentException"));
-        assertNull(actual.getValue());
+        ExtractingMatcher.KeyValue actual = new MethodExtractor(inaccessibleMethod, "1").extractFrom(item);
+        assertEquals(new MethodKey(inaccessibleMethod, "1"), actual.key);
+        assertEquals(ReportingMatcher.PresenceStatus.MISSING, actual.value.presenceStatus());
+        assertNull(actual.value.get());
+        assertSame(IllegalArgumentException.class, actual.value.extractionThrowable().getClass());
     }
 
     @Test
     public void throwingMethod() {
-        ExtractingMatcher.Extractor.ExtractedValue actual = new Extractors.MethodExtractor(throwingMethod).extractFrom(item);
-        assertEquals(BROKEN, actual.getStatus());
-        assertThat(actual.getValueAsString(), containsString("RuntimeException"));
-        assertNull(actual.getValue());
-    }*/
+        ExtractingMatcher.KeyValue actual = new MethodExtractor(throwingMethod).extractFrom(item);
+        assertEquals(new MethodKey(throwingMethod), actual.key);
+        assertEquals(ReportingMatcher.PresenceStatus.MISSING, actual.value.presenceStatus());
+        assertNull(actual.value.get());
+        assertSame(RuntimeException.class, actual.value.extractionThrowable().getClass());
+    }
+
+    @Test
+    public void extractFromMissingItem() {
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new MethodKey(inaccessibleMethod, 1), ReportingMatcher.Value.missing()),
+                new MethodExtractor(inaccessibleMethod, 1).extractFromMissingItem()
+        );
+    }
 
 
     private static class MyClass {

@@ -6,6 +6,8 @@ import com.github.alkedr.matchers.reporting.utility.MergingMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import java.util.Objects;
+
 import static com.github.alkedr.matchers.reporting.utility.NoOpMatcher.noOp;
 import static com.github.alkedr.matchers.reporting.utility.ReportingMatchersAdapter.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.utility.ReportingMatchersAdapter.toReportingMatchers;
@@ -121,7 +123,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
         // TODO: геттеры на всякий случай
     }
 
-    // TODO: должен ли RenamedKey объединяться с непереименованным Key?  НЕТ!
+    // не объединяется с непереименованным Key
     static class RenamedKey implements Key {
         final Key key;
         final String name;
@@ -132,18 +134,22 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
         }
 
         @Override
-        public String asString() {
-            return name;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof RenamedKey)) return false;
+            RenamedKey that = (RenamedKey) o;
+            return Objects.equals(key, that.key) &&
+                    Objects.equals(name, that.name);
         }
 
         @Override
         public int hashCode() {
-            return key.hashCode();
+            return Objects.hash(key, name);
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return key.equals(obj);
+        public String asString() {
+            return name;
         }
     }
 }

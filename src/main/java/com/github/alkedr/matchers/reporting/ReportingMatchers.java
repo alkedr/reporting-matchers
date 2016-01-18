@@ -12,8 +12,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodKind.GETTER_METHOD;
-import static com.github.alkedr.matchers.reporting.extraction.MethodKind.REGULAR_METHOD;
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
 import static com.github.alkedr.matchers.reporting.iteration.ContainsInSpecifiedOrderChecker.containsInSpecifiedOrderChecker;
 import static java.util.Arrays.asList;
 
@@ -55,13 +54,13 @@ public class ReportingMatchers {
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(new MethodExtractor(REGULAR_METHOD, method, arguments));
+        return new ExtractingMatcher<>(new MethodExtractor(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(new MethodByNameExtractor(REGULAR_METHOD, methodName, arguments));
+        return new ExtractingMatcher<>(new MethodByNameExtractor(methodName, arguments));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -73,12 +72,12 @@ public class ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new ExtractingMatcher<>(new MethodExtractor(GETTER_METHOD, method));
+        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new MethodExtractor(method), null);
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new ExtractingMatcher<>(new MethodByNameExtractor(GETTER_METHOD, methodName));
+        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new MethodByNameExtractor(methodName), null);
     }
 
     // как method(), только убирает 'get' и 'is'

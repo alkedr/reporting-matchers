@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.broken;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.present;
+import static java.lang.reflect.Modifier.isStatic;
 
 public class FieldExtractor extends FieldKey implements ExtractingMatcher.Extractor {
     public FieldExtractor(Field field) {
@@ -16,7 +17,7 @@ public class FieldExtractor extends FieldKey implements ExtractingMatcher.Extrac
 
     @Override
     public ExtractingMatcher.KeyValue extractFrom(Object item) {
-        if (item == null) {
+        if (item == null && !isStatic(getField().getModifiers())) {
             return new ExtractingMatcher.KeyValue(this, missing());
         }
         try {

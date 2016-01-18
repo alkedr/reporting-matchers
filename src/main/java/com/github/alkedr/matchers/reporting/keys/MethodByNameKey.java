@@ -1,28 +1,22 @@
 package com.github.alkedr.matchers.reporting.keys;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.extraction.MethodKind;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForRegularMethodInvocation;
+
 public class MethodByNameKey implements ReportingMatcher.Key {
-    private final MethodKind methodKind;
     private final String methodName;
     private final Object[] arguments;
 
-    public MethodByNameKey(MethodKind methodKind, String methodName, Object... arguments) {
-        Validate.notNull(methodKind, "methodKind");
+    public MethodByNameKey(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
-        this.methodKind = methodKind;
         this.methodName = methodName;
         this.arguments = Arrays.copyOf(arguments, arguments.length);
-    }
-
-    public MethodKind getMethodKind() {
-        return methodKind;
     }
 
     public String getMethodName() {
@@ -38,18 +32,17 @@ public class MethodByNameKey implements ReportingMatcher.Key {
         if (this == o) return true;
         if (!(o instanceof MethodByNameKey)) return false;
         MethodByNameKey that = (MethodByNameKey) o;
-        return methodKind == that.methodKind &&
-                Objects.equals(methodName, that.methodName) &&
+        return Objects.equals(methodName, that.methodName) &&
                 Arrays.equals(arguments, that.arguments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(methodKind, methodName, arguments);
+        return Objects.hash(methodName, arguments);
     }
 
     @Override
     public String asString() {
-        return methodKind.invocationToString(methodName, arguments);
+        return createNameForRegularMethodInvocation(methodName, arguments);
     }
 }

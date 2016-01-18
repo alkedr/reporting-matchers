@@ -138,7 +138,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         }
 
         public static Value broken(Throwable extractionThrowable) {
-            return new Value(null, null, null, extractionThrowable);
+            return new Value(PresenceStatus.MISSING, null, null, extractionThrowable);
         }
     }
 

@@ -1,31 +1,62 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.github.alkedr.matchers.reporting.keys.HashMapKey;
+import org.junit.Test;
+
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
 public class ValueForKeyExtractorTest {
-    /*@Test
+    @Test
     public void nullItem() {
-        assertReflectionEquals(missing(), new Extractors.ValueForKeyExtractor("1").extractFrom(null));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new HashMapKey("1"), ReportingMatcher.Value.missing()),
+                new ValueForKeyExtractor("1").extractFrom(null)
+        );
     }
 
     @Test
     public void itemIsNotMap() {
-        ExtractingMatcher.Extractor.ExtractedValue actual = new Extractors.ValueForKeyExtractor("1").extractFrom(new Object());
-        assertEquals(BROKEN, actual.getStatus());
-        assertThat(actual.getValueAsString(), containsString("ClassCastException"));
-        assertNull(actual.getValue());
+        ExtractingMatcher.KeyValue actual = new ValueForKeyExtractor("1").extractFrom(new Object());
+        assertEquals(new HashMapKey("1"), actual.key);
+        assertEquals(ReportingMatcher.PresenceStatus.MISSING, actual.value.presenceStatus());
+        assertNull(actual.value.get());
+        assertSame(ClassCastException.class, actual.value.extractionThrowable().getClass());
     }
 
     @Test
     public void keyIsMissing() {
-        assertReflectionEquals(missing(), new Extractors.ValueForKeyExtractor("2").extractFrom(singletonMap("1", "q")));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new HashMapKey("1"), ReportingMatcher.Value.missing()),
+                new ValueForKeyExtractor("1").extractFrom(singletonMap("2", "q"))
+        );
     }
 
     @Test
     public void keyIsPresent() {
-        assertReflectionEquals(normal("q", "q"), new Extractors.ValueForKeyExtractor("1").extractFrom(singletonMap("1", "q")));
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new HashMapKey("1"), ReportingMatcher.Value.present("q")),
+                new ValueForKeyExtractor("1").extractFrom(singletonMap("1", "q"))
+        );
     }
 
     @Test
     public void keyIsPresentButValueIsNull() {
-        assertReflectionEquals(normal("null", null), new Extractors.ValueForKeyExtractor("1").extractFrom(singletonMap("1", null)));
-    }*/
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new HashMapKey("1"), ReportingMatcher.Value.present(null)),
+                new ValueForKeyExtractor("1").extractFrom(singletonMap("1", null))
+        );
+    }
+
+    @Test
+    public void extractFrom_missingItem() {
+        assertReflectionEquals(
+                new ExtractingMatcher.KeyValue(new HashMapKey("1"), ReportingMatcher.Value.missing()),
+                new ValueForKeyExtractor("1").extractFromMissingItem()
+        );
+    }
 }

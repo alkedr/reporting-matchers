@@ -12,8 +12,8 @@ import static java.lang.reflect.Modifier.isStatic;
 
 // TODO: должны ли объединяться method() и getter() ?
 public class MethodExtractor extends MethodKey implements ExtractingMatcher.Extractor {
-    public MethodExtractor(MethodKind methodKind, Method method, Object... arguments) {
-        super(methodKind, method, arguments);
+    public MethodExtractor(Method method, Object... arguments) {
+        super(method, arguments);
     }
 
     @Override

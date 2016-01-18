@@ -5,20 +5,24 @@ import org.junit.Test;
 import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
 import static org.junit.Assert.assertEquals;
 
-public class MethodNameUtils_GetterNameToPropertyNameTest {
+public class MethodNameUtils_CreateNameForGetterMethodInvocationTest {
     @Test
     public void nullAndEmptyInput() {
         assertEquals("", createNameForGetterMethodInvocation(null));
-        assertEquals("", createNameForGetterMethodInvocation(""));
+        verifyNotChanged("");
     }
 
     @Test
     public void noChangeNecessary() {
-        assertEquals("qwerty", createNameForGetterMethodInvocation("qwerty"));
-        assertEquals("get", createNameForGetterMethodInvocation("get"));
-        assertEquals("is", createNameForGetterMethodInvocation("is"));
-        assertEquals("getaway", createNameForGetterMethodInvocation("getaway"));
-        assertEquals("issue", createNameForGetterMethodInvocation("issue"));
+        verifyNotChanged("qwerty");
+        verifyNotChanged("get");
+        verifyNotChanged("is");
+        verifyNotChanged("getaway");
+        verifyNotChanged("issue");
+        verifyNotChanged("is_x");
+        verifyNotChanged("get_x");
+        verifyNotChanged("ISX");
+        verifyNotChanged("GETX");
     }
 
     @Test
@@ -29,5 +33,10 @@ public class MethodNameUtils_GetterNameToPropertyNameTest {
     @Test
     public void removeIs() {
         assertEquals("qwerTy", createNameForGetterMethodInvocation("isQwerTy"));
+    }
+
+
+    private static void verifyNotChanged(String methodName) {
+        assertEquals(methodName, createNameForGetterMethodInvocation(methodName));
     }
 }
