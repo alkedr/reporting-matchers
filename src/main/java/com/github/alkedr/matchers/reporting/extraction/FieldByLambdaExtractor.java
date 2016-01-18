@@ -5,6 +5,7 @@ import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import java.util.function.Function;
 
 // TODO: пробовать передавать в лямбду Object, получать класс из ClassCastException
+@Deprecated
 public class FieldByLambdaExtractor<T> implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     private final Function<T, Object> function;
 

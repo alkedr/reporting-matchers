@@ -2,7 +2,10 @@ package com.github.alkedr.matchers.reporting.html;
 
 import com.github.alkedr.matchers.reporting.Reporter;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -10,17 +13,15 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: (missing) и (broken) в репортере
 // TODO: эскейпить
 // TODO: три вкладки: actual, diff, expected
-public class HtmlReporter implements Reporter {
+// TODO: серые линии слева, как в тасках
+public class HtmlReporter implements Reporter, Closeable {
     private final Appendable appendable;
     private final String title;
 
     public HtmlReporter(Appendable appendable, String title) {
         this.appendable = appendable;
         this.title = title;
-    }
 
-    @Override
-    public void beginReport() {
         append("<!DOCTYPE html>"
                 + "<html>"
                 + "<head>"
@@ -47,28 +48,45 @@ public class HtmlReporter implements Reporter {
         );
     }
 
+
     @Override
-    public void beginKeyValuePair(String keyAsString, ValueStatus valueStatus, String valueAsString) {
-        appendDiv("key", escapeHtml4(keyAsString));
-        if (valueAsString != null && !valueAsString.isEmpty()) {
-            appendDiv(valueStatus + " value", escapeHtml4(valueAsString));
+    public void close() {
+        append("</body></html>");
+    }
+
+
+    @Override
+    public void beginNode(String name, Object value) {
+        appendDiv("key", escapeHtml4(name));
+        if (value != null) {
+            // TODO: разные стили в зависимости от Object.getClass()
+            // TODO: защита от очень больших значений
+            appendDiv("value", escapeHtml4(value.toString()));
         }
         appendDivStart("checks");
     }
 
     @Override
-    public void addCheck(CheckStatus status, String description) {
-        appendDiv(status.toString(), escapeHtml4(description));
+    public void passedCheck(String description) {
+        appendDiv("PASSED", escapeHtml4(description));
     }
 
     @Override
-    public void endKeyValuePair() {
+    public void failedCheck(String expected, String actual) {
+        appendDiv("FAILED", "Expected: " + escapeHtml4(expected) + "\n     but: was " + actual);
+    }
+
+    @Override
+    public void brokenCheck(String description, Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        appendDiv("BROKEN", escapeHtml4(description) + "\n" + sw.getBuffer());
+    }
+
+    @Override
+    public void endNode() {
         appendDivEnd();
-    }
-
-    @Override
-    public void endReport() {
-        append("</body></html>");
     }
 
 

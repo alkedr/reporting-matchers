@@ -1,0 +1,175 @@
+package com.github.alkedr.matchers.reporting;
+
+import com.google.common.collect.Iterators;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
+
+import java.util.Iterator;
+import java.util.function.Consumer;
+
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+public class ChecksUtils {
+    @SafeVarargs
+    public static void verifyChecks(ReportingMatcher.Checks actual, Consumer<Object>... expected) {
+        verifyChecks(actual.checksIterator, Iterators.forArray(expected));
+    }
+
+    public static void verifyChecks(Iterator<?> actual, Iterator<Consumer<Object>> expected) {
+        while (actual.hasNext() && expected.hasNext()) {
+            expected.next().accept(actual.next());
+        }
+        assertFalse("В actual лишние элементы", actual.hasNext());
+        assertFalse("В actual слишком мало элементов", expected.hasNext());
+    }
+
+
+    @SafeVarargs
+    public static Consumer<Iterator<?>> checks(Consumer<Object>... expected) {
+        return actual -> verifyChecks(actual, Iterators.forArray(expected));
+    }
+
+
+    public static Consumer<Object> matcher(Matcher<?> expected) {
+        return actual -> assertSame(actual, expected);
+    }
+
+
+    public static Consumer<Object> kvc(ReportingMatcher.Key key, ReportingMatcher.Value value,
+                                       ReportingMatcher.Checks checks) {
+        return kvc(sameInstance(key), sameInstance(value), sameInstance(checks));
+    }
+
+    public static Consumer<Object> kvc(Matcher<ReportingMatcher.Key> keyMatcher,
+                                       Matcher<ReportingMatcher.Value> valueMatcher,
+                                       Matcher<ReportingMatcher.Checks> checksMatcher) {
+        return actual -> {
+            assertTrue(actual instanceof ReportingMatcher.KeyValueChecks);
+            ReportingMatcher.KeyValueChecks actualKvc = (ReportingMatcher.KeyValueChecks) actual;
+            assertThat("key", actualKvc.key(), keyMatcher);
+            assertThat("value", actualKvc.value(), valueMatcher);
+            assertThat("checks", actualKvc.checks(), checksMatcher);
+        };
+    }
+
+    public static Consumer<Object> kvc(ReportingMatcher.Key key, ReportingMatcher.Value value,
+                                       Consumer<Iterator<?>> checksVerifier) {
+        return kvc(sameInstance(key), sameInstance(value), checksVerifier);
+    }
+
+    public static Consumer<Object> kvc(Matcher<ReportingMatcher.Key> keyMatcher,
+                                       Matcher<ReportingMatcher.Value> valueMatcher,
+                                       Consumer<Iterator<?>> checksVerifier) {
+        return actual -> {
+            assertTrue(actual instanceof ReportingMatcher.KeyValueChecks);
+            ReportingMatcher.KeyValueChecks actualKvc = (ReportingMatcher.KeyValueChecks) actual;
+            assertThat("key", actualKvc.key(), keyMatcher);
+            assertThat("value", actualKvc.value(), valueMatcher);
+            checksVerifier.accept(actualKvc.checks().checksIterator);
+        };
+    }
+
+
+    public static Matcher<ReportingMatcher.Value> value(ReportingMatcher.PresenceStatus presenceStatusMatcher,
+                                                        Object objectMatcher,
+                                                        String asStringMatcher,
+                                                        Throwable extractionThrowableMatcher) {
+        return value(equalTo(presenceStatusMatcher), sameInstance(objectMatcher), equalTo(asStringMatcher), sameInstance(extractionThrowableMatcher));
+    }
+
+    public static Matcher<ReportingMatcher.Value> value(Matcher<ReportingMatcher.PresenceStatus> presenceStatusMatcher,
+                                                        Matcher<Object> objectMatcher,
+                                                        Matcher<String> asStringMatcher,
+                                                        Matcher<Throwable> extractionThrowableMatcher) {
+        return allOf(
+                new FeatureMatcher<ReportingMatcher.Value, ReportingMatcher.PresenceStatus>(presenceStatusMatcher, "presenceStatus", "presenceStatus") {
+                    @Override
+                    protected ReportingMatcher.PresenceStatus featureValueOf(ReportingMatcher.Value actual) {
+                        return actual.presenceStatus();
+                    }
+                },
+                new FeatureMatcher<ReportingMatcher.Value, Object>(objectMatcher, "object", "object") {
+                    @Override
+                    protected Object featureValueOf(ReportingMatcher.Value actual) {
+                        return actual.get();
+                    }
+                },
+                new FeatureMatcher<ReportingMatcher.Value, String>(asStringMatcher, "asString", "asString") {
+                    @Override
+                    protected String featureValueOf(ReportingMatcher.Value actual) {
+                        return actual.asString();
+                    }
+                },
+                new FeatureMatcher<ReportingMatcher.Value, Throwable>(extractionThrowableMatcher, "extractionThrowable", "extractionThrowable") {
+                    @Override
+                    protected Throwable featureValueOf(ReportingMatcher.Value actual) {
+                        return actual.extractionThrowable();
+                    }
+                }
+        );
+    }
+
+
+
+//    public static Iterable<Object> checksToIterable(ReportingMatcher.Checks actual) {
+//        return IteratorUtils.toList(
+//                Iterators.transform(
+//                        actual.checksIterator,
+//                        o -> o instanceof ReportingMatcher.Checks ? checksToIterable((ReportingMatcher.Checks) o) : o
+//                )
+//        );
+//    }
+
+
+
+/*
+    @SafeVarargs
+    public static void verifyKvcGroup(ReportingMatcher.CheckListener checkListener,
+                                       Matcher<ReportingMatcher.KeyValueChecks>... kvcs) {
+        ArgumentCaptor<Iterator<ReportingMatcher.KeyValueChecks>> captor =
+                (ArgumentCaptor<Iterator<ReportingMatcher.KeyValueChecks>>) (Object)
+                        ArgumentCaptor.forClass(Iterator.class);
+        inOrder(checkListener).verify(checkListener).keyValueChecksGroup(captor.capture());
+        assertThat(IteratorUtils.toList(captor.getValue()), contains(kvcs));
+    }
+
+    public static Matcher<ReportingMatcher.KeyValueChecks> kvc(ReportingMatcher.Key key,
+                                                               ReportingMatcher.Value value,
+                                                               ReportingMatcher.Checks checks) {
+        return kvc(sameInstance(key), sameInstance(value), sameInstance(checks));
+    }
+
+    public static Matcher<ReportingMatcher.KeyValueChecks> kvc(Matcher<ReportingMatcher.Key> keyMatcher,
+                                                               Matcher<ReportingMatcher.Value> valueMatcher,
+                                                               Matcher<ReportingMatcher.Checks> checksMatcher) {
+        return allOf(
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Key>(keyMatcher, "key", "key") {
+                    @Override
+                    protected ReportingMatcher.Key featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.key();
+                    }
+                },
+
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Value>(valueMatcher, "value", "value") {
+                    @Override
+                    protected ReportingMatcher.Value featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.value();
+                    }
+                },
+
+                new FeatureMatcher<ReportingMatcher.KeyValueChecks, ReportingMatcher.Checks>(checksMatcher, "checks", "checks") {
+                    @Override
+                    protected ReportingMatcher.Checks featureValueOf(ReportingMatcher.KeyValueChecks actual) {
+                        return actual.checks();
+                    }
+                }
+        );
+    }
+*/
+}

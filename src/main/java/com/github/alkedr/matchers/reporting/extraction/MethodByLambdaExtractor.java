@@ -4,6 +4,7 @@ import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
 import java.util.function.Function;
 
+@Deprecated
 public class MethodByLambdaExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
     private final Function<Object, Object> function;
 

@@ -8,9 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.field;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.getter;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.sequence;
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -20,10 +18,9 @@ public class IntegrationTestMain {
     public static void main(String... args) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(args[0])) {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-                Reporter reporter = new HtmlReporter(writer, "Заголовок страницы");
-                reporter.beginReport();
+                HtmlReporter reporter = new HtmlReporter(writer, "Заголовок страницы");
                 isCorrectUser().getChecks(USER).run(USER, reporter);
-                reporter.endReport();
+                reporter.close();
             }
         }
 
@@ -39,6 +36,10 @@ public class IntegrationTestMain {
                         field("year").is(greaterThan(1900), lessThan(2016)),
                         field("month").is(greaterThan(0), lessThan(13)),
                         field("day").is(greaterThan(0), lessThan(32))
+                ),
+                method("getArray").is(
+                        arrayElement(0).is(1),
+                        arrayWithElements(1, 2, 3, 4)
                 )
         );
     }
@@ -52,6 +53,10 @@ public class IntegrationTestMain {
 
         public Date getBirthDate() {
             return birthDate;
+        }
+
+        public Integer[] getArray() {
+            return new Integer[]{1, 2, 3};
         }
 
         public static class Date {

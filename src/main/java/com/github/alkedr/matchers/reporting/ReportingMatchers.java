@@ -2,7 +2,10 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.comparison.ComparingReportingMatcherBuilder;
 import com.github.alkedr.matchers.reporting.extraction.*;
+import com.github.alkedr.matchers.reporting.iteration.IteratorMatcher;
+import com.github.alkedr.matchers.reporting.utility.ConvertingReportingMatcher;
 import com.github.alkedr.matchers.reporting.utility.SequenceMatcher;
+import com.google.common.collect.Iterators;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,6 +14,7 @@ import java.util.Map;
 
 import static com.github.alkedr.matchers.reporting.extraction.MethodKind.GETTER_METHOD;
 import static com.github.alkedr.matchers.reporting.extraction.MethodKind.REGULAR_METHOD;
+import static com.github.alkedr.matchers.reporting.iteration.ContainsInSpecifiedOrderChecker.containsInSpecifiedOrderChecker;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -99,8 +103,20 @@ public class ReportingMatchers {
 
 
     public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(new ValueForKeyExtractingMatcher(key));
+        return new ExtractingMatcher<>(new ValueForKeyExtractor(key));
     }
+
+
+
+    // TODO: тут нужны перегрузки для всех примитивных типов
+    @SafeVarargs
+    public static <T> ReportingMatcher<T[]> arrayWithElements(T... elements) {
+        return new ConvertingReportingMatcher<>(
+                item -> Iterators.forArray((Object[]) item),
+                new IteratorMatcher<>(() -> containsInSpecifiedOrderChecker(elements))
+        );
+    }
+
 
 
 

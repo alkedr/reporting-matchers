@@ -4,6 +4,7 @@ import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
 // TODO: тесты
+@Deprecated  // заменить boolean shouldMerge в RenamedKey?
 public enum MethodKind {
     REGULAR_METHOD {
         @Override

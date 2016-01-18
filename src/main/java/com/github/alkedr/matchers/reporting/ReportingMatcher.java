@@ -6,8 +6,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Iterator;
 
 import static java.util.Arrays.asList;
@@ -58,6 +56,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         private final Checks checks;
 
         public KeyValueChecks(Key key, Value value, Checks checks) {
+            // TODO проверять на не-null?
             this.key = key;
             this.value = value;
             this.checks = checks;
@@ -94,7 +93,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         private final PresenceStatus presenceStatus;
         private final Object object;
         private final String asString;
-        private final Throwable extractionThrowable;  // FIXME: это штука ExtractingMatcher'а
+        private final Throwable extractionThrowable;  // FIXME: это штука ExtractingMatcher'а?
 
         Value(PresenceStatus presenceStatus, Object object, String asString, Throwable extractionThrowable) {
             this.presenceStatus = presenceStatus;
@@ -113,7 +112,11 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             return object;
         }
 
-        public String asString() {
+        public String asString() {   // TODO: перенести эту логику в Reporter?
+            if (presenceStatus == PresenceStatus.MISSING) {
+                return "(отсутствует)";
+            }
+            // TODO: whitelist классов?
             return asString == null ? String.valueOf(object) : asString;
         }
 
@@ -146,7 +149,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
     // отображать presenceStatus как матчер?
     // TODO: Visitor?
     class Checks {
-        private final Iterator<?> checksIterator;
+        final Iterator<?> checksIterator;
 
         public Checks(Iterator<?> checksIterator) {
             this.checksIterator = checksIterator;
@@ -160,7 +163,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
                 } else if (next instanceof Matcher) {
                     runMatcherForPresentItem(item, reporter, (Matcher<?>) next);
                 } else if (next instanceof KeyValueChecks) {
-                    runKeyValueChecksForPresentItem(item, reporter, (KeyValueChecks) next);
+                    runKeyValueChecks(reporter, (KeyValueChecks) next);
                 } else {
                     throw new RuntimeException();  // FIXME
                 }
@@ -246,8 +249,12 @@ public interface ReportingMatcher<T> extends Matcher<T> {
 
 
 
-        private static void runPresenceStatusForPresentItem(Object item, Reporter reporter, PresenceStatus next) {
-            // TODO
+        private static void runPresenceStatusForPresentItem(Object item, Reporter reporter, PresenceStatus presenceStatus) {
+            if (presenceStatus == PresenceStatus.MISSING) {
+                reporter.failedCheck("missing", "present");
+            } else {
+                reporter.passedCheck("is missing");
+            }
         }
 
         private static void runMatcherForPresentItem(Object item, Reporter reporter, Matcher<?> matcher) {
@@ -255,34 +262,31 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             try {
                 matches = matcher.matches(item);
             } catch (RuntimeException e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw, true);
-                e.printStackTrace(pw);
-                reporter.addCheck(Reporter.CheckStatus.BROKEN, sw.getBuffer().toString());
+                reporter.brokenCheck("", e);
                 return;
             }
             if (matches) {
                 // TODO: подсовывать свой Description, который отлавливает equalTo и is
-                reporter.addCheck(Reporter.CheckStatus.PASSED, StringDescription.toString(matcher));
+                reporter.passedCheck(StringDescription.toString(matcher));
             } else {
-                Description stringDescription = new StringDescription()
-                        .appendText("Expected: ")
-                        .appendDescriptionOf(matcher)
-                        .appendText("\n     but: ");
-                matcher.describeMismatch(item, stringDescription);
-                reporter.addCheck(Reporter.CheckStatus.FAILED, stringDescription.toString());
+                Description mismatchDescription = new StringDescription();
+                matcher.describeMismatch(item, mismatchDescription);
+                reporter.failedCheck(StringDescription.toString(matcher), mismatchDescription.toString());
             }
         }
 
-        private static void runKeyValueChecksForPresentItem(Object item, Reporter reporter, KeyValueChecks kvc) {
-            reporter.beginKeyValuePair(kvc.key().asString(), null, kvc.value().asString());
+        private static void runKeyValueChecks(Reporter reporter, KeyValueChecks kvc) {
+            reporter.beginNode(kvc.key().asString(), kvc.value().asString());
+            if (kvc.value().extractionThrowable() != null) {
+                reporter.brokenCheck("Ошибка при извлечении", kvc.value().extractionThrowable());
+            }
             // TODO: missing, broken etc
             if (kvc.value().presenceStatus() == PresenceStatus.PRESENT) {
                 kvc.checks().run(kvc.value().get(), reporter);
             } else {
                 kvc.checks().runForMissingItem(reporter);
             }
-            reporter.endKeyValuePair();
+            reporter.endNode();
         }
 
         private void runForMissingItem(Reporter reporter) {
@@ -293,23 +297,23 @@ public interface ReportingMatcher<T> extends Matcher<T> {
                 } else if (next instanceof Matcher) {
                     runMatcherForMissingItem(reporter, (Matcher<?>) next);
                 } else if (next instanceof KeyValueChecks) {
-                    runKeyValueChecksForMissingItem(reporter, (KeyValueChecks) next);
+                    runKeyValueChecks(reporter, (KeyValueChecks) next);
                 } else {
                     throw new RuntimeException();  // FIXME
                 }
             }
         }
 
-        private void runPresenceStatusForMissingItem(Reporter reporter, PresenceStatus presenceStatus) {
-
+        private static void runPresenceStatusForMissingItem(Reporter reporter, PresenceStatus presenceStatus) {
+            if (presenceStatus == PresenceStatus.PRESENT) {
+                reporter.failedCheck("present", "missing");
+            } else {
+                reporter.passedCheck("is present");
+            }
         }
 
-        private void runMatcherForMissingItem(Reporter reporter, Matcher<?> matcher) {
-
-        }
-
-        private void runKeyValueChecksForMissingItem(Reporter reporter, KeyValueChecks kvc) {
-
+        private static void runMatcherForMissingItem(Reporter reporter, Matcher<?> matcher) {
+            reporter.failedCheck(StringDescription.toString(matcher), "missing");
         }
     }
 }

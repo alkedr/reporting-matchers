@@ -2,13 +2,13 @@ package com.github.alkedr.matchers.reporting.extraction;
 
 import java.lang.reflect.Method;
 
-public class Extractors_ObjectMethodExtractorTest {
+public class MethodExtractorTest {
     private final Method inaccessibleMethod;
     private final Method inaccessibleStaticMethod;
     private final Method throwingMethod;
     private final MyClass item = new MyClass();
 
-    public Extractors_ObjectMethodExtractorTest() throws NoSuchMethodException {
+    public MethodExtractorTest() throws NoSuchMethodException {
         inaccessibleMethod = MyClass.class.getDeclaredMethod("returnArg", int.class);
         inaccessibleStaticMethod = MyClass.class.getDeclaredMethod("returnArgStatic", int.class);
         throwingMethod = MyClass.class.getDeclaredMethod("throwingMethod");

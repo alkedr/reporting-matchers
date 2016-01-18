@@ -1,4 +1,4 @@
 package com.github.alkedr.matchers.reporting;
 
-public class ReportingMatcherTest {
+public class ReportingMatcherChecksNoOpTest {
 }

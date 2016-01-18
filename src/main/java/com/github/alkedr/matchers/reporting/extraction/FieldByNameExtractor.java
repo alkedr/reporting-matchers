@@ -1,20 +1,15 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import org.apache.commons.lang3.Validate;
+import com.github.alkedr.matchers.reporting.keys.FieldByNameKey;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Value.missing;
 
-public class FieldByNameExtractor implements ExtractingMatcher.Extractor, ReportingMatcher.Key {
-    private final String fieldName;
-
+public class FieldByNameExtractor extends FieldByNameKey implements ExtractingMatcher.Extractor {
     public FieldByNameExtractor(String fieldName) {
-        Validate.notNull(fieldName, "fieldName");
-        this.fieldName = fieldName;
+        super(fieldName);
     }
 
     @Override
@@ -22,30 +17,12 @@ public class FieldByNameExtractor implements ExtractingMatcher.Extractor, Report
         if (item == null) {
             return new ExtractingMatcher.KeyValue(this, missing());
         }
-        Field field = FieldUtils.getField(item.getClass(), fieldName, true);  // TODO: проверить исключения, null
+        Field field = FieldUtils.getField(item.getClass(), getFieldName(), true);  // TODO: проверить исключения, null
         return new FieldExtractor(field).extractFrom(item);
     }
 
     @Override
     public ExtractingMatcher.KeyValue extractFromMissingItem() {
         return new ExtractingMatcher.KeyValue(this, missing());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FieldByNameExtractor that = (FieldByNameExtractor) o;
-        return Objects.equals(fieldName, that.fieldName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fieldName);
-    }
-
-    @Override
-    public String asString() {
-        return fieldName;
     }
 }

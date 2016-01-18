@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-public class Extractors_MapValueForKeyExtractorTest {
+public class ValueForKeyExtractorTest {
     /*@Test
     public void nullItem() {
         assertReflectionEquals(missing(), new Extractors.ValueForKeyExtractor("1").extractFrom(null));

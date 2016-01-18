@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public class LambdaUtils {
     private static final Unsafe UNSAFE;
 

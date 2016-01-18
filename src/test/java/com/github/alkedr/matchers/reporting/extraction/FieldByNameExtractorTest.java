@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-public class Extractors_ObjectFieldByNameExtractorTest {
+public class FieldByNameExtractorTest {
     /*private final MyClass item = new MyClass();
 
     @Test(expected = NullPointerException.class)

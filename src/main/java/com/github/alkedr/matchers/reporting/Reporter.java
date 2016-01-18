@@ -9,80 +9,25 @@ package com.github.alkedr.matchers.reporting;
  * TODO: пример кода как создать Reporter и запустить на нём ReportingMatcher
  */
 // TODO: написать в доках интерфейсов как их реализовывать
+// TODO: убрать beginReport и endReport()?
 public interface Reporter {
-
-    /**
-     * Вызывается перед началом всех проверок. Некоторым реализациям нужно выполнить какие-то действия в начале
-     * построения отчёта.
-     */
-    void beginReport();
-
     /**
      * Начинает пару ключ-значение.
      *
-     * @param keyAsString Ключ, название проверяемого значения, например название поля, номер элемента в массиве и
-     *                    т. п.
-     * @param valueStatus TODO
-     * @param valueAsString Проверяемое значение в виде строки. Обычно для примитивных типов - toString, для
+     * @param name Название проверяемого значения, например название поля, номер элемента в массиве и т. п.
+     * @param value Проверяемое значение в виде строки. Обычно для примитивных типов - toString, для
      *                      составных объектов - пустая строка.
      */
-    void beginKeyValuePair(String keyAsString, ValueStatus valueStatus, String valueAsString);
+    // TODO: передавать Object'ы, позволять репортерам самостоятельно решать как их отображать?
+    // если нужно указать именно строковое представление, то можно передать строку?
+    void beginNode(String name, Object value);
+
+    void passedCheck(String description);
+    void failedCheck(String expected, String actual);
+    void brokenCheck(String description, Throwable throwable);
 
     /**
-     * Добавляет проверку для текущего узла. Проверка здесь - результат запуска обычного (не-Reporting) матчера.
-     * @param status
-     * @param description если status == {@link CheckStatus#PASSED}, то describeTo матчера
-     *                    если status == {@link CheckStatus#FAILED}, то describeTo + describeMismatch (как сообщение
-     *                    об ошибке в AssertionException в {@link org.hamcrest.MatcherAssert#assertThat})
-     *                    если status == {@link CheckStatus#BROKEN}, то стектрейс
+     * Заканчивает узел дерева, начатый методом {@link #beginNode}.
      */
-    void addCheck(CheckStatus status, String description);
-
-    /**
-     * Заканчивает узел дерева, начатый методом {@link #beginKeyValuePair}.
-     */
-    void endKeyValuePair();
-
-    /**
-     * Заканчивает построение отчёта, начатое методом {@link #beginReport}. Некоторым реализациям нужно выполнить
-     * какие-то действия в конце построения отчёта.
-     */
-    void endReport();
-
-
-    enum CheckStatus {
-        /**
-         * Проверка пройдена.
-         */
-        PASSED,
-
-        /**
-         * Проверка провалена (matches() вернул false).
-         */
-        FAILED,
-
-        /**
-         * Проверка сломана (один из методов matches(), describeTo() и describeMismatch() бросил исключение).
-         */
-        BROKEN,
-    }
-
-
-    enum ValueStatus {
-        /**
-         * Значение было извлечено успешно.
-         */
-        NORMAL,
-
-        /**
-         * Значение не было найдено в проверяемом объекте, например проверяли {@link java.util.Map}, искали элемент
-         * по ключу, но элемента с таким ключом не было.
-         */
-        MISSING,
-
-        /**
-         * При извлечении значения было брошено исключение.
-         */
-        BROKEN,
-    }
+    void endNode();
 }

@@ -21,7 +21,7 @@ public class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T
 
     @Override
     public boolean matches(Object item) {
-        return false;
+        return true;
     }
 
     @Override

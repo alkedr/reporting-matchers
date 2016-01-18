@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.extraction;
 
-public class Extractors_ArrayElementExtractorTest {
+public class ElementExtractorTest {
     /*@Test
     public void nullItem() {
         assertReflectionEquals(missing(), new Extractors.ArrayElementExtractor(1).extractFrom(null));

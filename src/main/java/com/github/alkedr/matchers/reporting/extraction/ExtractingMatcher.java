@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // is заменяет, не добавляет
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
+// TODO: разнести ключи и экстракторы в разные пакеты, потому что ключи нужны в IteratorMatcher'е
 public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     private final String name;
     private final Extractor extractor;
@@ -117,9 +118,10 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
             this.key = key;
             this.value = value;
         }
+        // TODO: геттеры на всякий случай
     }
 
-    // TODO: должен ли RenamedKey объединяться с непереименованным Key?
+    // TODO: должен ли RenamedKey объединяться с непереименованным Key?  НЕТ!
     static class RenamedKey implements Key {
         final Key key;
         final String name;

@@ -2,6 +2,7 @@ package com.github.alkedr.matchers.reporting.utility;
 
 import com.github.alkedr.matchers.reporting.BaseReportingMatcher;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
+import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import org.hamcrest.Description;
 
@@ -18,20 +19,19 @@ public class SequenceMatcher<T> extends BaseReportingMatcher<T> {
 
     @Override
     public Checks getChecks(Object item) {
-        return Checks.sequence(
-                Iterators.transform(
-                        matchers.iterator(),
-                        matcher -> matcher.getChecks(item)
-                )
-        );
+        return getChecksImpl(matcher -> matcher.getChecks(item));
     }
 
     @Override
     public Checks getChecksForMissingItem() {
+        return getChecksImpl(ReportingMatcher::getChecksForMissingItem);
+    }
+
+    private Checks getChecksImpl(Function<ReportingMatcher<? super T>, Checks> checksFunction) {
         return Checks.sequence(
                 Iterators.transform(
                         matchers.iterator(),
-                        matcher -> matcher.getChecksForMissingItem()
+                        checksFunction
                 )
         );
     }
