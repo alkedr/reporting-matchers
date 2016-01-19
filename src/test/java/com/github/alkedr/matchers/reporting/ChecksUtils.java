@@ -87,14 +87,12 @@ public class ChecksUtils {
 
     public static Matcher<ReportingMatcher.Value> value(ReportingMatcher.PresenceStatus presenceStatusMatcher,
                                                         Object objectMatcher,
-                                                        String asStringMatcher,
                                                         Throwable extractionThrowableMatcher) {
-        return value(equalTo(presenceStatusMatcher), sameInstance(objectMatcher), equalTo(asStringMatcher), sameInstance(extractionThrowableMatcher));
+        return value(equalTo(presenceStatusMatcher), sameInstance(objectMatcher), sameInstance(extractionThrowableMatcher));
     }
 
     public static Matcher<ReportingMatcher.Value> value(Matcher<ReportingMatcher.PresenceStatus> presenceStatusMatcher,
                                                         Matcher<Object> objectMatcher,
-                                                        Matcher<String> asStringMatcher,
                                                         Matcher<Throwable> extractionThrowableMatcher) {
         return allOf(
                 new FeatureMatcher<ReportingMatcher.Value, ReportingMatcher.PresenceStatus>(presenceStatusMatcher, "presenceStatus", "presenceStatus") {
@@ -107,12 +105,6 @@ public class ChecksUtils {
                     @Override
                     protected Object featureValueOf(ReportingMatcher.Value actual) {
                         return actual.get();
-                    }
-                },
-                new FeatureMatcher<ReportingMatcher.Value, String>(asStringMatcher, "asString", "asString") {
-                    @Override
-                    protected String featureValueOf(ReportingMatcher.Value actual) {
-                        return actual.asString();
                     }
                 },
                 new FeatureMatcher<ReportingMatcher.Value, Throwable>(extractionThrowableMatcher, "extractionThrowable", "extractionThrowable") {

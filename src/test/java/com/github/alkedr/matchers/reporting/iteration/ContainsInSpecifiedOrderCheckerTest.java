@@ -53,7 +53,7 @@ public class ContainsInSpecifiedOrderCheckerTest {
     public void expectedOneItem_gotEmpty() {
         IteratorMatcher.ElementChecker elementChecker = new ContainsInSpecifiedOrderChecker(Iterators.forArray(matcher1));
         verifyChecks(elementChecker.begin());
-        verifyChecks(elementChecker.end(), kvc(equalTo(new ElementKey(0)), value(MISSING, null, "(отсутствует)", null), sameInstance(checks1Missing)));
+        verifyChecks(elementChecker.end(), kvc(equalTo(new ElementKey(0)), value(MISSING, null, null), sameInstance(checks1Missing)));
     }
 
     @Test

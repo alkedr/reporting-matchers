@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting.html;
 
 import com.github.alkedr.matchers.reporting.Reporter;
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -17,11 +18,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: защита от очень больших значений
 public class HtmlReporter implements Reporter, Closeable {
     private final Appendable appendable;
-    private final String title;
 
     public HtmlReporter(Appendable appendable, String title) {
         this.appendable = appendable;
-        this.title = title;
 
         append("<!DOCTYPE html>"
                 + "<html>"
@@ -57,12 +56,34 @@ public class HtmlReporter implements Reporter, Closeable {
 
 
     @Override
-    public void beginNode(String name, String value) {
+    public void beginNode(String name, Object value) {
         appendDiv("key", escapeHtml4(name));
         if (value != null) {
-            appendDiv("value", escapeHtml4(value));
+            appendDiv("value", escapeHtml4(value.toString()));
         }
         appendDivStart("checks");
+    }
+
+    @Override
+    public void beginMissingNode(String name) {
+        appendDiv("key", escapeHtml4(name));
+        appendDivStart("checks");
+    }
+
+    @Override
+    public void beginBrokenNode(String name, Throwable throwable) {
+        appendDiv("key", escapeHtml4(name));
+        appendDivStart("checks");
+        appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
+    }
+
+    @Override
+    public void presenceCheck(ReportingMatcher.PresenceStatus expectedPresenceStatus, ReportingMatcher.PresenceStatus actualPresenceStatus) {
+        if (actualPresenceStatus == expectedPresenceStatus) {
+            passedCheck(expectedPresenceStatus.toString());
+        } else {
+            failedCheck(expectedPresenceStatus.toString(), actualPresenceStatus.toString());
+        }
     }
 
     @Override
@@ -76,11 +97,13 @@ public class HtmlReporter implements Reporter, Closeable {
     }
 
     @Override
+    public void checkForMissingItem(String description) {
+        appendDiv("FAILED", description);
+    }
+
+    @Override
     public void brokenCheck(String description, Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw, true);
-        throwable.printStackTrace(pw);
-        appendDiv("BROKEN", escapeHtml4(description) + "\n" + sw.getBuffer());
+        appendDiv("BROKEN", escapeHtml4(description) + "\n" + throwableToString(throwable));
     }
 
     @Override
@@ -116,5 +139,12 @@ public class HtmlReporter implements Reporter, Closeable {
         } catch (IOException e) {
             throw new RuntimeException(e);  // FIXME: своё исключение?
         }
+    }
+
+    private static String throwableToString(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 }

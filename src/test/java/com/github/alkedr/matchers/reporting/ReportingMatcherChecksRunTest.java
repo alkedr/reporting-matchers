@@ -6,6 +6,8 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatcher.Checks.*;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.PresenceStatus.MISSING;
+import static com.github.alkedr.matchers.reporting.ReportingMatcher.PresenceStatus.PRESENT;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
@@ -41,28 +43,28 @@ public class ReportingMatcherChecksRunTest {
     @Test
     public void presentItem_present() {
         present().run(item, reporter);
-        verify(reporter).passedCheck("is present");
+        verify(reporter).presenceCheck(PRESENT, PRESENT);
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
     public void presentItem_missing() {
         missing().run(item, reporter);
-        verify(reporter).failedCheck("missing", "present");
+        verify(reporter).presenceCheck(MISSING, PRESENT);
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
     public void missingItem_present() {
         present().runForMissingItem(reporter);
-        verify(reporter).failedCheck("present", "missing");
+        verify(reporter).presenceCheck(PRESENT, MISSING);
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
     public void missingItem_missing() {
         missing().runForMissingItem(reporter);
-        verify(reporter).passedCheck("is missing");
+        verify(reporter).presenceCheck(MISSING, MISSING);
         verifyNoMoreInteractions(reporter);
     }
 
@@ -84,14 +86,14 @@ public class ReportingMatcherChecksRunTest {
     @Test
     public void presentItem_throwingMatcher() {
         matchers(brokenMatcher).run(item, reporter);
-        verify(reporter).brokenCheck("матчер '12345' бросил исключение:", exception);
+        verify(reporter).brokenCheck("12345", exception);
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
-    public void missingItem_passingMatcher() {
+    public void missingItem_matcher() {
         matchers(anything()).runForMissingItem(reporter);
-        verify(reporter).failedCheck("ANYTHING", "missing");
+        verify(reporter).checkForMissingItem("ANYTHING");
         verifyNoMoreInteractions(reporter);
     }
 
@@ -100,8 +102,8 @@ public class ReportingMatcherChecksRunTest {
     public void presentItem_presentKeyValueChecks() {
         ReportingMatcher.Value value = ReportingMatcher.Value.present(1);
         keyValueChecks(new ReportingMatcher.KeyValueChecks(key, value, present())).run(item, reporter);
-        verify(reporter).beginNode(key.asString(), value.asString());
-        verify(reporter).passedCheck("is present");
+        verify(reporter).beginNode(key.asString(), value.get());
+        verify(reporter).presenceCheck(PRESENT, PRESENT);
         verify(reporter).endNode();
         verifyNoMoreInteractions(reporter);
     }
@@ -110,8 +112,8 @@ public class ReportingMatcherChecksRunTest {
     public void presentItem_missingKeyValueChecks() {
         ReportingMatcher.Value value = ReportingMatcher.Value.missing();
         keyValueChecks(new ReportingMatcher.KeyValueChecks(key, value, missing())).run(item, reporter);
-        verify(reporter).beginNode(key.asString(), value.asString());
-        verify(reporter).passedCheck("is missing");
+        verify(reporter).beginMissingNode(key.asString());
+        verify(reporter).presenceCheck(MISSING, MISSING);
         verify(reporter).endNode();
         verifyNoMoreInteractions(reporter);
     }
@@ -120,9 +122,8 @@ public class ReportingMatcherChecksRunTest {
     public void presentItem_brokenKeyValueChecks() {
         ReportingMatcher.Value value = ReportingMatcher.Value.broken(new RuntimeException("123"));
         keyValueChecks(new ReportingMatcher.KeyValueChecks(key, value, missing())).run(item, reporter);
-        verify(reporter).beginNode(key.asString(), value.asString());
-        verify(reporter).brokenCheck("ошибка при извлечении:", value.extractionThrowable());
-        verify(reporter).passedCheck("is missing");
+        verify(reporter).beginBrokenNode(key.asString(), value.extractionThrowable());
+        verify(reporter).presenceCheck(MISSING, MISSING);
         verify(reporter).endNode();
         verifyNoMoreInteractions(reporter);
     }
@@ -131,8 +132,8 @@ public class ReportingMatcherChecksRunTest {
     public void missingItem_presentKeyValueChecks() {
         ReportingMatcher.Value value = ReportingMatcher.Value.present(1);
         keyValueChecks(new ReportingMatcher.KeyValueChecks(key, value, present())).runForMissingItem(reporter);
-        verify(reporter).beginNode(key.asString(), value.asString());
-        verify(reporter).passedCheck("is present");
+        verify(reporter).beginNode(key.asString(), value.get());  // TODO: missingNode?
+        verify(reporter).presenceCheck(PRESENT, PRESENT);
         verify(reporter).endNode();
         verifyNoMoreInteractions(reporter);
     }

@@ -15,7 +15,7 @@ public class ExtractingMatcherTest {
     private final Object extractedItem = new Object();
     private final ExtractingMatcher.Extractor extractor = mock(ExtractingMatcher.Extractor.class);
     private final ReportingMatcher.Key key = mock(ReportingMatcher.Key.class);
-    private final ReportingMatcher.Value presentValue = present(extractedItem, "1");
+    private final ReportingMatcher.Value presentValue = present(extractedItem);
     private final ReportingMatcher.Value missingValue = missing();
     private final ReportingMatcher<?> matcher = mock(ReportingMatcher.class);
     private final ReportingMatcher.Checks checksForExtractedValue = ReportingMatcher.Checks.noOp();

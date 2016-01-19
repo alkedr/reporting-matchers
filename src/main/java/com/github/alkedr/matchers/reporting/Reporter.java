@@ -20,10 +20,16 @@ public interface Reporter {
      */
     // TODO: передавать Object'ы, позволять репортерам самостоятельно решать как их отображать?
     // если нужно указать именно строковое представление, то можно передать строку?
-    void beginNode(String name, String value);   // либо String, либо Value
+    void beginNode(String name, Object value);
+    void beginMissingNode(String name);
+    void beginBrokenNode(String name, Throwable throwable);
+
+    // TODO: избавиться от actualPresenceStatus, потмоу что мы его уже указали в beginNode/beginMissingNode?
+    void presenceCheck(ReportingMatcher.PresenceStatus expectedPresenceStatus, ReportingMatcher.PresenceStatus actualPresenceStatus);
 
     void passedCheck(String description);
     void failedCheck(String expected, String actual);
+    void checkForMissingItem(String description);
     void brokenCheck(String description, Throwable throwable);
 
     /**

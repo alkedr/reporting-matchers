@@ -43,8 +43,8 @@ public class IteratorMatcherTest {
     public void getChecks() {
         ReportingMatcher.Key element1Key = new ElementKey(0);
         ReportingMatcher.Key element2Key = new ElementKey(1);
-        Matcher<ReportingMatcher.Value> value1 = value(PRESENT, element1, element1.toString(), null);
-        Matcher<ReportingMatcher.Value> value2 = value(PRESENT, element2, element2.toString(), null);
+        Matcher<ReportingMatcher.Value> value1 = value(PRESENT, element1, null);
+        Matcher<ReportingMatcher.Value> value2 = value(PRESENT, element2, null);
         verifyChecks(
                 new IteratorMatcher<>(() -> elementChecker).getChecks(iterable.iterator()),
                 matcher(beginMatcher),
