@@ -151,7 +151,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
     class Checks {
         final Iterator<?> checksIterator;
 
-        public Checks(Iterator<?> checksIterator) {
+        private Checks(Iterator<?> checksIterator) {
             this.checksIterator = checksIterator;
         }
 
