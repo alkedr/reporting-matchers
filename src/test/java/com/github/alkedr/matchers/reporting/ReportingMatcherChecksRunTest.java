@@ -132,7 +132,7 @@ public class ReportingMatcherChecksRunTest {
     public void missingItem_presentKeyValueChecks() {
         ReportingMatcher.Value value = ReportingMatcher.Value.present(1);
         keyValueChecks(new ReportingMatcher.KeyValueChecks(key, value, present())).runForMissingItem(reporter);
-        verify(reporter).beginNode(key.asString(), value.get());  // TODO: missingNode?
+        verify(reporter).beginNode(key.asString(), value.get());
         verify(reporter).presenceCheck(PRESENT, PRESENT);
         verify(reporter).endNode();
         verifyNoMoreInteractions(reporter);
