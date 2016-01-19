@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: эскейпить
 // TODO: три вкладки: actual, diff, expected
 // TODO: серые линии слева, как в тасках
+// TODO: защита от очень больших значений
 public class HtmlReporter implements Reporter, Closeable {
     private final Appendable appendable;
     private final String title;
@@ -56,12 +57,10 @@ public class HtmlReporter implements Reporter, Closeable {
 
 
     @Override
-    public void beginNode(String name, Object value) {
+    public void beginNode(String name, String value) {
         appendDiv("key", escapeHtml4(name));
         if (value != null) {
-            // TODO: разные стили в зависимости от Object.getClass()
-            // TODO: защита от очень больших значений
-            appendDiv("value", escapeHtml4(value.toString()));
+            appendDiv("value", escapeHtml4(value));
         }
         appendDivStart("checks");
     }

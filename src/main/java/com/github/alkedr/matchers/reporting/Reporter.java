@@ -20,7 +20,7 @@ public interface Reporter {
      */
     // TODO: передавать Object'ы, позволять репортерам самостоятельно решать как их отображать?
     // если нужно указать именно строковое представление, то можно передать строку?
-    void beginNode(String name, Object value);
+    void beginNode(String name, String value);   // либо String, либо Value
 
     void passedCheck(String description);
     void failedCheck(String expected, String actual);

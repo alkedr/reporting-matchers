@@ -159,7 +159,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             while (checksIterator.hasNext()) {
                 Object next = checksIterator.next();
                 if (next instanceof PresenceStatus) {   // TODO: вынести if'ы в метод, принимающий лямбды?
-                    runPresenceStatusForPresentItem(item, reporter, (PresenceStatus) next);
+                    runPresenceStatusForPresentItem(reporter, (PresenceStatus) next);
                 } else if (next instanceof Matcher) {
                     runMatcherForPresentItem(item, reporter, (Matcher<?>) next);
                 } else if (next instanceof KeyValueChecks) {
@@ -249,11 +249,11 @@ public interface ReportingMatcher<T> extends Matcher<T> {
 
 
 
-        private static void runPresenceStatusForPresentItem(Object item, Reporter reporter, PresenceStatus presenceStatus) {
+        private static void runPresenceStatusForPresentItem(Reporter reporter, PresenceStatus presenceStatus) {
             if (presenceStatus == PresenceStatus.MISSING) {
                 reporter.failedCheck("missing", "present");
             } else {
-                reporter.passedCheck("is missing");
+                reporter.passedCheck("is present");
             }
         }
 
@@ -262,7 +262,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             try {
                 matches = matcher.matches(item);
             } catch (RuntimeException e) {
-                reporter.brokenCheck("", e);
+                reporter.brokenCheck("матчер '" + StringDescription.toString(matcher) + "' бросил исключение:", e);
                 return;
             }
             if (matches) {
@@ -278,7 +278,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         private static void runKeyValueChecks(Reporter reporter, KeyValueChecks kvc) {
             reporter.beginNode(kvc.key().asString(), kvc.value().asString());
             if (kvc.value().extractionThrowable() != null) {
-                reporter.brokenCheck("Ошибка при извлечении", kvc.value().extractionThrowable());
+                reporter.brokenCheck("ошибка при извлечении:", kvc.value().extractionThrowable());
             }
             // TODO: missing, broken etc
             if (kvc.value().presenceStatus() == PresenceStatus.PRESENT) {
@@ -289,7 +289,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             reporter.endNode();
         }
 
-        private void runForMissingItem(Reporter reporter) {
+        void runForMissingItem(Reporter reporter) {
             while (checksIterator.hasNext()) {
                 Object next = checksIterator.next();
                 if (next instanceof PresenceStatus) {
@@ -308,7 +308,7 @@ public interface ReportingMatcher<T> extends Matcher<T> {
             if (presenceStatus == PresenceStatus.PRESENT) {
                 reporter.failedCheck("present", "missing");
             } else {
-                reporter.passedCheck("is present");
+                reporter.passedCheck("is missing");
             }
         }
 

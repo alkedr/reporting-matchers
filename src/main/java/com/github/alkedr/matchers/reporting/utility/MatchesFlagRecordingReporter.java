@@ -10,7 +10,7 @@ public class MatchesFlagRecordingReporter implements Reporter {
     }
 
     @Override
-    public void beginNode(String name, Object value) {
+    public void beginNode(String name, String value) {
     }
 
     @Override
