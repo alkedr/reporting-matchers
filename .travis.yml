@@ -5,8 +5,6 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_5d1cc3ab8481_key -iv $encrypted_5d1cc3ab8481_iv -in travis-secrets.tar.enc -out travis-secrets.tar -d
   - tar xvf travis-secrets.tar
   - cp travis/pubring.gpg ~/.gnupg
-after_success:
-  - mvn clean deploy --settings travis/settings.xml
-env:
-  global:
-    secure: eLQSJ1HxWVi8gN8rt+dm9UYy/wWqGoZ+dH7iHQxQWR/CgQ5pKgwT/juDi11FW4rR1LKg5B8chYH1/L9Ff1yEQRb5o61cW6gVFeQ8TikTMfd32MYp4OnDfSYOOrJ9ychDdt2GrZJEn1YbutlKIJF0BtOHBViGl1jp63qhzRE1ABaWq65bX4gEFcBAe1zBHsWAUP/AwJVEA/8EnDNZF053MYXAuGXJnw2feZEJmAsUq/0yWYJslW0nLjbG4C9dxHh/kMsWcOomGkZkFebrNrKtcdOsrCiZ84gnzIKP2Z3ArBdt08Y1OyyvxkNXIDMNPgwME6jzbmyB5yaD2NfGNJMif+nEZ1NNr1pI8N+aLdEiNIY/6S3Kbksok+qov1WyJeM10jlCdqC76wzNEYmy/00g4W2Y13vlEKUJXTNe2ZKrkyBJsr+pR/LqOD4S3BvLRRFn/rE1RNaI4c/BTevvuMLJpB+wypIae29NeEU2VBBlc1YYD6CvRZRT/BIRlvVLU1TvPXLWIdtIcC94vcDIOb3rZIXQWlTNG6YH1oyZiJ8TEvfZVDqjAob9t6ffjOo3RRJR05fLbu1MzOgYqzatrpdeO+7a7VMfZBCI7a8FjMfWKUt2RXZ60eIJIUuI64TeRa85yjF3oN3j3npizgogjUM0qotSoucI8XgvwLC4ckVq3xg=
+install: true
+script: mvn clean test --settings travis/settings.xml
+deploy: mvn deploy --settings travis/settings.xml

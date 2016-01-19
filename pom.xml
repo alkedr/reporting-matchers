@@ -151,9 +151,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.6</version>
                 <configuration>
-                    <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                    <keyname>D660714E</keyname>
+                    <passphraseServerId>ossrh</passphraseServerId>
                 </configuration>
                 <executions>
                     <execution>
