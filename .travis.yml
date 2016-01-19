@@ -1,7 +1,8 @@
 language: java
 jdk:
   - oraclejdk8
+before_install:
+  - openssl aes-256-cbc -K $encrypted_5d1cc3ab8481_key -iv $encrypted_5d1cc3ab8481_iv -in travis/pubring.gpg.enc -out ~/.gnupg/pubring.gpg -d
 after_success:
   - openssl aes-256-cbc -K $encrypted_5d1cc3ab8481_key -iv $encrypted_5d1cc3ab8481_iv -in travis/settings.xml.enc -out travis/settings.xml -d
-  - openssl aes-256-cbc -K $encrypted_5d1cc3ab8481_key -iv $encrypted_5d1cc3ab8481_iv -in travis/pubring.gpg.enc -out ~/.gnupg/pubring.gpg -d
   - mvn clean deploy --settings travis/settings.xml
