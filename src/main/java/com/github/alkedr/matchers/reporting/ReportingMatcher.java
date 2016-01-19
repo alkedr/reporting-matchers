@@ -222,11 +222,11 @@ public interface ReportingMatcher<T> extends Matcher<T> {
         }
 
         public static Checks merge(Iterable<Checks> checksIterable) {
-            return sequence(checksIterable.iterator());
+            return merge(checksIterable.iterator());
         }
 
         public static Checks merge(Checks... checksArray) {
-            return sequence(asList(checksArray));
+            return merge(asList(checksArray));
         }
 
 
