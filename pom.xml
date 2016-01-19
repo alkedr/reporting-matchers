@@ -8,12 +8,39 @@
     <artifactId>reporting-matchers</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>Reporting Matchers</name>
+    <url>https://github.com/alkedr/reporting-matchers</url>
+    <!--<description>TODO</description>-->
+
+    <inceptionYear>2016</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Unlicense</name>
+            <url>http://unlicense.org/UNLICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/alkedr/reporting-matchers</connection>
+        <url>https://github.com/alkedr/reporting-matchers</url>
+    </scm>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/alkedr/reporting-matchers/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/alkedr/reporting-matchers</url>
+    </ciManagement>
+
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <!-- TODO: project name -->
-    <!-- TODO: scm, developers, javadoc etc -->
 
 
     <dependencies>
