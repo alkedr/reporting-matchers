@@ -4,7 +4,7 @@ jdk:
 install: true
 script: mvn test
 after_success:
-  - travis-deploy.sh
+  - ./travis-deploy.sh
 #deploy:
 #  provider: script
 #  script: travis-deploy.sh
