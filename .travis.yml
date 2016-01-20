@@ -3,8 +3,10 @@ jdk:
   - oraclejdk8
 install: true
 script: mvn test
-deploy:
-  provider: script
-  script: travis-deploy.sh
-  on:
-    branch: master
+after_success:
+  - travis-deploy.sh
+#deploy:
+#  provider: script
+#  script: travis-deploy.sh
+#  on:
+#    branch: master
