@@ -26,18 +26,18 @@ public class Keys {
     }
 
     public static Key getterKey(Method method) {
-        return new RenamedKey(new MethodKey(method), createNameForGetterMethodInvocation(method.getName()));
+        return renamedKey(methodKey(method), createNameForGetterMethodInvocation(method.getName()));
     }
 
     public static Key getterByNameKey(String methodName) {
-        return new RenamedKey(methodByNameKey(methodName), createNameForGetterMethodInvocation(methodName));
+        return renamedKey(methodByNameKey(methodName), createNameForGetterMethodInvocation(methodName));
     }
 
     public static Key elementKey(int index) {
         return new ElementKey(index);
     }
 
-    // подходит только для
+    // подходит только для HashMap
     public static Key hashMapKey(Object key) {
         return new HashMapKey(key);
     }

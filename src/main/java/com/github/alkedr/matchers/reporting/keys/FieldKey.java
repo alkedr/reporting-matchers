@@ -3,7 +3,6 @@ package com.github.alkedr.matchers.reporting.keys;
 import org.apache.commons.lang3.Validate;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 class FieldKey implements Key {
     private final Field field;
@@ -16,14 +15,14 @@ class FieldKey implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FieldKey)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         FieldKey fieldKey = (FieldKey) o;
-        return Objects.equals(field, fieldKey.field);
+        return field.equals(fieldKey.field);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(field);
+        return field.hashCode();
     }
 
     @Override

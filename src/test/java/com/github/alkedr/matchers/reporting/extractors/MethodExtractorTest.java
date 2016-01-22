@@ -13,7 +13,6 @@ import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-// TODO преобразование метода наследника к методу родителя для объединения?
 public class MethodExtractorTest {
     private final Method inaccessibleMethod;
     private final Method inaccessibleStaticMethod;

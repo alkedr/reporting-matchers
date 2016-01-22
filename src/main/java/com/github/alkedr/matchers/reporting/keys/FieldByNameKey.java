@@ -2,8 +2,6 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.apache.commons.lang3.Validate;
 
-import java.util.Objects;
-
 class FieldByNameKey implements Key {
     private final String fieldName;
 
@@ -15,14 +13,14 @@ class FieldByNameKey implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FieldByNameKey)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         FieldByNameKey that = (FieldByNameKey) o;
-        return Objects.equals(fieldName, that.fieldName);
+        return fieldName.equals(that.fieldName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fieldName);
+        return fieldName.hashCode();
     }
 
     @Override

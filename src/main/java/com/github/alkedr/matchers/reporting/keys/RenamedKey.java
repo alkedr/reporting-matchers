@@ -1,13 +1,16 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import java.util.Objects;
+import org.apache.commons.lang3.Validate;
 
-// не должен объединяться с непереименованным Key
+// не объединяется с непереименованным Key
+// TODO: объединяться с непереименованным Key если названия совпадают?
 class RenamedKey implements Key {
     private final Key key;
     private final String name;
 
     RenamedKey(Key key, String name) {
+        Validate.notNull(key, "key");
+        Validate.notBlank(name, "name");
         this.key = key;
         this.name = name;
     }
@@ -15,15 +18,16 @@ class RenamedKey implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RenamedKey)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         RenamedKey that = (RenamedKey) o;
-        return Objects.equals(key, that.key) &&
-                Objects.equals(name, that.name);
+        return key.equals(that.key) && name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, name);
+        int result = key.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override

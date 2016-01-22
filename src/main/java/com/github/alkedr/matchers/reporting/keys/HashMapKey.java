@@ -1,7 +1,5 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import java.util.Objects;
-
 // не подходит для TreeMap, IdentityHashMap и пр.
 class HashMapKey implements Key {
     private final Object key;
@@ -13,14 +11,14 @@ class HashMapKey implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HashMapKey)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         HashMapKey that = (HashMapKey) o;
-        return Objects.equals(key, that.key);
+        return key.equals(that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key);
+        return key.hashCode();
     }
 
     @Override

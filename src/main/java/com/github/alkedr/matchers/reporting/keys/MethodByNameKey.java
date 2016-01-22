@@ -3,8 +3,10 @@ package com.github.alkedr.matchers.reporting.keys;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
-import java.util.Objects;
 
+import static com.github.alkedr.matchers.reporting.keys.Keys.createNameForRegularMethodInvocation;
+
+// TODO: сравнивать аргументы так же, как и value в CheckResult'ах?
 class MethodByNameKey implements Key {
     private final String methodName;
     private final Object[] arguments;
@@ -19,19 +21,19 @@ class MethodByNameKey implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MethodByNameKey)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         MethodByNameKey that = (MethodByNameKey) o;
-        return Objects.equals(methodName, that.methodName) &&
-                Arrays.equals(arguments, that.arguments);
+        return methodName.equals(that.methodName) && Arrays.equals(arguments, that.arguments);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(methodName, arguments);
+        return 31 * methodName.hashCode() + Arrays.hashCode(arguments);
     }
 
     @Override
     public String asString() {
-        return Keys.createNameForRegularMethodInvocation(methodName, arguments);
+        return createNameForRegularMethodInvocation(methodName, arguments);
     }
 }
