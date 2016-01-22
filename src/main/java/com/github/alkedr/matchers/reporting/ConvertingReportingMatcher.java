@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.check.results.CheckResult;
-import org.hamcrest.Description;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -24,9 +23,5 @@ class ConvertingReportingMatcher<T, U> extends BaseReportingMatcher<T> {
     @Override
     public Iterator<CheckResult> getChecksForMissingItem() {
         return matcher.getChecksForMissingItem();
-    }
-
-    @Override
-    public void describeTo(Description description) {
     }
 }

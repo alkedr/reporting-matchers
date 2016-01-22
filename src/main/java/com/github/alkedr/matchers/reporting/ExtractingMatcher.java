@@ -3,7 +3,6 @@ package com.github.alkedr.matchers.reporting;
 import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import com.github.alkedr.matchers.reporting.extractors.Extractor;
 import org.apache.commons.collections4.iterators.SingletonIterator;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 import java.util.Iterator;
@@ -49,13 +48,6 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
 
     @Override
-    public void describeTo(Description description) {
-//        description.appendText(name);
-        // TODO: append matcher.describeTo()
-    }
-
-
-    @Override
     public ExtractingMatcher<T> displayedAs(String newName) {
         return new ExtractingMatcher<>(newName, extractor, matcher);
     }
@@ -66,7 +58,6 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     }
 
 
-    // Заменяет, а не добавляет матчеры?
     @Override
     public ExtractingMatcher<T> is(Object value) {
         return is(equalTo(value));
@@ -87,9 +78,4 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     public <U> ExtractingMatcher<T> is(Iterable<? extends Matcher<? super U>> matchers) {
         return is(merge(toReportingMatchers(matchers)));
     }
-
-    // TODO: are, returns
-    // TODO: isPresent(), isAbsent()
-
-
 }

@@ -5,7 +5,6 @@ import com.github.alkedr.matchers.reporting.check.results.CheckResults;
 import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.keys.Keys;
-import org.hamcrest.Description;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -32,11 +31,6 @@ class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
         return new ChecksIterator(elementCheckerSupplier.get(), emptyIterator());
     }
 
-
-    @Override
-    public void describeTo(Description description) {
-        // TODO
-    }
 
     private static class ChecksIterator implements Iterator<CheckResult> {
         private final ElementChecker elementChecker;

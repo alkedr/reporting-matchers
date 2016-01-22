@@ -2,7 +2,6 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import org.apache.commons.collections4.iterators.SingletonIterator;
-import org.hamcrest.Description;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -34,11 +33,6 @@ public class BaseReportingMatcherTest {
         public Iterator<CheckResult> getChecksForMissingItem() {
             throw new UnsupportedOperationException();
         }
-
-        @Override
-        public void describeTo(Description description) {
-            throw new UnsupportedOperationException();
-        }
     }
 
     private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
@@ -49,11 +43,6 @@ public class BaseReportingMatcherTest {
 
         @Override
         public Iterator<CheckResult> getChecksForMissingItem() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void describeTo(Description description) {
             throw new UnsupportedOperationException();
         }
     }

@@ -2,7 +2,6 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import com.google.common.collect.Iterators;
-import org.hamcrest.Description;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -11,7 +10,7 @@ class SequenceOrMergeMatcher<T> extends BaseReportingMatcher<T> {
     private final Iterable<? extends ReportingMatcher<? super T>> matchers;
     private final Function<Iterator<CheckResult>, Iterator<CheckResult>> mergeFunction;
 
-    public SequenceOrMergeMatcher(Iterable<? extends ReportingMatcher<? super T>> matchers, Function<Iterator<CheckResult>, Iterator<CheckResult>> mergeFunction) {
+    SequenceOrMergeMatcher(Iterable<? extends ReportingMatcher<? super T>> matchers, Function<Iterator<CheckResult>, Iterator<CheckResult>> mergeFunction) {
         this.matchers = matchers;
         this.mergeFunction = mergeFunction;
     }
@@ -35,10 +34,5 @@ class SequenceOrMergeMatcher<T> extends BaseReportingMatcher<T> {
                         )
                 )
         );
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        // TODO
     }
 }

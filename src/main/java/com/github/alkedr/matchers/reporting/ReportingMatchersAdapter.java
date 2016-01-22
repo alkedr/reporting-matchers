@@ -61,6 +61,4 @@ class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements ReportingMat
     public void describeMismatch(Object item, Description description) {
         regularMatcher.describeMismatch(item, description);
     }
-
-
 }
