@@ -11,7 +11,7 @@ import java.util.Iterator;
 //   - end()'ы между собой
 // Плохо что begin()'ы не объединяются с end()'ами. Точно ли нужны begin()'ы?
 public interface ElementChecker {
-    Iterator<CheckResult> begin();
+    Iterator<CheckResult> begin();  // FIXME: точно ли нужен begin()? не хочется его объединять с end()
     Iterator<CheckResult> element(Key key, Object value);   // TODO: Object item?
     Iterator<CheckResult> end();
 }

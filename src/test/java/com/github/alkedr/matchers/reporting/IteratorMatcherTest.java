@@ -38,6 +38,9 @@ public class IteratorMatcherTest {
         when(elementChecker.end()).thenReturn(endChecks);
     }
 
+
+    // TODO: item == null, item.getClass() != Iterator.class
+
     @Test
     public void getChecks() {
         Key key1 = Keys.elementKey(0);

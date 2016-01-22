@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyIterator;
 
-// TODO: заюзать группы KeyValueChecks
-// По хорошему надо объединять missing?
+// TODO: заюзать SequenceOfMergedSubValueCheckResults
+// По-хорошему надо объединять missing?
 class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
     private final Supplier<ElementChecker> elementCheckerSupplier;
 

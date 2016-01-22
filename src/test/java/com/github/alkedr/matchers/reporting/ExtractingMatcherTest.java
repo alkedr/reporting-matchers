@@ -4,6 +4,7 @@ import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.junit.After;
+import org.junit.Test;
 import org.mockito.InOrder;
 
 import static org.mockito.Mockito.inOrder;
@@ -22,7 +23,11 @@ public class ExtractingMatcherTest {
         inOrder.verifyNoMoreInteractions();
     }
 
-    // TODO: тестировать ExtractionResult'ы отдельно
+    // TODO: item == null, item.getClass() != Iterator.class
+
+    @Test
+    public void getChecks() {
+    }
 
     /*@Test
     public void getChecks_withMatcher_present() {

@@ -9,7 +9,7 @@ public class CreateNameForGetterMethodInvocationTest {
     @Test
     public void nullAndEmptyInput() {
         assertEquals("", createNameForGetterMethodInvocation(null));
-        verifyNotChanged("");
+        assertEquals("", createNameForGetterMethodInvocation(""));
     }
 
     @Test

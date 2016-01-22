@@ -11,26 +11,19 @@ import static com.github.alkedr.matchers.reporting.ReportingMatchers.merge;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatchers;
+import static com.github.alkedr.matchers.reporting.keys.Keys.renamedKey;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-// TODO: описать зачем нужно, пример использования
-// field("qwerty").displayedAs("12345").is(equalTo(1))
-// is заменяет, не добавляет
-// все fluent API методы возвращают новый инстанс
-// TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements ExtractingMatcherBuilder<T> {
-    private final String name;
     private final ExtractableKey extractableKey;
     private final ReportingMatcher<?> matcher;
 
     ExtractingMatcher(ExtractableKey extractableKey) {
-        this(null, extractableKey, noOp());
+        this(extractableKey, noOp());
     }
 
-    // name и checks могут быть null
-    ExtractingMatcher(String name, ExtractableKey extractableKey, ReportingMatcher<?> matcher) {
-        this.name = name;
+    ExtractingMatcher(ExtractableKey extractableKey, ReportingMatcher<?> matcher) {
         this.extractableKey = extractableKey;
         this.matcher = matcher;
     }
@@ -49,12 +42,12 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
     @Override
     public ExtractingMatcher<T> displayedAs(String newName) {
-        return new ExtractingMatcher<>(newName, extractableKey, matcher);
+        return new ExtractingMatcher<>(renamedKey(extractableKey, newName), matcher);
     }
 
     @Override
     public ExtractingMatcher<T> key(ExtractableKey newExtractableKey) {
-        return new ExtractingMatcher<>(name, newExtractableKey, matcher);
+        return new ExtractingMatcher<>(newExtractableKey, matcher);
     }
 
 
@@ -65,7 +58,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
     @Override
     public ExtractingMatcher<T> is(Matcher<?> matcher) {
-        return new ExtractingMatcher<>(name, extractableKey, toReportingMatcher(matcher));
+        return new ExtractingMatcher<>(extractableKey, toReportingMatcher(matcher));
     }
 
     @Override

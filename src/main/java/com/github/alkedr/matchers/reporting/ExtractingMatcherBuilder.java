@@ -3,10 +3,15 @@ package com.github.alkedr.matchers.reporting;
 import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
+// TODO: описать зачем нужно, пример использования
+// field("qwerty").displayedAs("12345").is(equalTo(1))
+// все fluent API методы возвращают новый инстанс
+// TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 public interface ExtractingMatcherBuilder<T> extends ReportingMatcher<T> {
 
     ExtractingMatcherBuilder<T> displayedAs(String newName);
 
+    @Deprecated // ???
     ExtractingMatcherBuilder<T> key(ExtractableKey newExtractableKey);
 
 
