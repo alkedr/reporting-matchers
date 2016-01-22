@@ -1,24 +1,43 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.comparison.ComparingReportingMatcherBuilder;
-import com.github.alkedr.matchers.reporting.extraction.*;
-import com.github.alkedr.matchers.reporting.iteration.IteratorMatcher;
-import com.github.alkedr.matchers.reporting.utility.ConvertingReportingMatcher;
-import com.github.alkedr.matchers.reporting.utility.SequenceMatcher;
+import com.github.alkedr.matchers.reporting.check.results.CheckResults;
 import com.google.common.collect.Iterators;
+import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForGetterMethodInvocation;
-import static com.github.alkedr.matchers.reporting.iteration.ContainsInSpecifiedOrderChecker.containsInSpecifiedOrderChecker;
+import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
+import static com.github.alkedr.matchers.reporting.extractors.ExtractingMatcherExtractors.*;
 import static java.util.Arrays.asList;
 
 // используй static import
 // TODO: использовать здесь только интерфейсы из корневого пакета?
+// TODO: сделать реализации матчеров package-private?
 public class ReportingMatchers {
+
+
+
+    // оборачивает переданный ему матчер если он не reporting.
+    public static <T> ReportingMatcher<T> toReportingMatcher(Matcher<T> matcher) {
+        return matcher instanceof ReportingMatcher ? (ReportingMatcher<T>) matcher : new ReportingMatchersAdapter<>(matcher);
+    }
+
+    public static <U> Iterable<ReportingMatcher<? super U>> toReportingMatchers(Iterable<? extends Matcher<? super U>> matchers) {
+        // TODO: конвертировать на лету?
+        Collection<ReportingMatcher<? super U>> result = new ArrayList<>();
+        for (Matcher<? super U> matcher : matchers) {
+            result.add(toReportingMatcher(matcher));
+        }
+        return result;
+    }
+
+
 
     @SafeVarargs
     public static <T> ReportingMatcher<T> sequence(ReportingMatcher<? super T>... matchers) {
@@ -26,7 +45,17 @@ public class ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T> sequence(Iterable<? extends ReportingMatcher<? super T>> matchers) {
-        return new SequenceMatcher<>(matchers);
+        return new SequenceOrMergeMatcher<>(matchers, Function.identity());
+    }
+
+
+    @SafeVarargs
+    public static <T> ReportingMatcher<T> merge(ReportingMatcher<? super T>... matchers) {
+        return merge(asList(matchers));
+    }
+
+    public static <T> ReportingMatcher<T> merge(Iterable<? extends ReportingMatcher<? super T>> matchers) {
+        return new SequenceOrMergeMatcher<>(matchers, CheckResults::merge);
     }
 
 
@@ -37,30 +66,32 @@ public class ReportingMatchers {
     // TODO: elementsThatAre(predicate/matcher).alsoAre()
     // TODO: method(lambda), getter(lambda)
 
+    // TODO: present(), missing()
+
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(Field field) {
-        return new ExtractingMatcher<>(new FieldExtractor(field));
+        return new ExtractingMatcher<>(fieldExtractor(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcher<T> field(String fieldName) {
-        return new ExtractingMatcher<>(new FieldByNameExtractor(fieldName));
+        return new ExtractingMatcher<>(fieldByNameExtractor(fieldName));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(new MethodExtractor(method, arguments));
+        return new ExtractingMatcher<>(methodExtractor(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(new MethodByNameExtractor(methodName, arguments));
+        return new ExtractingMatcher<>(methodByNameExtractor(methodName, arguments));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -72,12 +103,14 @@ public class ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new MethodExtractor(method), null);
+        return new ExtractingMatcher<T>(getterExtractor(method));
+//        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new Extractors.MethodExtractor(method), null);
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new MethodByNameExtractor(methodName), null);
+        return new ExtractingMatcher<T>(getterByNameExtractor(methodName));
+//        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new Extractors.MethodByNameExtractor(methodName), null);
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -87,26 +120,27 @@ public class ReportingMatchers {
 
 
     public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(new ElementExtractor(index));
+        return new ExtractingMatcher<>(elementExtractor(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcher<List<T>> element(int index) {
-        return new ExtractingMatcher<>(new ElementExtractor(index));
+        return new ExtractingMatcher<>(elementExtractor(index));
     }
 
     // O(N)
     public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(new ElementExtractor(index));
+        return new ExtractingMatcher<>(elementExtractor(index));
     }
 
 
     public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(new ValueForKeyExtractor(key));
+        return new ExtractingMatcher<>(valueForKeyExtractor(key));
     }
 
 
 
+    // TODO: поддерживать массивы, итераторы, итераблы ?мапы?  (это всё обёртки для IteratorMatcher, которые преобразовывают item)
     // TODO: тут нужны перегрузки для всех примитивных типов
     @SafeVarargs
     public static <T> ReportingMatcher<T[]> arrayWithElements(T... elements) {
@@ -125,7 +159,6 @@ public class ReportingMatchers {
     public static <T> ComparingReportingMatcherBuilder<T> compare() {
         return new ComparingReportingMatcherBuilder<>();
     }
-
 
 
 //    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields() {

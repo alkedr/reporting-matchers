@@ -1,19 +1,13 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
-
 import java.util.Objects;
 
 // не подходит для TreeMap, IdentityHashMap и пр.
-public class HashMapKey implements ReportingMatcher.Key {
+class HashMapKey implements Key {
     private final Object key;
 
-    public HashMapKey(Object key) {
+    HashMapKey(Object key) {
         this.key = key;
-    }
-
-    public Object getKey() {
-        return key;
     }
 
     @Override

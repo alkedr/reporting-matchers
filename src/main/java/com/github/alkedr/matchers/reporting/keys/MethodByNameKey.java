@@ -1,30 +1,19 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.github.alkedr.matchers.reporting.extraction.MethodNameUtils.createNameForRegularMethodInvocation;
-
-public class MethodByNameKey implements ReportingMatcher.Key {
+class MethodByNameKey implements Key {
     private final String methodName;
     private final Object[] arguments;
 
-    public MethodByNameKey(String methodName, Object... arguments) {
+    MethodByNameKey(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
         this.methodName = methodName;
         this.arguments = Arrays.copyOf(arguments, arguments.length);
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public Object[] getArguments() {
-        return Arrays.copyOf(arguments, arguments.length);
     }
 
     @Override
@@ -43,6 +32,6 @@ public class MethodByNameKey implements ReportingMatcher.Key {
 
     @Override
     public String asString() {
-        return createNameForRegularMethodInvocation(methodName, arguments);
+        return Keys.createNameForRegularMethodInvocation(methodName, arguments);
     }
 }

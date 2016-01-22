@@ -1,21 +1,16 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import org.apache.commons.lang3.Validate;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-public class FieldKey implements ReportingMatcher.Key {
+class FieldKey implements Key {
     private final Field field;
 
-    public FieldKey(Field field) {
+    FieldKey(Field field) {
         Validate.notNull(field, "field");
         this.field = field;
-    }
-
-    public Field getField() {
-        return field;
     }
 
     @Override

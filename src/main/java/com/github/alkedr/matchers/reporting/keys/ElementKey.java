@@ -1,20 +1,15 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Objects;
 
-public class ElementKey implements ReportingMatcher.Key {
+class ElementKey implements Key {
     private final int index;
 
-    public ElementKey(int index) {
+    ElementKey(int index) {
         Validate.isTrue(index >= 0, "index must be positive");
         this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     @Override
