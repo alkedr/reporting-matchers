@@ -10,7 +10,7 @@ import static java.util.Collections.emptyIterator;
 
 // matches всегда возвращает true, в отчёт никогда ничего не добавляется
 class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
-    private static final NoOpMatcher<?> INSTANCE = new NoOpMatcher<>();
+    static final NoOpMatcher<?> INSTANCE = new NoOpMatcher<>();
 
     @Override
     public Iterator<CheckResult> getChecks(Object item) {
@@ -30,10 +30,5 @@ class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-    }
-
-
-    public static <T> NoOpMatcher<T> noOp() {
-        return (NoOpMatcher<T>) INSTANCE;
     }
 }

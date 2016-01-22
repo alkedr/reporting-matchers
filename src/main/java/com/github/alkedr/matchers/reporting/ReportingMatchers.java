@@ -21,6 +21,11 @@ import static java.util.Arrays.asList;
 // TODO: сделать реализации матчеров package-private?
 public class ReportingMatchers {
 
+    @SuppressWarnings("unchecked")
+    public static <T> ReportingMatcher<T> noOp() {
+        return (ReportingMatcher<T>) NoOpMatcher.INSTANCE;
+    }
+
 
 
     // оборачивает переданный ему матчер если он не reporting.

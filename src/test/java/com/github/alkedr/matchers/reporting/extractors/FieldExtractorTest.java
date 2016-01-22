@@ -1,14 +1,17 @@
 package com.github.alkedr.matchers.reporting.extractors;
 
-import com.github.alkedr.matchers.reporting.keys.Keys;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.missingSubValue;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.presentSubValue;
 import static com.github.alkedr.matchers.reporting.extractors.ExtractingMatcherExtractors.fieldExtractor;
+import static com.github.alkedr.matchers.reporting.keys.Keys.fieldKey;
+import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 public class FieldExtractorTest {
     private final Field inaccessibleField;
@@ -20,7 +23,6 @@ public class FieldExtractorTest {
         staticField = MyClass.class.getDeclaredField("MY_STATIC_FIELD");
     }
 
-
     @Test(expected = NullPointerException.class)
     public void nullField() {
         fieldExtractor(null);
@@ -28,40 +30,40 @@ public class FieldExtractorTest {
 
     @Test
     public void extractFrom_nullItem() {
-        assertReflectionEquals(
-                new Extractor.Result.Missing(Keys.fieldKey(inaccessibleField)),
-                fieldExtractor(inaccessibleField).extractFrom(null)
+        assertEquals(
+                missingSubValue(fieldKey(inaccessibleField), emptyIterator()),
+                fieldExtractor(inaccessibleField).extractFrom(null).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_inaccessibleField() {
-        assertReflectionEquals(
-                new Extractor.Result.Present(Keys.fieldKey(inaccessibleField), 2),
-                fieldExtractor(inaccessibleField).extractFrom(item)
+        assertEquals(
+                presentSubValue(fieldKey(inaccessibleField), 2, emptyIterator()),
+                fieldExtractor(inaccessibleField).extractFrom(item).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_inaccessibleStaticFieldAndNullItem() {
-        assertReflectionEquals(
-                new Extractor.Result.Present(Keys.fieldKey(staticField), 3),
-                fieldExtractor(staticField).extractFrom(null)
+        assertEquals(
+                presentSubValue(fieldKey(staticField), 3, emptyIterator()),
+                fieldExtractor(staticField).extractFrom(null).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_itemHasWrongClass() {
         Extractor.Result.Broken actual = (Extractor.Result.Broken) fieldExtractor(inaccessibleField).extractFrom(new Object());
-        assertEquals(Keys.fieldKey(inaccessibleField), actual.key);
+        assertEquals(fieldKey(inaccessibleField), actual.key);
         assertSame(IllegalArgumentException.class, actual.throwable.getClass());   // TODO: missing?
     }
 
     @Test
     public void extractFrom_missingItem() {
-        assertReflectionEquals(
-                new Extractor.Result.Missing(Keys.fieldKey(inaccessibleField)),
-                fieldExtractor(inaccessibleField).extractFromMissingItem()
+        assertEquals(
+                missingSubValue(fieldKey(inaccessibleField), emptyIterator()),
+                fieldExtractor(inaccessibleField).extractFromMissingItem().createCheckResult(noOp())
         );
     }
 

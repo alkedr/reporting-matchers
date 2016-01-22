@@ -98,13 +98,6 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.unitils</groupId>
-            <artifactId>unitils-core</artifactId>
-            <version>3.4.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 

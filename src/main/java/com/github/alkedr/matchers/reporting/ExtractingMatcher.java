@@ -8,8 +8,8 @@ import org.hamcrest.Matcher;
 
 import java.util.Iterator;
 
-import static com.github.alkedr.matchers.reporting.NoOpMatcher.noOp;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.merge;
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatchers;
 import static java.util.Arrays.asList;

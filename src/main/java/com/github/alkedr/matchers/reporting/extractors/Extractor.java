@@ -1,8 +1,8 @@
 package com.github.alkedr.matchers.reporting.extractors;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import com.github.alkedr.matchers.reporting.check.results.CheckResults;
+import com.github.alkedr.matchers.reporting.check.results.MergeableSubValueCheckResult;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.keys.Keys;
 
@@ -15,7 +15,7 @@ public interface Extractor {
     interface Result {
         // возвращает новый инстанс
         Result rename(String newName);
-        CheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue);
+        MergeableSubValueCheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue);
 
         class Present implements Result {
             private final Key key;
@@ -32,7 +32,7 @@ public interface Extractor {
             }
 
             @Override
-            public CheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
+            public MergeableSubValueCheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
                 return CheckResults.presentSubValue(key, value, matcherForExtractedValue.getChecks(value));
             }
         }
@@ -50,7 +50,7 @@ public interface Extractor {
             }
 
             @Override
-            public CheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
+            public MergeableSubValueCheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
                 return CheckResults.missingSubValue(key, matcherForExtractedValue.getChecksForMissingItem());
             }
         }
@@ -70,10 +70,9 @@ public interface Extractor {
             }
 
             @Override
-            public CheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
+            public MergeableSubValueCheckResult createCheckResult(ReportingMatcher<?> matcherForExtractedValue) {
                 return CheckResults.brokenSubValue(key, throwable, matcherForExtractedValue.getChecksForMissingItem());
             }
         }
     }
-
 }

@@ -1,12 +1,17 @@
 package com.github.alkedr.matchers.reporting.extractors;
 
-import com.github.alkedr.matchers.reporting.keys.Keys;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.missingSubValue;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.presentSubValue;
 import static com.github.alkedr.matchers.reporting.extractors.ExtractingMatcherExtractors.fieldByNameExtractor;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static com.github.alkedr.matchers.reporting.keys.Keys.fieldByNameKey;
+import static com.github.alkedr.matchers.reporting.keys.Keys.fieldKey;
+import static java.util.Collections.emptyIterator;
+import static org.junit.Assert.assertEquals;
 
 public class FieldByNameExtractorTest {
     private final Field inaccessibleField;
@@ -18,7 +23,6 @@ public class FieldByNameExtractorTest {
         inaccessibleField2 = MyClassWithTwoFields.class.getDeclaredField("myInaccessibleField");
     }
 
-
     @Test(expected = NullPointerException.class)
     public void nullFieldName() {
         fieldByNameExtractor(null);
@@ -26,41 +30,41 @@ public class FieldByNameExtractorTest {
 
     @Test
     public void extractFrom_nullItem() {
-        assertReflectionEquals(
-                new Extractor.Result.Missing(Keys.fieldByNameKey("myInaccessibleField")),
-                fieldByNameExtractor("myInaccessibleField").extractFrom(null)
+        assertEquals(
+                missingSubValue(fieldByNameKey("myInaccessibleField"), emptyIterator()),
+                fieldByNameExtractor("myInaccessibleField").extractFrom(null).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_inaccessibleField() {
-        assertReflectionEquals(
-                new Extractor.Result.Present(Keys.fieldKey(inaccessibleField), 2),
-                fieldByNameExtractor("myInaccessibleField").extractFrom(item)
+        assertEquals(
+                presentSubValue(fieldKey(inaccessibleField), 2, emptyIterator()),
+                fieldByNameExtractor("myInaccessibleField").extractFrom(item).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_itemDoesNotHaveSuchField() {
-        assertReflectionEquals(
-                new Extractor.Result.Missing(Keys.fieldByNameKey("myInaccessibleField")),
-                fieldByNameExtractor("myInaccessibleField").extractFrom(new Object())
+        assertEquals(
+                missingSubValue(fieldByNameKey("myInaccessibleField"), emptyIterator()),
+                fieldByNameExtractor("myInaccessibleField").extractFrom(new Object()).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_itemHasTwoMatchingFields() {
-        assertReflectionEquals(
-                new Extractor.Result.Present(Keys.fieldKey(inaccessibleField2), 3),
-                fieldByNameExtractor("myInaccessibleField").extractFrom(new MyClassWithTwoFields())
+        assertEquals(
+                presentSubValue(fieldKey(inaccessibleField2), 3, emptyIterator()),
+                fieldByNameExtractor("myInaccessibleField").extractFrom(new MyClassWithTwoFields()).createCheckResult(noOp())
         );
     }
 
     @Test
     public void extractFrom_missingItem() {
-        assertReflectionEquals(
-                new Extractor.Result.Missing(Keys.fieldByNameKey("myInaccessibleField")),
-                fieldByNameExtractor("myInaccessibleField").extractFromMissingItem()
+        assertEquals(
+                missingSubValue(fieldByNameKey("myInaccessibleField"), emptyIterator()),
+                fieldByNameExtractor("myInaccessibleField").extractFromMissingItem().createCheckResult(noOp())
         );
     }
 
