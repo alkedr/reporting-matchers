@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.junit.After;
@@ -13,7 +13,7 @@ public class ExtractingMatcherTest {
     private final Reporter reporter = mock(Reporter.class);
     private final InOrder inOrder = inOrder(reporter);
     private final Object item = new Object();
-    private final Extractor extractor = mock(Extractor.class);
+    private final ExtractableKey extractableKey = mock(ExtractableKey.class);
     private final Key key = mock(Key.class);
     private final ReportingMatcher<?> matcher = mock(ReportingMatcher.class);
 

@@ -1,7 +1,6 @@
-package com.github.alkedr.matchers.reporting.extractors;
+package com.github.alkedr.matchers.reporting.keys;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-public class ExtractorResultsTest {
+public class ExtractionResultsTest {
     private final Reporter reporter = mock(Reporter.class);
     private final InOrder inOrder = inOrder(reporter);
     private final Key key = elementKey(1);
@@ -24,7 +23,7 @@ public class ExtractorResultsTest {
     @Test
     public void present_createCheckResult() {
         Object value = new Object();
-        new Extractor.Result.Present(key, value).createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Present(key, value).createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginNode(key.asString(), value);
         inOrder.verify(reporter).passedCheck("1");
         inOrder.verify(reporter).endNode();
@@ -32,7 +31,7 @@ public class ExtractorResultsTest {
 
     @Test
     public void missing_createCheckResult() {
-        new Extractor.Result.Missing(key).createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Missing(key).createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginMissingNode(key.asString());
         inOrder.verify(reporter).checkForMissingItem("1");
         inOrder.verify(reporter).endNode();
@@ -41,7 +40,7 @@ public class ExtractorResultsTest {
     @Test
     public void broken_createCheckResult() {
         Throwable throwable = new RuntimeException();
-        new Extractor.Result.Broken(key, throwable).createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Broken(key, throwable).createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginBrokenNode(key.asString(), throwable);
         inOrder.verify(reporter).checkForMissingItem("1");
         inOrder.verify(reporter).endNode();
@@ -51,7 +50,7 @@ public class ExtractorResultsTest {
     @Test
     public void present_rename_createCheckResult() {
         Object value = new Object();
-        new Extractor.Result.Present(key, value).rename("123").createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Present(key, value).rename("123").createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginNode("123", value);
         inOrder.verify(reporter).passedCheck("1");
         inOrder.verify(reporter).endNode();
@@ -59,7 +58,7 @@ public class ExtractorResultsTest {
 
     @Test
     public void missing_rename_createCheckResult() {
-        new Extractor.Result.Missing(key).rename("123").createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Missing(key).rename("123").createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginMissingNode("123");
         inOrder.verify(reporter).checkForMissingItem("1");
         inOrder.verify(reporter).endNode();
@@ -68,7 +67,7 @@ public class ExtractorResultsTest {
     @Test
     public void broken_rename_createCheckResult() {
         Throwable throwable = new RuntimeException();
-        new Extractor.Result.Broken(key, throwable).rename("123").createCheckResult(matcher).run(reporter);
+        new ExtractableKey.Result.Broken(key, throwable).rename("123").createCheckResult(matcher).run(reporter);
         inOrder.verify(reporter).beginBrokenNode("123", throwable);
         inOrder.verify(reporter).checkForMissingItem("1");
         inOrder.verify(reporter).endNode();
@@ -78,9 +77,9 @@ public class ExtractorResultsTest {
     @Test
     public void present_rename_equals() {
         Object value = new Object();
-        Extractor.Result original = new Extractor.Result.Present(key, value);
-        Extractor.Result renamed1 = original.rename("123");
-        Extractor.Result renamed2 = original.rename("123");
+        ExtractableKey.Result original = new ExtractableKey.Result.Present(key, value);
+        ExtractableKey.Result renamed1 = original.rename("123");
+        ExtractableKey.Result renamed2 = original.rename("123");
         assertNotSame(original, renamed1);
         assertNotEquals(original.createCheckResult(matcher), renamed1.createCheckResult(matcher));
         assertEquals(renamed1.createCheckResult(matcher), renamed2.createCheckResult(matcher));
@@ -88,9 +87,9 @@ public class ExtractorResultsTest {
 
     @Test
     public void missing_rename_equals() {
-        Extractor.Result original = new Extractor.Result.Missing(key);
-        Extractor.Result renamed1 = original.rename("123");
-        Extractor.Result renamed2 = original.rename("123");
+        ExtractableKey.Result original = new ExtractableKey.Result.Missing(key);
+        ExtractableKey.Result renamed1 = original.rename("123");
+        ExtractableKey.Result renamed2 = original.rename("123");
         assertNotSame(original, renamed1);
         assertNotEquals(original.createCheckResult(matcher), renamed1.createCheckResult(matcher));
         assertEquals(renamed1.createCheckResult(matcher), renamed2.createCheckResult(matcher));
@@ -99,9 +98,9 @@ public class ExtractorResultsTest {
     @Test
     public void broken_rename_equals() {
         Throwable throwable = new RuntimeException();
-        Extractor.Result original = new Extractor.Result.Broken(key, throwable);
-        Extractor.Result renamed1 = original.rename("123");
-        Extractor.Result renamed2 = original.rename("123");
+        ExtractableKey.Result original = new ExtractableKey.Result.Broken(key, throwable);
+        ExtractableKey.Result renamed1 = original.rename("123");
+        ExtractableKey.Result renamed2 = original.rename("123");
         assertNotSame(original, renamed1);
         assertNotEquals(original.createCheckResult(matcher), renamed1.createCheckResult(matcher));
         assertEquals(renamed1.createCheckResult(matcher), renamed2.createCheckResult(matcher));

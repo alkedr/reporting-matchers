@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.junit.Test;
 
-import static com.github.alkedr.matchers.reporting.keys.Keys.createNameForRegularMethodInvocation;
+import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
 import static org.junit.Assert.assertEquals;
 
 public class CreateNameForRegularMethodInvocationTest {

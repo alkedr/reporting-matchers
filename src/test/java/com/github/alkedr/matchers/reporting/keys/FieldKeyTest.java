@@ -4,21 +4,23 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.missingSubValue;
+import static com.github.alkedr.matchers.reporting.check.results.CheckResults.presentSubValue;
 import static com.github.alkedr.matchers.reporting.keys.Keys.fieldKey;
+import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 
 public class FieldKeyTest {
-    private static final Field FIELD1;
-    private static final Field FIELD2;
+    private final Field inaccessibleField;
+    private final Field staticField;
+    private final MyClass item = new MyClass();
 
-    static {
-        try {
-            FIELD1 = MyClass.class.getDeclaredField("field1");
-            FIELD2 = MyClass.class.getDeclaredField("field2");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+    public FieldKeyTest() throws NoSuchFieldException {
+        inaccessibleField = MyClass.class.getDeclaredField("myInaccessibleField");
+        staticField = MyClass.class.getDeclaredField("MY_STATIC_FIELD");
     }
 
     @Test(expected = NullPointerException.class)
@@ -28,23 +30,61 @@ public class FieldKeyTest {
 
     @Test
     public void asStringTest() {
-        assertEquals("field1", fieldKey(FIELD1).asString());
+        assertEquals("myInaccessibleField", fieldKey(inaccessibleField).asString());
     }
 
     @Test
     public void hashCodeTest() {
-        assertEquals(fieldKey(FIELD1).hashCode(), fieldKey(FIELD1).hashCode());
+        assertEquals(fieldKey(inaccessibleField).hashCode(), fieldKey(inaccessibleField).hashCode());
     }
 
     @Test
     public void equalsTest() {
-        assertEquals(fieldKey(FIELD1), fieldKey(FIELD1));
-        assertNotEquals(fieldKey(FIELD1), fieldKey(FIELD2));
+        assertEquals(fieldKey(inaccessibleField), fieldKey(inaccessibleField));
+        assertNotEquals(fieldKey(inaccessibleField), fieldKey(staticField));
     }
 
+    @Test
+    public void extractFrom_nullItem() {
+        assertEquals(
+                missingSubValue(fieldKey(inaccessibleField), emptyIterator()),
+                fieldKey(inaccessibleField).extractFrom(null).createCheckResult(noOp())
+        );
+    }
+
+    @Test
+    public void extractFrom_inaccessibleField() {
+        assertEquals(
+                presentSubValue(fieldKey(inaccessibleField), 2, emptyIterator()),
+                fieldKey(inaccessibleField).extractFrom(item).createCheckResult(noOp())
+        );
+    }
+
+    @Test
+    public void extractFrom_inaccessibleStaticFieldAndNullItem() {
+        assertEquals(
+                presentSubValue(fieldKey(staticField), 3, emptyIterator()),
+                fieldKey(staticField).extractFrom(null).createCheckResult(noOp())
+        );
+    }
+
+    @Test
+    public void extractFrom_itemHasWrongClass() {
+        ExtractableKey.Result.Broken actual = (ExtractableKey.Result.Broken) fieldKey(inaccessibleField).extractFrom(new Object());
+        assertEquals(fieldKey(inaccessibleField), actual.key);
+        assertSame(IllegalArgumentException.class, actual.throwable.getClass());   // TODO: missing?
+    }
+
+    @Test
+    public void extractFrom_missingItem() {
+        assertEquals(
+                missingSubValue(fieldKey(inaccessibleField), emptyIterator()),
+                fieldKey(inaccessibleField).extractFromMissingItem().createCheckResult(noOp())
+        );
+    }
 
     private static class MyClass {
-        private final int field1 = 1;
-        private final int field2 = 2;
+        private final int myInaccessibleField = 2;
+        private static final int MY_STATIC_FIELD = 3;
     }
 }

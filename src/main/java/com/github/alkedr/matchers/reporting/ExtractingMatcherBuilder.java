@@ -1,13 +1,13 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 public interface ExtractingMatcherBuilder<T> extends ReportingMatcher<T> {
 
     ExtractingMatcherBuilder<T> displayedAs(String newName);
 
-    ExtractingMatcherBuilder<T> extractor(Extractor newExtractor);
+    ExtractingMatcherBuilder<T> key(ExtractableKey newExtractableKey);
 
 
     // Заменяет, а не добавляет матчеры?

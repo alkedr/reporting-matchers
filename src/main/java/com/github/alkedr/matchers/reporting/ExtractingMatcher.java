@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.check.results.CheckResult;
-import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.hamcrest.Matcher;
 
@@ -21,40 +21,40 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements ExtractingMatcherBuilder<T> {
     private final String name;
-    private final Extractor extractor;
+    private final ExtractableKey extractableKey;
     private final ReportingMatcher<?> matcher;
 
-    ExtractingMatcher(Extractor extractor) {
-        this(null, extractor, noOp());
+    ExtractingMatcher(ExtractableKey extractableKey) {
+        this(null, extractableKey, noOp());
     }
 
     // name и checks могут быть null
-    ExtractingMatcher(String name, Extractor extractor, ReportingMatcher<?> matcher) {
+    ExtractingMatcher(String name, ExtractableKey extractableKey, ReportingMatcher<?> matcher) {
         this.name = name;
-        this.extractor = extractor;
+        this.extractableKey = extractableKey;
         this.matcher = matcher;
     }
 
 
     @Override
     public Iterator<CheckResult> getChecks(Object item) {
-        return new SingletonIterator<>(extractor.extractFrom(item).createCheckResult(matcher));
+        return new SingletonIterator<>(extractableKey.extractFrom(item).createCheckResult(matcher));
     }
 
     @Override
     public Iterator<CheckResult> getChecksForMissingItem() {
-        return new SingletonIterator<>(extractor.extractFromMissingItem().createCheckResult(matcher));
+        return new SingletonIterator<>(extractableKey.extractFromMissingItem().createCheckResult(matcher));
     }
 
 
     @Override
     public ExtractingMatcher<T> displayedAs(String newName) {
-        return new ExtractingMatcher<>(newName, extractor, matcher);
+        return new ExtractingMatcher<>(newName, extractableKey, matcher);
     }
 
     @Override
-    public ExtractingMatcher<T> extractor(Extractor newExtractor) {
-        return new ExtractingMatcher<>(name, newExtractor, matcher);
+    public ExtractingMatcher<T> key(ExtractableKey newExtractableKey) {
+        return new ExtractingMatcher<>(name, newExtractableKey, matcher);
     }
 
 
@@ -65,7 +65,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
     @Override
     public ExtractingMatcher<T> is(Matcher<?> matcher) {
-        return new ExtractingMatcher<>(name, extractor, toReportingMatcher(matcher));
+        return new ExtractingMatcher<>(name, extractableKey, toReportingMatcher(matcher));
     }
 
     @Override

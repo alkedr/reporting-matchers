@@ -28,6 +28,8 @@ public class GetterByNameKeyTest {
         assertNotEquals(getterByNameKey("getX"), getterByNameKey("method2"));
     }
 
+    // TODO: протестировать извлечение
+
 
     private static class MyClass {
         private int getX() { return 0; }

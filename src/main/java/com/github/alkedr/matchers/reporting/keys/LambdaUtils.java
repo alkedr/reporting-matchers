@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting.extractors;
+package com.github.alkedr.matchers.reporting.keys;
 
 import sun.misc.Unsafe;
 
@@ -28,9 +28,9 @@ class LambdaUtils {
     // Могут возникнуть проблемы с кастами внутри function
 
 
-    static <T> Iterable<Extractor> getExtractorsChainFromFunction(Function<T, Object> function) {
+    static <T> Iterable<ExtractableKey> getExtractorsChainFromFunction(Function<T, Object> function) {
         Class<?> clazz = getArgumentClassFromFunction(function);
-        Map<Object, Supplier<Iterable<Extractor>>> returnedValueToFieldSupplierMap =
+        Map<Object, Supplier<Iterable<ExtractableKey>>> returnedValueToFieldSupplierMap =
                 new IdentityHashMap<>();
         Object instance = createMockInstance(clazz, returnedValueToFieldSupplierMap);
         Object functionResult = function.apply((T) instance);
@@ -40,7 +40,7 @@ class LambdaUtils {
         throw new RuntimeException("function не возвращает поле");  // FIXME
     }
 
-    private static Object createMockInstance(Class<?> clazz, Map<Object, Supplier<Iterable<Extractor>>> returnedValueToFieldSupplierMap) {
+    private static Object createMockInstance(Class<?> clazz, Map<Object, Supplier<Iterable<ExtractableKey>>> returnedValueToFieldSupplierMap) {
         Object result = createUninitializedObject(clazz);
 //        initializeFields(result, returnedValueToFieldSupplierMap);
         return result;

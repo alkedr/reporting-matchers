@@ -1,14 +1,11 @@
-package com.github.alkedr.matchers.reporting.extractors;
+package com.github.alkedr.matchers.reporting.keys;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import com.github.alkedr.matchers.reporting.check.results.CheckResults;
 import com.github.alkedr.matchers.reporting.check.results.MergeableSubValueCheckResult;
-import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.keys.Keys;
 
-// TODO: TypeSafeExtractor ?
 // TODO: написать в доках интерфейсов как их реализовывать
-public interface Extractor {
+public interface ExtractableKey extends Key {
     Result extractFrom(Object item);
     Result extractFromMissingItem();
 

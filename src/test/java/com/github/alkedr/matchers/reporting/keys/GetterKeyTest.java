@@ -43,6 +43,8 @@ public class GetterKeyTest {
         assertNotEquals(getterKey(METHOD1), getterKey(METHOD2));
     }
 
+    // TODO: протестировать извлечение
+
 
     private static class MyClass {
         private int getX() { return 0; }

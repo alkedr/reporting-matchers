@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
-import static com.github.alkedr.matchers.reporting.extractors.ExtractingMatcherExtractors.*;
+import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -76,27 +76,27 @@ public class ReportingMatchers {
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcher<T> field(Field field) {
-        return new ExtractingMatcher<>(fieldExtractor(field));
+    public static <T> ExtractingMatcherBuilder<T> field(Field field) {
+        return new ExtractingMatcher<>(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcher<T> field(String fieldName) {
-        return new ExtractingMatcher<>(fieldByNameExtractor(fieldName));
+    public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
+        return new ExtractingMatcher<>(fieldByNameKey(fieldName));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
-    public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(methodExtractor(method, arguments));
+    public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
+        return new ExtractingMatcher<>(methodKey(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
-    public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(methodByNameExtractor(methodName, arguments));
+    public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
+        return new ExtractingMatcher<>(methodByNameKey(methodName, arguments));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -107,15 +107,13 @@ public class ReportingMatchers {
 
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcher<T> getter(Method method) {
-        return new ExtractingMatcher<T>(getterExtractor(method));
-//        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(method.getName()), new Extractors.MethodExtractor(method), null);
+    public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
+        return new ExtractingMatcher<T>(getterKey(method));
     }
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcher<T> getter(String methodName) {
-        return new ExtractingMatcher<T>(getterByNameExtractor(methodName));
-//        return new ExtractingMatcher<>(createNameForGetterMethodInvocation(methodName), new Extractors.MethodByNameExtractor(methodName), null);
+    public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
+        return new ExtractingMatcher<T>(getterByNameKey(methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -124,23 +122,23 @@ public class ReportingMatchers {
 //    }
 
 
-    public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(elementExtractor(index));
+    public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
-    public static <T> ExtractingMatcher<List<T>> element(int index) {
-        return new ExtractingMatcher<>(elementExtractor(index));
+    public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
     // O(N)
-    public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(elementExtractor(index));
+    public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
 
-    public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(valueForKeyExtractor(key));
+    public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
+        return new ExtractingMatcher<>(hashMapKey(key));
     }
 
 
