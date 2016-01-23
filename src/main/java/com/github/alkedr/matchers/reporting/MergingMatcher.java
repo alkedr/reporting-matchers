@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.MergingReporter;
+import com.github.alkedr.matchers.reporting.reporters.OneLevelMergingReporter;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 
 class MergingMatcher<T> extends BaseReportingMatcher<T> {
@@ -12,14 +12,14 @@ class MergingMatcher<T> extends BaseReportingMatcher<T> {
 
     @Override
     public void run(Object item, Reporter reporter) {
-        try (MergingReporter mergingReporter = new MergingReporter(reporter)) {
+        try (OneLevelMergingReporter mergingReporter = new OneLevelMergingReporter(reporter)) {
             reportingMatcher.run(item, mergingReporter);
         }
     }
 
     @Override
     public void runForMissingItem(Reporter reporter) {
-        try (MergingReporter mergingReporter = new MergingReporter(reporter)) {
+        try (OneLevelMergingReporter mergingReporter = new OneLevelMergingReporter(reporter)) {
             reportingMatcher.runForMissingItem(mergingReporter);
         }
     }
