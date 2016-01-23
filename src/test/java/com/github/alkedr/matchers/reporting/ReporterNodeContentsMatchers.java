@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
-import org.hamcrest.CustomTypeSafeMatcher;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 
 import java.util.function.BiConsumer;
@@ -17,16 +17,15 @@ public class ReporterNodeContentsMatchers {
     }
 
     public static Consumer<Reporter> contentsThat(BiConsumer<InOrder, Reporter> verifier) {
-        return argThat(new CustomTypeSafeMatcher<Consumer<Reporter>>("has correct contents") {
-            @Override
-            public boolean matchesSafely(Consumer<Reporter> item) {
-                Reporter reporter = mock(Reporter.class);
-                InOrder inOrder = inOrder(reporter);
-                item.accept(reporter);
-                verifier.accept(inOrder, reporter);
-                inOrder.verifyNoMoreInteractions();
-                return true;
-            }
-        });
+        return argThat(
+                (ArgumentMatcher<Consumer<Reporter>>) item -> {
+                    Reporter reporter = mock(Reporter.class);
+                    InOrder inOrder = inOrder(reporter);
+                    ((Consumer<Reporter>) item).accept(reporter);
+                    verifier.accept(inOrder, reporter);
+                    inOrder.verifyNoMoreInteractions();
+                    return true;
+                }
+        );
     }
 }
