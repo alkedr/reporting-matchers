@@ -3,7 +3,9 @@ package com.github.alkedr.matchers.reporting.extractors;
 import com.github.alkedr.matchers.reporting.keys.*;
 
 // TODO: убрать static factory?
-public class Extractors {
+public enum Extractors {
+    ;
+
     public static Extractor fieldExtractor(FieldKey key) {
         return new FieldExtractor(key);
     }

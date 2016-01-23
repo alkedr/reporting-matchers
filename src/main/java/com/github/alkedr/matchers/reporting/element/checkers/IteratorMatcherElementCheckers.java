@@ -9,7 +9,9 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class IteratorMatcherElementCheckers {
+public enum IteratorMatcherElementCheckers {
+    ;
+
     public static ElementChecker containsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
         return new ContainsInSpecifiedOrderChecker(elementMatchers);
     }

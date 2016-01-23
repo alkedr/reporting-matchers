@@ -19,7 +19,8 @@ import static java.util.Arrays.asList;
 // используй static import
 // TODO: использовать здесь только интерфейсы из корневого пакета?
 // TODO: сделать реализации матчеров package-private?
-public class ReportingMatchers {
+public enum ReportingMatchers {
+    ;
 
     @SuppressWarnings("unchecked")
     public static <T> ReportingMatcher<T> noOp() {
