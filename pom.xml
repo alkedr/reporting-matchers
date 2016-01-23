@@ -65,20 +65,6 @@
             <version>3.4</version>
         </dependency>
 
-        <!--TODO: перейти на что-то одно из commons-collections4 и guava-collections-->
-        <!--TODO: кажется можно избавиться и от того, и от другого-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-collections</artifactId>
-            <version>r03</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>

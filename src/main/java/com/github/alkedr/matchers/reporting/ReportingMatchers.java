@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.keys.*;
-import com.google.common.collect.Iterators;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
@@ -149,7 +148,7 @@ public class ReportingMatchers {
     @SafeVarargs
     public static <T> ReportingMatcher<T[]> arrayWithElements(T... elements) {
         return new ConvertingReportingMatcher<>(
-                item -> Iterators.forArray((Object[]) item),
+                item -> asList((Object[]) item).iterator(),
                 new IteratorMatcher<>(() -> containsInSpecifiedOrderChecker(elements))
         );
     }
