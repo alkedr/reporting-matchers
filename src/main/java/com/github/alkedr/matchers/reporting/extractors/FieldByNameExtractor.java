@@ -24,11 +24,12 @@ class FieldByNameExtractor implements Extractor {
             try {
                 field = FieldUtils.getField(item.getClass(), key.getFieldName(), true);
             } catch (IllegalArgumentException e) {
+                // "field name is matched at multiple places in the inheritance hierarchy"
                 result.broken(key, e);
                 return;
             }
-            // TODO: broken если нет такого поля?
             if (field == null) {
+                // TODO: broken если нет такого поля?
                 result.missing(key);
             } else {
                 fieldExtractor(new FieldKey(field)).extractFrom(item, result);
