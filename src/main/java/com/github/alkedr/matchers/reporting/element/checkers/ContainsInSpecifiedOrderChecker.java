@@ -33,10 +33,7 @@ class ContainsInSpecifiedOrderChecker implements ElementChecker {
     @Override
     public void end(Reporter reporter) {
         while (elementMatchers.hasNext()) {
-            int index1 = index++;
-            reporter.beginMissingNode(new ElementKey(index1));
-            elementMatchers.next().runForMissingItem(reporter);
-            reporter.endNode();
+            reporter.missingNode(new ElementKey(index++), r -> elementMatchers.next().runForMissingItem(reporter));
         }
     }
 }

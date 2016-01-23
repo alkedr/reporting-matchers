@@ -3,44 +3,50 @@ package com.github.alkedr.matchers.reporting.reporters;
 import com.github.alkedr.matchers.reporting.keys.Key;
 
 import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /*
-Придётся хранить в памяти всё, потому что чтобы замёржить уровень, нужно получить все ноды этого уровня
-Чтобы получить все ноды первого уровня, нужно дойти до close()
+Будет ли проблема с сайд-эффектами IteratorMatcher?
  */
 public class MergingReporter implements Reporter, Closeable {
     private final Reporter reporter;
-    private final Deque<Map<OneLevelMergingReporter.Node, RecordingReporter>> stack = new ArrayDeque<>();
+    private final Map<Node, Collection<Consumer<Reporter>>> nodes = new LinkedHashMap<>();
 
     public MergingReporter(Reporter reporter) {
         this.reporter = reporter;
-        stack.add(new LinkedHashMap<>());
     }
 
     @Override
-    public void close() throws IOException {
-//        pop();
-        // TODO: check stack.isEmpty()
+    public void close() {
+        for (Map.Entry<Node, Collection<Consumer<Reporter>>> entry : nodes.entrySet()) {
+            entry.getKey().addToReporter(
+                    new MergingReporter(reporter),
+                    reporter -> {
+                        for (Consumer<Reporter> contents : entry.getValue()) {
+                            contents.accept(reporter);
+                        }
+                    }
+            );
+        }
     }
 
     @Override
-    public void beginNode(Key key, Object value) {
-//        push(new OneLevelMergingReporter.PresentNode(key, value));
+    public void presentNode(Key key, Object value, Consumer<Reporter> contents) {
+        nodes.getOrDefault(new PresentNode(key, value), new ArrayList<>()).add(contents);
     }
 
     @Override
-    public void beginMissingNode(Key key) {
-//        push(new OneLevelMergingReporter.MissingNode(key));
+    public void missingNode(Key key, Consumer<Reporter> contents) {
+        nodes.getOrDefault(new MissingNode(key), new ArrayList<>()).add(contents);
     }
 
     @Override
-    public void beginBrokenNode(Key key, Throwable throwable) {
-//        push(new OneLevelMergingReporter.BrokenNode(key, throwable));
+    public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
+        nodes.getOrDefault(new BrokenNode(key, throwable), new ArrayList<>()).add(contents);
     }
 
     @Override
@@ -83,8 +89,98 @@ public class MergingReporter implements Reporter, Closeable {
         reporter.brokenCheck(description, throwable);
     }
 
-    @Override
-    public void endNode() {
-//        pop();
+
+    interface Node {
+        void addToReporter(Reporter reporter, Consumer<Reporter> contents);
+    }
+
+
+    static class PresentNode implements Node {
+        final Key key;
+        final Object value;   // TODO: сравнивать по == ?
+
+        PresentNode(Key key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
+            reporter.presentNode(key, value, contents);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PresentNode that = (PresentNode) o;
+            return key.equals(that.key) && value.equals(that.value);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = key.hashCode();
+            result = 31 * result + value.hashCode();
+            return result;
+        }
+    }
+
+
+    static class MissingNode implements Node {
+        final Key key;
+
+        MissingNode(Key key) {
+            this.key = key;
+        }
+
+        @Override
+        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
+            reporter.missingNode(key, contents);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MissingNode that = (MissingNode) o;
+            return key.equals(that.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return key.hashCode();
+        }
+    }
+
+
+    static class BrokenNode implements Node {
+        final Key key;
+        final Throwable throwable;
+
+        BrokenNode(Key key, Throwable throwable) {
+            this.key = key;
+            this.throwable = throwable;
+        }
+
+        @Override
+        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
+            reporter.brokenNode(key, throwable, contents);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BrokenNode that = (BrokenNode) o;
+            return key.equals(that.key) && throwable.equals(that.throwable);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = key.hashCode();
+            result = 31 * result + throwable.hashCode();
+            return result;
+        }
     }
 }

@@ -6,6 +6,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.function.Consumer;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -53,25 +54,31 @@ public class HtmlReporter implements Reporter, Closeable {
 
 
     @Override
-    public void beginNode(Key key, Object value) {
+    public void presentNode(Key key, Object value, Consumer<Reporter> contents) {
         appendDiv("key", escapeHtml4(key.asString()));
         if (value != null) {
             appendDiv("value", escapeHtml4(value.toString()));
         }
         appendDivStart("checks");
+        contents.accept(this);
+        appendDivEnd();
     }
 
     @Override
-    public void beginMissingNode(Key key) {
+    public void missingNode(Key key, Consumer<Reporter> contents) {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
+        contents.accept(this);
+        appendDivEnd();
     }
 
     @Override
-    public void beginBrokenNode(Key key, Throwable throwable) {
+    public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
         appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
+        contents.accept(this);
+        appendDivEnd();
     }
 
     @Override
@@ -112,11 +119,6 @@ public class HtmlReporter implements Reporter, Closeable {
     @Override
     public void brokenCheck(String description, Throwable throwable) {
         appendDiv("BROKEN", escapeHtml4(description) + "\n" + throwableToString(throwable));
-    }
-
-    @Override
-    public void endNode() {
-        appendDivEnd();
     }
 
 

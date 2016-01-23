@@ -85,23 +85,17 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
         @Override
         public void present(Key key, Object value) {
-            reporter.beginNode(renameKeyIfNecessary(key), value);
-            matcherForExtractedValue.run(value, reporter);
-            reporter.endNode();
+            reporter.presentNode(renameKeyIfNecessary(key), value, r -> matcherForExtractedValue.run(value, r));
         }
 
         @Override
         public void missing(Key key) {
-            reporter.beginMissingNode(renameKeyIfNecessary(key));
-            matcherForExtractedValue.runForMissingItem(reporter);
-            reporter.endNode();
+            reporter.missingNode(renameKeyIfNecessary(key), matcherForExtractedValue::runForMissingItem);
         }
 
         @Override
         public void broken(Key key, Throwable throwable) {
-            reporter.beginBrokenNode(renameKeyIfNecessary(key), throwable);
-            matcherForExtractedValue.runForMissingItem(reporter);
-            reporter.endNode();
+            reporter.brokenNode(renameKeyIfNecessary(key), throwable, matcherForExtractedValue::runForMissingItem);
         }
 
         private Key renameKeyIfNecessary(Key key) {

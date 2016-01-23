@@ -25,7 +25,7 @@ public class MatchesFlagRecordingReporterTest {
         assertFalse(reporter.getMatchesFlag());
     }
 
-    @Test
+    /*@Test
     public void otherMethods_shouldNotChangeMatchesFlag() {
         reporter.beginNode(null, null);
         assertTrue(reporter.getMatchesFlag());
@@ -35,5 +35,5 @@ public class MatchesFlagRecordingReporterTest {
 
         reporter.endNode();
         assertTrue(reporter.getMatchesFlag());
-    }
+    }*/
 }
