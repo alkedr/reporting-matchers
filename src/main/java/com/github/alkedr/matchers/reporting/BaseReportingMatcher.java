@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResults;
 import com.github.alkedr.matchers.reporting.reporters.MatchesFlagRecordingReporter;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -10,7 +9,7 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
     @Override
     public boolean matches(Object item) {
         MatchesFlagRecordingReporter reporter = new MatchesFlagRecordingReporter();
-        CheckResults.runAll(getChecks(item), reporter);
+        run(item, reporter);
         return reporter.getMatchesFlag();
     }
 

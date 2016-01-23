@@ -1,13 +1,17 @@
 package com.github.alkedr.matchers.reporting.keys;
 
-import java.util.Map;
-
 // не подходит для TreeMap, IdentityHashMap и пр.
-class HashMapKey implements ExtractableKey {
+// подходит только для HashMap
+// TODO: hashMapEntryKey, в ReportingMatchers удобная объёртка valueForKey() ?
+public class HashMapKey implements Key {
     private final Object key;
 
-    HashMapKey(Object key) {
+    public HashMapKey(Object key) {
         this.key = key;
+    }
+
+    public Object getKey() {
+        return key;
     }
 
     @Override
@@ -26,22 +30,5 @@ class HashMapKey implements ExtractableKey {
     @Override
     public String asString() {
         return String.valueOf(key);
-    }
-
-    @Override
-    public Result extractFrom(Object item) {
-        try {
-            if (item == null || !((Map<?, ?>) item).containsKey(key)) {
-                return new Result.Missing(this);
-            }
-            return new Result.Present(this, ((Map<?, ?>) item).get(key));
-        } catch (ClassCastException e) {
-            return new Result.Broken(this, e);
-        }
-    }
-
-    @Override
-    public Result extractFromMissingItem() {
-        return new Result.Missing(this);
     }
 }

@@ -66,6 +66,7 @@
         </dependency>
 
         <!--TODO: перейти на что-то одно из commons-collections4 и guava-collections-->
+        <!--TODO: кажется можно избавиться и от того, и от другого-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>

@@ -1,5 +1,7 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
+import com.github.alkedr.matchers.reporting.keys.Key;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,8 +53,8 @@ public class HtmlReporter implements Reporter, Closeable {
 
 
     @Override
-    public void beginNode(String name, Object value) {
-        appendDiv("key", escapeHtml4(name));
+    public void beginNode(Key key, Object value) {
+        appendDiv("key", escapeHtml4(key.asString()));
         if (value != null) {
             appendDiv("value", escapeHtml4(value.toString()));
         }
@@ -60,14 +62,14 @@ public class HtmlReporter implements Reporter, Closeable {
     }
 
     @Override
-    public void beginMissingNode(String name) {
-        appendDiv("key", escapeHtml4(name));
+    public void beginMissingNode(Key key) {
+        appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
     }
 
     @Override
-    public void beginBrokenNode(String name, Throwable throwable) {
-        appendDiv("key", escapeHtml4(name));
+    public void beginBrokenNode(Key key, Throwable throwable) {
+        appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
         appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
     }

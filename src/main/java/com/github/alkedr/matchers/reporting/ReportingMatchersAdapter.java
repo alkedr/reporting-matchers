@@ -1,18 +1,10 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
-import org.apache.commons.collections4.iterators.SingletonIterator;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
-
-import java.util.Iterator;
-
-import static com.github.alkedr.matchers.reporting.check.results.CheckResults.brokenMatcher;
-import static com.github.alkedr.matchers.reporting.check.results.CheckResults.failedMatcher;
-import static com.github.alkedr.matchers.reporting.check.results.CheckResults.matcherForMissingItem;
-import static com.github.alkedr.matchers.reporting.check.results.CheckResults.passedMatcher;
 
 /**
  * Обёртка для матчеров, которая позволяет сделать любой матчер ReportingMatcher'ом
@@ -26,25 +18,27 @@ class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements ReportingMat
     }
 
     @Override
-    public Iterator<CheckResult> getChecks(Object item) {
+    public void run(Object item, Reporter reporter) {
         boolean matches;
         try {
             matches = regularMatcher.matches(item);
         } catch (RuntimeException e) {
-            return new SingletonIterator<>(brokenMatcher(StringDescription.toString(regularMatcher), e));
+            reporter.brokenCheck(StringDescription.toString(regularMatcher), e);
+            return;
         }
         if (matches) {
-            // TODO: подсовывать свой Description, который отлавливает equalTo и is
-            return new SingletonIterator<>(passedMatcher(StringDescription.toString(regularMatcher)));
+            // TODO: отлавливать equalTo и is
+            reporter.passedCheck(StringDescription.toString(regularMatcher));
+        } else {
+            Description mismatchDescription = new StringDescription();
+            regularMatcher.describeMismatch(item, mismatchDescription);
+            reporter.failedCheck(StringDescription.toString(regularMatcher), mismatchDescription.toString());
         }
-        Description mismatchDescription = new StringDescription();
-        regularMatcher.describeMismatch(item, mismatchDescription);
-        return new SingletonIterator<>(failedMatcher(StringDescription.toString(regularMatcher), mismatchDescription.toString()));
     }
 
     @Override
-    public Iterator<CheckResult> getChecksForMissingItem() {
-        return new SingletonIterator<>(matcherForMissingItem(StringDescription.asString(regularMatcher)));
+    public void runForMissingItem(Reporter reporter) {
+        reporter.checkForMissingItem(StringDescription.asString(regularMatcher));
     }
 
     @Override

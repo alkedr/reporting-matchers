@@ -4,28 +4,36 @@ import org.apache.commons.lang3.Validate;
 
 // не объединяется с непереименованным Key
 // TODO: объединяться с непереименованным Key если названия совпадают?
-class RenamedKey<T extends Key> implements Key {
-    private final Key key;
+public class RenamedKey<K extends Key> implements Key {
+    private final K originalKey;
     private final String name;
 
-    RenamedKey(Key key, String name) {
-        Validate.notNull(key, "key");
+    public RenamedKey(K originalKey, String name) {
+        Validate.notNull(originalKey, "originalKey");
         Validate.notBlank(name, "name");
-        this.key = key;
+        this.originalKey = originalKey;
         this.name = name;
+    }
+
+    public K getOriginalKey() {
+        return originalKey;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RenamedKey that = (RenamedKey) o;
-        return key.equals(that.key) && name.equals(that.name);
+        RenamedKey<?> that = (RenamedKey<?>) o;
+        return originalKey.equals(that.originalKey) && name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        int result = key.hashCode();
+        int result = originalKey.hashCode();
         result = 31 * result + name.hashCode();
         return result;
     }

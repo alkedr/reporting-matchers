@@ -1,10 +1,7 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.google.common.collect.Iterators;
-
-import java.util.Iterator;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 
 class CompositeElementChecker implements ElementChecker {
     private final Iterable<ElementChecker> elementCheckers;
@@ -14,32 +11,23 @@ class CompositeElementChecker implements ElementChecker {
     }
 
     @Override
-    public Iterator<CheckResult> begin() {
-        return Iterators.concat(
-                Iterators.transform(
-                        elementCheckers.iterator(),
-                        ElementChecker::begin
-                )
-        );
+    public void begin(Reporter reporter) {
+        for (ElementChecker elementChecker : elementCheckers) {
+            elementChecker.begin(reporter);
+        }
     }
 
     @Override
-    public Iterator<CheckResult> element(Key key, Object value) {
-        return Iterators.concat(
-                Iterators.transform(
-                        elementCheckers.iterator(),
-                        elementChecker -> elementChecker.element(key, value)
-                )
-        );
+    public void element(Key key, Object value, Reporter reporter) {
+        for (ElementChecker elementChecker : elementCheckers) {
+            elementChecker.element(key, value, reporter);
+        }
     }
 
     @Override
-    public Iterator<CheckResult> end() {
-        return Iterators.concat(
-                Iterators.transform(
-                        elementCheckers.iterator(),
-                        ElementChecker::end
-                )
-        );
+    public void end(Reporter reporter) {
+        for (ElementChecker elementChecker : elementCheckers) {
+            elementChecker.end(reporter);
+        }
     }
 }

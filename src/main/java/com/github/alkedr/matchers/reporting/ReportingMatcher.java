@@ -1,9 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.hamcrest.Matcher;
-
-import java.util.Iterator;
 
 /**
  *
@@ -38,6 +36,9 @@ import java.util.Iterator;
  */
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
-    Iterator<CheckResult> getChecks(Object item);
-    Iterator<CheckResult> getChecksForMissingItem();
+    void run(Object item, Reporter reporter);
+    void runForMissingItem(Reporter reporter);
+
+//    Iterator<CheckResult> getChecks(Object item);
+//    Iterator<CheckResult> getChecksForMissingItem();
 }

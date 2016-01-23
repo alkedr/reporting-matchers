@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResults;
 import com.github.alkedr.matchers.reporting.reporters.HtmlReporter;
 
 import java.io.FileOutputStream;
@@ -20,7 +19,7 @@ public class IntegrationTestMain {
         try (FileOutputStream outputStream = new FileOutputStream(args[0])) {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                 HtmlReporter reporter = new HtmlReporter(writer, "Заголовок страницы");
-                CheckResults.runAll(isCorrectUser().getChecks(USER), reporter);
+                isCorrectUser().run(USER, reporter);
                 reporter.close();
             }
         }

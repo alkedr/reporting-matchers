@@ -1,5 +1,7 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
+import com.github.alkedr.matchers.reporting.keys.Key;
+
 /**
  * Reporter - объект, который каким-то образом обрабатывает информацию о проверках от ReportingMatcher'а.
  *
@@ -16,9 +18,9 @@ public interface Reporter {
      * @param name Название проверяемого значения, например название поля, номер элемента в массиве и т. п.
      * @param value Проверяемое значение.
      */
-    void beginNode(String name, Object value);  // TODO: beginPresentNode?
-    void beginMissingNode(String name);
-    void beginBrokenNode(String name, Throwable throwable);
+    void beginNode(Key key, Object value);  // TODO: beginPresentNode?
+    void beginMissingNode(Key key);
+    void beginBrokenNode(Key key, Throwable throwable);
 
     void correctlyPresent();
     void correctlyMissing();
@@ -34,4 +36,8 @@ public interface Reporter {
      * Заканчивает узел дерева, начатый методом {@link #beginNode}.
      */
     void endNode();
+
+
+    // TODO: passedEqualToMatcher, failedEqualToMatcher?
+    // TODO: subValueOfMissingSubValue?
 }

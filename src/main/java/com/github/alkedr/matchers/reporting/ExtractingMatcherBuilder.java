@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 // TODO: описать зачем нужно, пример использования
@@ -10,10 +9,6 @@ import org.hamcrest.Matcher;
 public interface ExtractingMatcherBuilder<T> extends ReportingMatcher<T> {
 
     ExtractingMatcherBuilder<T> displayedAs(String newName);
-
-    @Deprecated // ???
-    ExtractingMatcherBuilder<T> key(ExtractableKey newExtractableKey);
-
 
     // Заменяет, а не добавляет матчеры?
     ExtractingMatcherBuilder<T> is(Object value);

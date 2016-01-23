@@ -1,11 +1,10 @@
-package com.github.alkedr.matchers.reporting.keys;
+package com.github.alkedr.matchers.reporting.extractors;
 
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -28,7 +27,7 @@ class LambdaUtils {
     // Могут возникнуть проблемы с кастами внутри function
 
 
-    static <T> Iterable<ExtractableKey> getExtractorsChainFromFunction(Function<T, Object> function) {
+    /*static <T> Iterable<ExtractableKey> getExtractorsChainFromFunction(Function<T, Object> function) {
         Class<?> clazz = getArgumentClassFromFunction(function);
         Map<Object, Supplier<Iterable<ExtractableKey>>> returnedValueToFieldSupplierMap =
                 new IdentityHashMap<>();
@@ -44,7 +43,7 @@ class LambdaUtils {
         Object result = createUninitializedObject(clazz);
 //        initializeFields(result, returnedValueToFieldSupplierMap);
         return result;
-    }
+    }*/
 
     private static Object createUninitializedObject(Class<?> clazz) {
         try {

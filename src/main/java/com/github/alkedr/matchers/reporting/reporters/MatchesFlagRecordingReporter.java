@@ -1,5 +1,7 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
+import com.github.alkedr.matchers.reporting.keys.Key;
+
 public class MatchesFlagRecordingReporter implements Reporter {
     private boolean matchesFlag = true;
 
@@ -8,15 +10,15 @@ public class MatchesFlagRecordingReporter implements Reporter {
     }
 
     @Override
-    public void beginNode(String name, Object value) {
+    public void beginNode(Key key, Object value) {
     }
 
     @Override
-    public void beginMissingNode(String name) {
+    public void beginMissingNode(Key key) {
     }
 
     @Override
-    public void beginBrokenNode(String name, Throwable throwable) {
+    public void beginBrokenNode(Key key, Throwable throwable) {
         matchesFlag = false;
     }
 

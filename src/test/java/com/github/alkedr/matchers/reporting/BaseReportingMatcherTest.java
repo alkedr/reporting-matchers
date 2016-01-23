@@ -1,13 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
-import org.apache.commons.collections4.iterators.SingletonIterator;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.junit.Test;
 
-import java.util.Iterator;
-
-import static com.github.alkedr.matchers.reporting.check.results.CheckResults.failedMatcher;
-import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -25,25 +20,22 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
-        public Iterator<CheckResult> getChecks(Object item) {
-            return emptyIterator();
+        public void run(Object item, Reporter reporter) {
         }
 
         @Override
-        public Iterator<CheckResult> getChecksForMissingItem() {
-            throw new UnsupportedOperationException();
+        public void runForMissingItem(Reporter reporter) {
         }
     }
 
     private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
         @Override
-        public Iterator<CheckResult> getChecks(Object item) {
-            return new SingletonIterator<>(failedMatcher(null, null));
+        public void run(Object item, Reporter reporter) {
+            reporter.failedCheck(null, null);
         }
 
         @Override
-        public Iterator<CheckResult> getChecksForMissingItem() {
-            throw new UnsupportedOperationException();
+        public void runForMissingItem(Reporter reporter) {
         }
     }
 }

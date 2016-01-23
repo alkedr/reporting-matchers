@@ -1,23 +1,21 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
 import com.github.alkedr.matchers.reporting.keys.Key;
-
-import java.util.Iterator;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 
 class ContainsInAnyOrderChecker implements ElementChecker {
     @Override
-    public Iterator<CheckResult> begin() {
-        return null;
+    public void begin(Reporter reporter) {
+
     }
 
     @Override
-    public Iterator<CheckResult> element(Key key, Object value) {
-        return null;
+    public void element(Key key, Object value, Reporter reporter) {
+
     }
 
     @Override
-    public Iterator<CheckResult> end() {
-        return null;
+    public void end(Reporter reporter) {
+
     }
 }

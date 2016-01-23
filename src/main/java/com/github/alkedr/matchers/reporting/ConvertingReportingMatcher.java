@@ -1,8 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 
-import java.util.Iterator;
 import java.util.function.Function;
 
 class ConvertingReportingMatcher<T, U> extends BaseReportingMatcher<T> {
@@ -15,13 +14,12 @@ class ConvertingReportingMatcher<T, U> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public Iterator<CheckResult> getChecks(Object item) {
-        // TODO: catch ClassCastException?
-        return matcher.getChecks(converter.apply((T) item));
+    public void run(Object item, Reporter reporter) {
+        matcher.run(converter.apply((T) item), reporter);
     }
 
     @Override
-    public Iterator<CheckResult> getChecksForMissingItem() {
-        return matcher.getChecksForMissingItem();
+    public void runForMissingItem(Reporter reporter) {
+        matcher.runForMissingItem(reporter);
     }
 }

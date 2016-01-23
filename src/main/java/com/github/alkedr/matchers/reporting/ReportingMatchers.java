@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResults;
+import com.github.alkedr.matchers.reporting.keys.*;
 import com.google.common.collect.Iterators;
 import org.hamcrest.Matcher;
 
@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
-import static com.github.alkedr.matchers.reporting.keys.Keys.*;
+import static com.github.alkedr.matchers.reporting.extractors.Extractors.*;
+import static java.lang.Character.isUpperCase;
+import static java.lang.Character.toLowerCase;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -50,7 +51,7 @@ public class ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T> sequence(Iterable<? extends ReportingMatcher<? super T>> matchers) {
-        return new SequenceOrMergeMatcher<>(matchers, Function.identity());
+        return new SequenceMatcher<>(matchers);
     }
 
 
@@ -60,7 +61,7 @@ public class ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T> merge(Iterable<? extends ReportingMatcher<? super T>> matchers) {
-        return new SequenceOrMergeMatcher<>(matchers, CheckResults::merge);
+        return new MergingMatcher<>(sequence(matchers));
     }
 
 
@@ -77,26 +78,26 @@ public class ReportingMatchers {
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(Field field) {
-        return new ExtractingMatcher<>(fieldKey(field));
+        return new ExtractingMatcher<>(fieldExtractor(new FieldKey(field)));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
-        return new ExtractingMatcher<>(fieldByNameKey(fieldName));
+        return new ExtractingMatcher<>(fieldByNameExtractor(new FieldByNameKey(fieldName)));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(methodKey(method, arguments));
+        return new ExtractingMatcher<>(methodExtractor(new MethodKey(method, arguments)));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(methodByNameKey(methodName, arguments));
+        return new ExtractingMatcher<>(methodByNameExtractor(new MethodByNameKey(methodName, arguments)));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -108,12 +109,12 @@ public class ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
-        return new ExtractingMatcher<T>(getterKey(method));
+        return new ExtractingMatcher<T>(methodExtractor(new MethodKey(method)), createNameForGetterMethodInvocation(method.getName()));
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
-        return new ExtractingMatcher<T>(getterByNameKey(methodName));
+        return new ExtractingMatcher<T>(methodByNameExtractor(new MethodByNameKey(methodName)), createNameForGetterMethodInvocation(methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -123,22 +124,22 @@ public class ReportingMatchers {
 
 
     public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
     }
 
     // O(N)
     public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
     }
 
 
     public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(hashMapKey(key));
+        return new ExtractingMatcher<>(hashMapKeyExtractor(new HashMapKey(key)));
     }
 
 
@@ -161,6 +162,22 @@ public class ReportingMatchers {
     // TODO: compare().fields().getters().with(expected)
     public static <T> ComparingReportingMatcherBuilder<T> compare() {
         return new ComparingReportingMatcherBuilder<>();
+    }
+
+
+
+
+    static String createNameForGetterMethodInvocation(String name) {
+        if (name == null) {
+            return "";
+        }
+        if (name.length() > 3 && name.startsWith("get") && isUpperCase(name.charAt(3))) {
+            return toLowerCase(name.charAt(3)) + name.substring(4);
+        }
+        if (name.length() > 2 && name.startsWith("is") && isUpperCase(name.charAt(2))) {
+            return toLowerCase(name.charAt(2)) + name.substring(3);
+        }
+        return name;
     }
 
 

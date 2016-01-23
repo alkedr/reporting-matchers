@@ -1,10 +1,10 @@
-package com.github.alkedr.matchers.reporting.keys;
+package com.github.alkedr.matchers.reporting.extractors;
 
 import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.github.alkedr.matchers.reporting.keys.LambdaUtils.getArgumentClassFromFunction;
+import static com.github.alkedr.matchers.reporting.extractors.LambdaUtils.getArgumentClassFromFunction;
 import static org.junit.Assert.assertSame;
 
 public class LambdaUtils_GetArgumentClassFromFunction {

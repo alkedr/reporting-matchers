@@ -1,55 +1,54 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.check.results.CheckResult;
-import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
-import org.apache.commons.collections4.iterators.SingletonIterator;
+import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.keys.RenamedKey;
+import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.hamcrest.Matcher;
-
-import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.merge;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.noOp;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatchers;
-import static com.github.alkedr.matchers.reporting.keys.Keys.renamedKey;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+// Можно извлекать несколько значений!
 class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements ExtractingMatcherBuilder<T> {
-    private final ExtractableKey extractableKey;
-    private final ReportingMatcher<?> matcher;
+    private final Extractor extractor;
+    private final String name;
+    private final ReportingMatcher<?> matcherForExtractedValue;
 
-    ExtractingMatcher(ExtractableKey extractableKey) {
-        this(extractableKey, noOp());
+    ExtractingMatcher(Extractor extractor) {
+        this(extractor, null);
     }
 
-    ExtractingMatcher(ExtractableKey extractableKey, ReportingMatcher<?> matcher) {
-        this.extractableKey = extractableKey;
-        this.matcher = matcher;
+    ExtractingMatcher(Extractor extractor, String name) {
+        this(extractor, name, noOp());
+    }
+
+    ExtractingMatcher(Extractor extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
+        this.extractor = extractor;
+        this.name = name;
+        this.matcherForExtractedValue = matcherForExtractedValue;
     }
 
 
     @Override
-    public Iterator<CheckResult> getChecks(Object item) {
-        return new SingletonIterator<>(extractableKey.extractFrom(item).createCheckResult(matcher));
+    public void run(Object item, Reporter reporter) {
+        extractor.extractFrom(item, new ExtractionResultListenerImpl(name, matcherForExtractedValue, reporter));
     }
 
     @Override
-    public Iterator<CheckResult> getChecksForMissingItem() {
-        return new SingletonIterator<>(extractableKey.extractFromMissingItem().createCheckResult(matcher));
+    public void runForMissingItem(Reporter reporter) {
+        extractor.extractFromMissingItem(new ExtractionResultListenerImpl(name, matcherForExtractedValue, reporter));
     }
 
 
     @Override
     public ExtractingMatcher<T> displayedAs(String newName) {
-        return new ExtractingMatcher<>(renamedKey(extractableKey, newName), matcher);
+        return new ExtractingMatcher<>(extractor, newName, matcherForExtractedValue);
     }
-
-    @Override
-    public ExtractingMatcher<T> key(ExtractableKey newExtractableKey) {
-        return new ExtractingMatcher<>(newExtractableKey, matcher);
-    }
-
 
     @Override
     public ExtractingMatcher<T> is(Object value) {
@@ -58,7 +57,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
     @Override
     public ExtractingMatcher<T> is(Matcher<?> matcher) {
-        return new ExtractingMatcher<>(extractableKey, toReportingMatcher(matcher));
+        return new ExtractingMatcher<>(extractor, name, toReportingMatcher(matcher));
     }
 
     @Override
@@ -70,5 +69,43 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     @Override
     public <U> ExtractingMatcher<T> is(Iterable<? extends Matcher<? super U>> matchers) {
         return is(merge(toReportingMatchers(matchers)));
+    }
+
+
+    private static class ExtractionResultListenerImpl implements Extractor.ResultListener {
+        private final String name;
+        private final ReportingMatcher<?> matcherForExtractedValue;
+        private final Reporter reporter;
+
+        private ExtractionResultListenerImpl(String name, ReportingMatcher<?> matcherForExtractedValue, Reporter reporter) {
+            this.name = name;
+            this.matcherForExtractedValue = matcherForExtractedValue;
+            this.reporter = reporter;
+        }
+
+        @Override
+        public void present(Key key, Object value) {
+            reporter.beginNode(renameKeyIfNecessary(key), value);
+            matcherForExtractedValue.run(value, reporter);
+            reporter.endNode();
+        }
+
+        @Override
+        public void missing(Key key) {
+            reporter.beginMissingNode(renameKeyIfNecessary(key));
+            matcherForExtractedValue.runForMissingItem(reporter);
+            reporter.endNode();
+        }
+
+        @Override
+        public void broken(Key key, Throwable throwable) {
+            reporter.beginBrokenNode(renameKeyIfNecessary(key), throwable);
+            matcherForExtractedValue.runForMissingItem(reporter);
+            reporter.endNode();
+        }
+
+        private Key renameKeyIfNecessary(Key key) {
+            return name == null ? key : new RenamedKey<>(key, name);
+        }
     }
 }
