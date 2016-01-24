@@ -12,6 +12,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: три вкладки: actual, diff, expected
 // TODO: серые линии слева, как в тасках
 // TODO: защита от очень больших значений
+// TODO: (missing), (broken)
 class HtmlReporter implements CloseableSimpleTreeReporter {
     private final Appendable appendable;
 

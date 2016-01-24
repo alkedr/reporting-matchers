@@ -3,6 +3,8 @@ package com.github.alkedr.matchers.reporting.element.checkers;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
+import java.util.function.Consumer;
+
 class CompositeElementChecker implements ElementChecker {
     private final Iterable<ElementChecker> elementCheckers;
 
@@ -18,10 +20,12 @@ class CompositeElementChecker implements ElementChecker {
     }
 
     @Override
-    public void element(Key key, Object value, SafeTreeReporter safeTreeReporter) {
-        for (ElementChecker elementChecker : elementCheckers) {
-            elementChecker.element(key, value, safeTreeReporter);
-        }
+    public Consumer<SafeTreeReporter> element(Key key, Object value) {
+//        for (ElementChecker elementChecker : elementCheckers) {
+//            elementChecker.element(key, value, safeTreeReporter);
+//        }
+        // TODO
+        return null;
     }
 
     @Override

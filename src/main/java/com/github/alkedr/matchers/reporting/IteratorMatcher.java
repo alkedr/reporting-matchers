@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.Iterator;
@@ -24,8 +25,9 @@ class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
         Iterator<?> iterator = (Iterator<?>) item;
         int i = 0;
         while (iterator.hasNext()) {
-            int index = i++;
-            elementChecker.element(elementKey(index), iterator.next(), safeTreeReporter);
+            ExtractableKey key = elementKey(i++);
+            Object value = iterator.next();
+            safeTreeReporter.presentNode(key, value, elementChecker.element(key, value));
         }
         elementChecker.end(safeTreeReporter);
     }

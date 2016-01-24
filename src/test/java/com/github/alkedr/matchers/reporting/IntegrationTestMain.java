@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.CloseableSimpleTreeReporter;
-import com.github.alkedr.matchers.reporting.reporters.Reporters;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.htmlReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
@@ -20,7 +20,7 @@ public class IntegrationTestMain {
     public static void main(String... args) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(args[0])) {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-                CloseableSimpleTreeReporter reporter = Reporters.htmlReporter(writer, "Заголовок страницы");
+                CloseableSimpleTreeReporter reporter = htmlReporter(writer, "Заголовок страницы");
                 isCorrectUser().run(USER, simpleTreeReporterToSafeTreeReporter(reporter));
                 reporter.close();
             }

@@ -2,10 +2,13 @@ package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.keys.Keys;
+import com.github.alkedr.matchers.reporting.reporters.FlatReporter;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.Iterator;
+import java.util.function.Consumer;
+
+import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 
 // TODO: пробовать пропускать элементы?
 class ContainsInSpecifiedOrderChecker implements ElementChecker {
@@ -21,19 +24,20 @@ class ContainsInSpecifiedOrderChecker implements ElementChecker {
     }
 
     @Override
-    public void element(Key key, Object value, SafeTreeReporter safeTreeReporter) {
+    public Consumer<SafeTreeReporter> element(Key key, Object value) {
         index++;
         if (elementMatchers.hasNext()) {
-            elementMatchers.next().run(value, safeTreeReporter);
-        } else {
-            safeTreeReporter.incorrectlyPresent();
+            ReportingMatcher<?> matcher = elementMatchers.next();
+            return safeTreeReporter -> matcher.run(value, safeTreeReporter);
         }
+        return FlatReporter::incorrectlyPresent;
     }
 
     @Override
     public void end(SafeTreeReporter safeTreeReporter) {
         while (elementMatchers.hasNext()) {
-            safeTreeReporter.missingNode(Keys.elementKey(index++), r -> elementMatchers.next().runForMissingItem(safeTreeReporter));
+            ReportingMatcher<?> matcher = elementMatchers.next();
+            safeTreeReporter.missingNode(elementKey(index++), r -> matcher.runForMissingItem(safeTreeReporter));
         }
     }
 }

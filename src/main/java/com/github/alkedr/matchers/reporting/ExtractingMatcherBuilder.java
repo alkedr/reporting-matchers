@@ -15,6 +15,7 @@ public interface ExtractingMatcherBuilder<T> extends ReportingMatcher<T> {
 
     ExtractingMatcherBuilder<T> is(Matcher<?> matcher);
 
+    // FIXME: warning
     <U> ExtractingMatcherBuilder<T> is(Matcher<? super U>... matchers);
 
     <U> ExtractingMatcherBuilder<T> is(Iterable<? extends Matcher<? super U>> matchers);

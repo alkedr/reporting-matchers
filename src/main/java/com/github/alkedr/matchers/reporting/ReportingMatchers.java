@@ -17,8 +17,8 @@ import static java.util.Arrays.asList;
 public enum ReportingMatchers {
     ;
 
-    @SuppressWarnings("unchecked")
     public static <T> ReportingMatcher<T> noOp() {
+        //noinspection unchecked
         return (ReportingMatcher<T>) NoOpMatcher.INSTANCE;
     }
 
