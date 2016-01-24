@@ -26,7 +26,7 @@ public enum Reporters {
     }
 
     public static SimpleTreeReporter compositeSimpleTreeReporter(SimpleTreeReporter... reporters) {
-        return new CompositeSimpleTreeReporter(asList(reporters));
+        return compositeSimpleTreeReporter(asList(reporters));
     }
 
     public static SimpleTreeReporter compositeSimpleTreeReporter(Iterable<SimpleTreeReporter> reporters) {

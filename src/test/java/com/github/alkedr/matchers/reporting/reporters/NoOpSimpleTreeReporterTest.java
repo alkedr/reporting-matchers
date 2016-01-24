@@ -2,13 +2,14 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import org.junit.Test;
 
-public class NoOpSafeTreeReporterTest {
+public class NoOpSimpleTreeReporterTest {
     @Test
     public void methodsShouldNotUseArgumentsOrThrow() {
-        SafeTreeReporter reporter = Reporters.noOpSafeTreeReporter();
-        reporter.presentNode(null, null, null);
-        reporter.missingNode(null, null);
-        reporter.brokenNode(null, null, null);
+        SimpleTreeReporter reporter = Reporters.noOpSimpleTreeReporter();
+        reporter.beginPresentNode(null, null);
+        reporter.beginMissingNode(null);
+        reporter.beginBrokenNode(null, null);
+        reporter.endNode();
         reporter.correctlyPresent();
         reporter.correctlyMissing();
         reporter.incorrectlyPresent();
