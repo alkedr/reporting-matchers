@@ -2,11 +2,9 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.function.Consumer;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -14,10 +12,10 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 // TODO: три вкладки: actual, diff, expected
 // TODO: серые линии слева, как в тасках
 // TODO: защита от очень больших значений
-public class HtmlReporter implements Reporter, Closeable {
+class HtmlReporter implements CloseableSimpleTreeReporter {
     private final Appendable appendable;
 
-    public HtmlReporter(Appendable appendable, String title) {
+    HtmlReporter(Appendable appendable, String title) {
         this.appendable = appendable;
 
         append("<!DOCTYPE html>"
@@ -54,32 +52,32 @@ public class HtmlReporter implements Reporter, Closeable {
 
 
     @Override
-    public void presentNode(Key key, Object value, Consumer<Reporter> contents) {
+    public void beginPresentNode(Key key, Object value) {
         appendDiv("key", escapeHtml4(key.asString()));
         if (value != null) {
             appendDiv("value", escapeHtml4(value.toString()));
         }
         appendDivStart("checks");
-        contents.accept(this);
-        appendDivEnd();
     }
 
     @Override
-    public void missingNode(Key key, Consumer<Reporter> contents) {
+    public void beginMissingNode(Key key) {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
-        contents.accept(this);
-        appendDivEnd();
     }
 
     @Override
-    public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
+    public void beginBrokenNode(Key key, Throwable throwable) {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDivStart("checks");
         appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
-        contents.accept(this);
+    }
+
+    @Override
+    public void endNode() {
         appendDivEnd();
     }
+
 
     @Override
     public void correctlyPresent() {

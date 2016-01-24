@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting.element.checkers;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.keys.Keys;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.Iterator;
 
@@ -17,23 +17,23 @@ class ContainsInSpecifiedOrderChecker implements ElementChecker {
     }
 
     @Override
-    public void begin(Reporter reporter) {
+    public void begin(SafeTreeReporter safeTreeReporter) {
     }
 
     @Override
-    public void element(Key key, Object value, Reporter reporter) {
+    public void element(Key key, Object value, SafeTreeReporter safeTreeReporter) {
         index++;
         if (elementMatchers.hasNext()) {
-            elementMatchers.next().run(value, reporter);
+            elementMatchers.next().run(value, safeTreeReporter);
         } else {
-            reporter.incorrectlyPresent();
+            safeTreeReporter.incorrectlyPresent();
         }
     }
 
     @Override
-    public void end(Reporter reporter) {
+    public void end(SafeTreeReporter safeTreeReporter) {
         while (elementMatchers.hasNext()) {
-            reporter.missingNode(Keys.elementKey(index++), r -> elementMatchers.next().runForMissingItem(reporter));
+            safeTreeReporter.missingNode(Keys.elementKey(index++), r -> elementMatchers.next().runForMissingItem(safeTreeReporter));
         }
     }
 }

@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
 import com.github.alkedr.matchers.reporting.keys.Keys;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -17,22 +17,22 @@ class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
         ElementChecker elementChecker = elementCheckerSupplier.get();
-        elementChecker.begin(reporter);
+        elementChecker.begin(safeTreeReporter);
         Iterator<?> iterator = (Iterator<?>) item;
         int i = 0;
         while (iterator.hasNext()) {
             int index = i++;
-            elementChecker.element(Keys.elementKey(index), iterator.next(), reporter);
+            elementChecker.element(Keys.elementKey(index), iterator.next(), safeTreeReporter);
         }
-        elementChecker.end(reporter);
+        elementChecker.end(safeTreeReporter);
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
         ElementChecker elementChecker = elementCheckerSupplier.get();
-        elementChecker.begin(reporter);
-        elementChecker.end(reporter);
+        elementChecker.begin(safeTreeReporter);
+        elementChecker.end(safeTreeReporter);
     }
 }

@@ -2,34 +2,40 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import org.junit.Test;
 
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.matchesFlagRecordingReporter;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MatchesFlagRecordingReporterTest {
-    private final MatchesFlagRecordingReporter reporter = new MatchesFlagRecordingReporter();
+    private final MatchesFlagRecordingReporter reporter = matchesFlagRecordingReporter();
 
     @Test
     public void initialValue() {
         assertTrue(reporter.getMatchesFlag());
     }
 
-
     @Test
-    public void presentNode() {
-        reporter.presentNode(null, null, null);
+    public void beginPresentNode() {
+        reporter.beginPresentNode(null, null);
         assertTrue(reporter.getMatchesFlag());
     }
 
     @Test
-    public void missingNode() {
-        reporter.missingNode(null, null);
+    public void beginMissingNode() {
+        reporter.beginMissingNode(null);
         assertTrue(reporter.getMatchesFlag());
     }
 
     @Test
-    public void brokenNode() {
-        reporter.brokenNode(null, null, null);
+    public void beginBrokenNode() {
+        reporter.beginBrokenNode(null, null);
         assertFalse(reporter.getMatchesFlag());
+    }
+
+    @Test
+    public void endNode() {
+        reporter.endNode();
+        assertTrue(reporter.getMatchesFlag());
     }
 
     @Test
@@ -79,7 +85,4 @@ public class MatchesFlagRecordingReporterTest {
         reporter.brokenCheck(null, null);
         assertFalse(reporter.getMatchesFlag());
     }
-
-
-    // TODO: тестировать содержимое нод
 }

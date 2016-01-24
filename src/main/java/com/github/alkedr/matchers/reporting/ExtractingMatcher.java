@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting;
 import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.keys.Keys;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.hamcrest.Matcher;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.merge;
@@ -35,13 +35,13 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
 
     @Override
-    public void run(Object item, Reporter reporter) {
-        extractor.extractFrom(item, new ExtractionResultListenerImpl(name, matcherForExtractedValue, reporter));
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
+        extractor.extractFrom(item, new ExtractionResultListenerImpl(name, matcherForExtractedValue, safeTreeReporter));
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
-        extractor.extractFromMissingItem(new ExtractionResultListenerImpl(name, matcherForExtractedValue, reporter));
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+        extractor.extractFromMissingItem(new ExtractionResultListenerImpl(name, matcherForExtractedValue, safeTreeReporter));
     }
 
 
@@ -75,27 +75,27 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     private static class ExtractionResultListenerImpl implements ExtractableKey.ResultListener {
         private final String name;
         private final ReportingMatcher<?> matcherForExtractedValue;
-        private final Reporter reporter;
+        private final SafeTreeReporter safeTreeReporter;
 
-        private ExtractionResultListenerImpl(String name, ReportingMatcher<?> matcherForExtractedValue, Reporter reporter) {
+        private ExtractionResultListenerImpl(String name, ReportingMatcher<?> matcherForExtractedValue, SafeTreeReporter safeTreeReporter) {
             this.name = name;
             this.matcherForExtractedValue = matcherForExtractedValue;
-            this.reporter = reporter;
+            this.safeTreeReporter = safeTreeReporter;
         }
 
         @Override
         public void present(Key key, Object value) {
-            reporter.presentNode(renameKeyIfNecessary(key), value, r -> matcherForExtractedValue.run(value, r));
+            safeTreeReporter.presentNode(renameKeyIfNecessary(key), value, r -> matcherForExtractedValue.run(value, r));
         }
 
         @Override
         public void missing(Key key) {
-            reporter.missingNode(renameKeyIfNecessary(key), matcherForExtractedValue::runForMissingItem);
+            safeTreeReporter.missingNode(renameKeyIfNecessary(key), matcherForExtractedValue::runForMissingItem);
         }
 
         @Override
         public void broken(Key key, Throwable throwable) {
-            reporter.brokenNode(renameKeyIfNecessary(key), throwable, matcherForExtractedValue::runForMissingItem);
+            safeTreeReporter.brokenNode(renameKeyIfNecessary(key), throwable, matcherForExtractedValue::runForMissingItem);
         }
 
         private Key renameKeyIfNecessary(Key key) {

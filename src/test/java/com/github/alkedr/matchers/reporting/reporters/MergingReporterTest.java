@@ -6,21 +6,22 @@ import org.mockito.InOrder;
 
 import java.util.function.Consumer;
 
-import static com.github.alkedr.matchers.reporting.ReporterNodeContentsMatchers.contentsThat;
-import static org.mockito.Matchers.any;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.mergingReporter;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 public class MergingReporterTest {
-    private final Reporter reporter = mock(Reporter.class);
-    private final InOrder inOrder = inOrder(reporter);
-    private final MergingReporter mergingReporter = new MergingReporter(reporter);
+    private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
+    private final InOrder inOrder = inOrder(simpleTreeReporter);
+    private final CloseableSafeTreeReporter mergingReporter = mergingReporter(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
     private final Key key1 = mock(Key.class);
     private final Key key2 = mock(Key.class);
     private final Key key3 = mock(Key.class);
     private final Object value = new Object();
-    private final Consumer<Reporter> contents = mock(Consumer.class);
+    private final Consumer<SafeTreeReporter> contents = mock(Consumer.class);
     private final Throwable throwable = new RuntimeException();
     private final String s1 = "1";
     private final String s2 = "1";
@@ -37,41 +38,44 @@ public class MergingReporterTest {
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.correctlyPresent();
-        inOrder.verify(reporter).correctlyPresent();
+        inOrder.verify(simpleTreeReporter).correctlyPresent();
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.correctlyMissing();
-        inOrder.verify(reporter).correctlyMissing();
+        inOrder.verify(simpleTreeReporter).correctlyMissing();
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.incorrectlyPresent();
-        inOrder.verify(reporter).incorrectlyPresent();
+        inOrder.verify(simpleTreeReporter).incorrectlyPresent();
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.incorrectlyMissing();
-        inOrder.verify(reporter).incorrectlyMissing();
+        inOrder.verify(simpleTreeReporter).incorrectlyMissing();
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.passedCheck(s1);
-        inOrder.verify(reporter).passedCheck(same(s1));
+        inOrder.verify(simpleTreeReporter).passedCheck(same(s1));
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.failedCheck(s1, s2);
-        inOrder.verify(reporter).failedCheck(same(s1), same(s2));
+        inOrder.verify(simpleTreeReporter).failedCheck(same(s1), same(s2));
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.brokenCheck(s1, throwable);
-        inOrder.verify(reporter).brokenCheck(same(s1), same(throwable));
+        inOrder.verify(simpleTreeReporter).brokenCheck(same(s1), same(throwable));
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.checkForMissingItem(s1);
-        inOrder.verify(reporter).checkForMissingItem(same(s1));
+        inOrder.verify(simpleTreeReporter).checkForMissingItem(same(s1));
         inOrder.verifyNoMoreInteractions();
 
         mergingReporter.close();
-        inOrder.verify(reporter).presentNode(same(key1), same(value), any());
-        inOrder.verify(reporter).missingNode(same(key2), any());
-        inOrder.verify(reporter).brokenNode(same(key3), same(throwable), any());
+        inOrder.verify(simpleTreeReporter).beginPresentNode(same(key1), same(value));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginMissingNode(same(key2));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key3), same(throwable));
+        inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -88,44 +92,46 @@ public class MergingReporterTest {
         mergingReporter.brokenNode(key1, throwable2, contents);
         mergingReporter.brokenNode(key2, throwable, contents);
         mergingReporter.close();
-        inOrder.verify(reporter).presentNode(same(key1), same(value), any());
-        inOrder.verify(reporter).presentNode(same(key1), same(value2), any());
-        inOrder.verify(reporter).presentNode(same(key2), same(value), any());
-        inOrder.verify(reporter).missingNode(same(key1), any());
-        inOrder.verify(reporter).missingNode(same(key2), any());
-        inOrder.verify(reporter).brokenNode(same(key1), same(throwable), any());
-        inOrder.verify(reporter).brokenNode(same(key1), same(throwable2), any());
-        inOrder.verify(reporter).brokenNode(same(key2), same(throwable), any());
+        inOrder.verify(simpleTreeReporter).beginPresentNode(same(key1), same(value));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginPresentNode(same(key1), same(value2));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginPresentNode(same(key2), same(value));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginMissingNode(same(key1));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginMissingNode(same(key2));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key1), same(throwable));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key1), same(throwable2));
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key2), same(throwable));
+        inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void recursiveMerge() {
-        mergingReporter.presentNode(key1, value, r -> r.presentNode(key1, value, Reporter::correctlyPresent));
-        mergingReporter.presentNode(key1, value, r -> r.presentNode(key1, value, Reporter::correctlyMissing));
-        mergingReporter.missingNode(key1, r -> r.missingNode(key1, Reporter::correctlyPresent));
-        mergingReporter.missingNode(key1, r -> r.missingNode(key1, Reporter::correctlyMissing));
-        mergingReporter.brokenNode(key1, throwable, r -> r.brokenNode(key1, throwable, Reporter::correctlyPresent));
-        mergingReporter.brokenNode(key1, throwable, r -> r.brokenNode(key1, throwable, Reporter::correctlyMissing));
+        mergingReporter.presentNode(key1, value, r -> r.presentNode(key1, value, SafeTreeReporter::correctlyPresent));
+        mergingReporter.presentNode(key1, value, r -> r.presentNode(key1, value, SafeTreeReporter::correctlyMissing));
+        mergingReporter.missingNode(key1, r -> r.missingNode(key1, SafeTreeReporter::correctlyPresent));
+        mergingReporter.missingNode(key1, r -> r.missingNode(key1, SafeTreeReporter::correctlyMissing));
+        mergingReporter.brokenNode(key1, throwable, r -> r.brokenNode(key1, throwable, SafeTreeReporter::correctlyPresent));
+        mergingReporter.brokenNode(key1, throwable, r -> r.brokenNode(key1, throwable, SafeTreeReporter::correctlyMissing));
         mergingReporter.close();
-        inOrder.verify(reporter).presentNode(same(key1), same(value), contentsThat((inOrder2, reporter2) -> {
-            inOrder2.verify(reporter2).presentNode(same(key1), same(value), contentsThat((inOrder3, reporter3) -> {
-                inOrder3.verify(reporter3).correctlyPresent();
-                inOrder3.verify(reporter3).correctlyMissing();
-            }));
-        }));
-        inOrder.verify(reporter).missingNode(same(key1), contentsThat((inOrder2, reporter2) -> {
-            inOrder2.verify(reporter2).missingNode(same(key1), contentsThat((inOrder3, reporter3) -> {
-                inOrder3.verify(reporter3).correctlyPresent();
-                inOrder3.verify(reporter3).correctlyMissing();
-            }));
-        }));
-        inOrder.verify(reporter).brokenNode(same(key1), same(throwable), contentsThat((inOrder2, reporter2) -> {
-            inOrder2.verify(reporter2).brokenNode(same(key1), same(throwable), contentsThat((inOrder3, reporter3) -> {
-                inOrder3.verify(reporter3).correctlyPresent();
-                inOrder3.verify(reporter3).correctlyMissing();
-            }));
-        }));
+        inOrder.verify(simpleTreeReporter, times(2)).beginPresentNode(same(key1), same(value));
+        inOrder.verify(simpleTreeReporter).correctlyPresent();
+        inOrder.verify(simpleTreeReporter).correctlyMissing();
+        inOrder.verify(simpleTreeReporter, times(2)).endNode();
+        inOrder.verify(simpleTreeReporter, times(2)).beginMissingNode(same(key1));
+        inOrder.verify(simpleTreeReporter).correctlyPresent();
+        inOrder.verify(simpleTreeReporter).correctlyMissing();
+        inOrder.verify(simpleTreeReporter, times(2)).endNode();
+        inOrder.verify(simpleTreeReporter, times(2)).beginBrokenNode(same(key1), same(throwable));
+        inOrder.verify(simpleTreeReporter).correctlyPresent();
+        inOrder.verify(simpleTreeReporter).correctlyMissing();
+        inOrder.verify(simpleTreeReporter, times(2)).endNode();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -134,7 +140,8 @@ public class MergingReporterTest {
         mergingReporter.presentNode(key1, value, contents);
         mergingReporter.close();
         mergingReporter.close();
-        inOrder.verify(reporter).presentNode(same(key1), same(value), any());
+        inOrder.verify(simpleTreeReporter).beginPresentNode(same(key1), same(value));
+        inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
 

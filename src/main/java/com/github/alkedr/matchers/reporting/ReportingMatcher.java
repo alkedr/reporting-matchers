@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.hamcrest.Matcher;
 
 /**
@@ -36,9 +36,6 @@ import org.hamcrest.Matcher;
  */
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
-    void run(Object item, Reporter reporter);
-    void runForMissingItem(Reporter reporter);
-
-//    Iterator<CheckResult> getChecks(Object item);
-//    Iterator<CheckResult> getChecksForMissingItem();
+    void run(Object item, SafeTreeReporter safeTreeReporter);
+    void runForMissingItem(SafeTreeReporter safeTreeReporter);
 }

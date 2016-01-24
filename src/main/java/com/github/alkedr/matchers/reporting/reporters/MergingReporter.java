@@ -2,28 +2,28 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MergingReporter extends ReporterWrapper implements Closeable {
-    private final Map<Node, Collection<Consumer<Reporter>>> nodes = new LinkedHashMap<>();
+class MergingReporter implements CloseableSafeTreeReporter {
+    protected final SafeTreeReporter reporter;
+    private final Map<Node, Collection<Consumer<SafeTreeReporter>>> nodes = new LinkedHashMap<>();
 
-    public MergingReporter(Reporter wrappedReporter) {
-        super(wrappedReporter);
+    MergingReporter(SafeTreeReporter reporter) {
+        this.reporter = reporter;
     }
 
     @Override
     public void close() {
-        for (Map.Entry<Node, Collection<Consumer<Reporter>>> entry : nodes.entrySet()) {
+        for (Map.Entry<Node, Collection<Consumer<SafeTreeReporter>>> entry : nodes.entrySet()) {
             entry.getKey().addToReporter(
-                    wrappedReporter,
+                    reporter,
                     r -> {  // TODO: сделать лямбду классом
-                        try (MergingReporter mergingReporter = new MergingReporter(r)) {
-                            for (Consumer<Reporter> contents : entry.getValue()) {
+                        try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(r)) {
+                            for (Consumer<SafeTreeReporter> contents : entry.getValue()) {
                                 contents.accept(mergingReporter);
                             }
                         }
@@ -34,23 +34,63 @@ public class MergingReporter extends ReporterWrapper implements Closeable {
     }
 
     @Override
-    public void presentNode(Key key, Object value, Consumer<Reporter> contents) {
+    public void presentNode(Key key, Object value, Consumer<SafeTreeReporter> contents) {
         nodes.computeIfAbsent(new PresentNode(key, value), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
-    public void missingNode(Key key, Consumer<Reporter> contents) {
+    public void missingNode(Key key, Consumer<SafeTreeReporter> contents) {
         nodes.computeIfAbsent(new MissingNode(key), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
-    public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
+    public void brokenNode(Key key, Throwable throwable, Consumer<SafeTreeReporter> contents) {
         nodes.computeIfAbsent(new BrokenNode(key, throwable), k -> new ArrayList<>()).add(contents);
+    }
+
+    @Override
+    public void correctlyPresent() {
+        reporter.correctlyPresent();
+    }
+
+    @Override
+    public void correctlyMissing() {
+        reporter.correctlyMissing();
+    }
+
+    @Override
+    public void incorrectlyPresent() {
+        reporter.incorrectlyPresent();
+    }
+
+    @Override
+    public void incorrectlyMissing() {
+        reporter.incorrectlyMissing();
+    }
+
+    @Override
+    public void passedCheck(String description) {
+        reporter.passedCheck(description);
+    }
+
+    @Override
+    public void failedCheck(String expected, String actual) {
+        reporter.failedCheck(expected, actual);
+    }
+
+    @Override
+    public void checkForMissingItem(String description) {
+        reporter.checkForMissingItem(description);
+    }
+
+    @Override
+    public void brokenCheck(String description, Throwable throwable) {
+        reporter.brokenCheck(description, throwable);
     }
 
 
     interface Node {
-        void addToReporter(Reporter reporter, Consumer<Reporter> contents);
+        void addToReporter(SafeTreeReporter safeTreeReporter, Consumer<SafeTreeReporter> contents);
     }
 
 
@@ -64,8 +104,8 @@ public class MergingReporter extends ReporterWrapper implements Closeable {
         }
 
         @Override
-        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
-            reporter.presentNode(key, value, contents);
+        public void addToReporter(SafeTreeReporter safeTreeReporter, Consumer<SafeTreeReporter> contents) {
+            safeTreeReporter.presentNode(key, value, contents);
         }
 
         @Override
@@ -94,8 +134,8 @@ public class MergingReporter extends ReporterWrapper implements Closeable {
         }
 
         @Override
-        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
-            reporter.missingNode(key, contents);
+        public void addToReporter(SafeTreeReporter safeTreeReporter, Consumer<SafeTreeReporter> contents) {
+            safeTreeReporter.missingNode(key, contents);
         }
 
         @Override
@@ -123,8 +163,8 @@ public class MergingReporter extends ReporterWrapper implements Closeable {
         }
 
         @Override
-        public void addToReporter(Reporter reporter, Consumer<Reporter> contents) {
-            reporter.brokenNode(key, throwable, contents);
+        public void addToReporter(SafeTreeReporter safeTreeReporter, Consumer<SafeTreeReporter> contents) {
+            safeTreeReporter.brokenNode(key, throwable, contents);
         }
 
         @Override

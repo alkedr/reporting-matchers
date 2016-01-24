@@ -1,15 +1,15 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.mockito.InOrder;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 public class ContainsInSpecifiedOrderCheckerTest {
-    private final Reporter reporter = mock(Reporter.class);
-    private final InOrder inOrder = inOrder(reporter);
+    private final SafeTreeReporter safeTreeReporter = mock(SafeTreeReporter.class);
+    private final InOrder inOrder = inOrder(safeTreeReporter);
     private final Key key1 = mock(Key.class);
     private final Object value1 = 1;
 

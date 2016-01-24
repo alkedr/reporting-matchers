@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 class CompositeElementChecker implements ElementChecker {
     private final Iterable<ElementChecker> elementCheckers;
@@ -11,23 +11,23 @@ class CompositeElementChecker implements ElementChecker {
     }
 
     @Override
-    public void begin(Reporter reporter) {
+    public void begin(SafeTreeReporter safeTreeReporter) {
         for (ElementChecker elementChecker : elementCheckers) {
-            elementChecker.begin(reporter);
+            elementChecker.begin(safeTreeReporter);
         }
     }
 
     @Override
-    public void element(Key key, Object value, Reporter reporter) {
+    public void element(Key key, Object value, SafeTreeReporter safeTreeReporter) {
         for (ElementChecker elementChecker : elementCheckers) {
-            elementChecker.element(key, value, reporter);
+            elementChecker.element(key, value, safeTreeReporter);
         }
     }
 
     @Override
-    public void end(Reporter reporter) {
+    public void end(SafeTreeReporter safeTreeReporter) {
         for (ElementChecker elementChecker : elementCheckers) {
-            elementChecker.end(reporter);
+            elementChecker.end(safeTreeReporter);
         }
     }
 }

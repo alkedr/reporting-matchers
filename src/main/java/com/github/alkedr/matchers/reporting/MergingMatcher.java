@@ -1,7 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.MergingReporter;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.CloseableSafeTreeReporter;
+import com.github.alkedr.matchers.reporting.reporters.Reporters;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 class MergingMatcher<T> extends BaseReportingMatcher<T> {
     private final ReportingMatcher<T> reportingMatcher;
@@ -11,15 +12,15 @@ class MergingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
-        try (MergingReporter mergingReporter = new MergingReporter(reporter)) {
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
+        try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(safeTreeReporter)) {
             reportingMatcher.run(item, mergingReporter);
         }
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
-        try (MergingReporter mergingReporter = new MergingReporter(reporter)) {
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+        try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(safeTreeReporter)) {
             reportingMatcher.runForMissingItem(mergingReporter);
         }
     }

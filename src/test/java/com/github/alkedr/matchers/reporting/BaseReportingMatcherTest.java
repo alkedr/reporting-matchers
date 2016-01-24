@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -20,22 +20,22 @@ public class BaseReportingMatcherTest {
 
     private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
-        public void run(Object item, Reporter reporter) {
+        public void run(Object item, SafeTreeReporter safeTreeReporter) {
         }
 
         @Override
-        public void runForMissingItem(Reporter reporter) {
+        public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
         }
     }
 
     private static class BaseReportingMatcherThatAddsFailedCheck extends BaseReportingMatcher<Object> {
         @Override
-        public void run(Object item, Reporter reporter) {
-            reporter.failedCheck(null, null);
+        public void run(Object item, SafeTreeReporter safeTreeReporter) {
+            safeTreeReporter.failedCheck(null, null);
         }
 
         @Override
-        public void runForMissingItem(Reporter reporter) {
+        public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
         }
     }
 }

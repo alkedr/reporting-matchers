@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -9,11 +9,11 @@ class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     static final NoOpMatcher<?> INSTANCE = new NoOpMatcher<>();
 
     @Override
-    public void run(Object item, Reporter reporter) {
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
     }
 
 

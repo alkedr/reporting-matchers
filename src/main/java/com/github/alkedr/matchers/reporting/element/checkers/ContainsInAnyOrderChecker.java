@@ -1,21 +1,21 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 class ContainsInAnyOrderChecker implements ElementChecker {
     @Override
-    public void begin(Reporter reporter) {
+    public void begin(SafeTreeReporter safeTreeReporter) {
 
     }
 
     @Override
-    public void element(Key key, Object value, Reporter reporter) {
+    public void element(Key key, Object value, SafeTreeReporter safeTreeReporter) {
 
     }
 
     @Override
-    public void end(Reporter reporter) {
+    public void end(SafeTreeReporter safeTreeReporter) {
 
     }
 }

@@ -1,10 +1,10 @@
 package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 public interface ElementChecker {
-    void begin(Reporter reporter);
-    void element(Key key, Object value, Reporter reporter);
-    void end(Reporter reporter);
+    void begin(SafeTreeReporter safeTreeReporter);
+    void element(Key key, Object value, SafeTreeReporter safeTreeReporter);
+    void end(SafeTreeReporter safeTreeReporter);
 }

@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.function.Function;
 
@@ -14,12 +14,12 @@ class ConvertingReportingMatcher<T, U> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
-        matcher.run(converter.apply((T) item), reporter);
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
+        matcher.run(converter.apply((T) item), safeTreeReporter);
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
-        matcher.runForMissingItem(reporter);
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+        matcher.runForMissingItem(safeTreeReporter);
     }
 }

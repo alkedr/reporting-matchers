@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.Reporter;
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 class SequenceMatcher<T> extends BaseReportingMatcher<T> {
     private final Iterable<? extends ReportingMatcher<? super T>> reportingMatchers;
@@ -10,16 +10,16 @@ class SequenceMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void run(Object item, Reporter reporter) {
+    public void run(Object item, SafeTreeReporter safeTreeReporter) {
         for (ReportingMatcher<? super T> reportingMatcher : reportingMatchers) {
-            reportingMatcher.run(item, reporter);
+            reportingMatcher.run(item, safeTreeReporter);
         }
     }
 
     @Override
-    public void runForMissingItem(Reporter reporter) {
+    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
         for (ReportingMatcher<? super T> reportingMatcher : reportingMatchers) {
-            reportingMatcher.runForMissingItem(reporter);
+            reportingMatcher.runForMissingItem(safeTreeReporter);
         }
     }
 }
