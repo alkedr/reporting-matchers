@@ -1,4 +1,4 @@
-package com.github.alkedr.matchers.reporting.extractors;
+package com.github.alkedr.matchers.reporting.keys;
 
 import sun.misc.Unsafe;
 

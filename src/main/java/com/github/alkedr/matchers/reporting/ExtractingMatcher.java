@@ -1,8 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.keys.RenamedKey;
+import com.github.alkedr.matchers.reporting.keys.Keys;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.hamcrest.Matcher;
 
@@ -15,19 +15,19 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 // Можно извлекать несколько значений!
 class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements ExtractingMatcherBuilder<T> {
-    private final Extractor extractor;
+    private final ExtractableKey extractor;
     private final String name;
     private final ReportingMatcher<?> matcherForExtractedValue;
 
-    ExtractingMatcher(Extractor extractor) {
+    ExtractingMatcher(ExtractableKey extractor) {
         this(extractor, null);
     }
 
-    ExtractingMatcher(Extractor extractor, String name) {
+    ExtractingMatcher(ExtractableKey extractor, String name) {
         this(extractor, name, noOp());
     }
 
-    ExtractingMatcher(Extractor extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
+    ExtractingMatcher(ExtractableKey extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
         this.extractor = extractor;
         this.name = name;
         this.matcherForExtractedValue = matcherForExtractedValue;
@@ -72,7 +72,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     }
 
 
-    private static class ExtractionResultListenerImpl implements Extractor.ResultListener {
+    private static class ExtractionResultListenerImpl implements ExtractableKey.ResultListener {
         private final String name;
         private final ReportingMatcher<?> matcherForExtractedValue;
         private final Reporter reporter;
@@ -99,7 +99,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
         }
 
         private Key renameKeyIfNecessary(Key key) {
-            return name == null ? key : new RenamedKey<>(key, name);
+            return name == null ? key : Keys.renamedKey(key, name);
         }
     }
 }

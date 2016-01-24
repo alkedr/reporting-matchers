@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.keys.*;
+import com.github.alkedr.matchers.reporting.keys.Keys;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
-import static com.github.alkedr.matchers.reporting.extractors.Extractors.*;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 import static java.util.Arrays.asList;
@@ -78,26 +77,26 @@ public enum ReportingMatchers {
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(Field field) {
-        return new ExtractingMatcher<>(fieldExtractor(new FieldKey(field)));
+        return new ExtractingMatcher<>((Keys.fieldKey(field)));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
-        return new ExtractingMatcher<>(fieldByNameExtractor(new FieldByNameKey(fieldName)));
+        return new ExtractingMatcher<>((Keys.fieldByNameKey(fieldName)));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(methodExtractor(new MethodKey(method, arguments)));
+        return new ExtractingMatcher<>((Keys.methodKey(method, arguments)));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(methodByNameExtractor(new MethodByNameKey(methodName, arguments)));
+        return new ExtractingMatcher<>((Keys.methodByNameKey(methodName, arguments)));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -109,12 +108,12 @@ public enum ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
-        return new ExtractingMatcher<T>(methodExtractor(new MethodKey(method)), createNameForGetterMethodInvocation(method.getName()));
+        return new ExtractingMatcher<T>((Keys.methodKey(method)), createNameForGetterMethodInvocation(method.getName()));
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
-        return new ExtractingMatcher<T>(methodByNameExtractor(new MethodByNameKey(methodName)), createNameForGetterMethodInvocation(methodName));
+        return new ExtractingMatcher<T>((Keys.methodByNameKey(methodName)), createNameForGetterMethodInvocation(methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -124,22 +123,22 @@ public enum ReportingMatchers {
 
 
     public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
+        return new ExtractingMatcher<>((Keys.elementKey(index)));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
-        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
+        return new ExtractingMatcher<>((Keys.elementKey(index)));
     }
 
     // O(N)
     public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(elementExtractor(new ElementKey(index)));
+        return new ExtractingMatcher<>((Keys.elementKey(index)));
     }
 
 
     public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(hashMapKeyExtractor(new HashMapKey(key)));
+        return new ExtractingMatcher<>((Keys.hashMapKey(key)));
     }
 
 

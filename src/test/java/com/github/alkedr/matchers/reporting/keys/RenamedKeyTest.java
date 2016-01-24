@@ -8,33 +8,33 @@ import static org.junit.Assert.assertNotEquals;
 public class RenamedKeyTest {
     @Test(expected = NullPointerException.class)
     public void nullKey() {
-        new RenamedKey<>(null, "");
+        Keys.renamedKey(null, "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullName() {
-        new RenamedKey<>(new ElementKey(0), null);
+        Keys.renamedKey(Keys.elementKey(0), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyName() {
-        new RenamedKey<>(new ElementKey(0), "");
+        Keys.renamedKey(Keys.elementKey(0), "");
     }
 
     @Test
     public void asStringTest() {
-        assertEquals("123", new RenamedKey<>(new ElementKey(0), "123").asString());
+        assertEquals("123", Keys.renamedKey(Keys.elementKey(0), "123").asString());
     }
 
     @Test
     public void hashCodeTest() {
-        assertEquals(new RenamedKey<>(new ElementKey(0), "123").hashCode(), new RenamedKey<>(new ElementKey(0), "123").hashCode());
+        assertEquals(Keys.renamedKey(Keys.elementKey(0), "123").hashCode(), Keys.renamedKey(Keys.elementKey(0), "123").hashCode());
     }
 
     @Test
     public void equalsTest() {
-        assertEquals(new RenamedKey<>(new ElementKey(0), "123"), new RenamedKey<>(new ElementKey(0), "123"));
-        assertNotEquals(new RenamedKey<>(new ElementKey(0), "123"), new RenamedKey<>(new ElementKey(1), "123"));
-        assertNotEquals(new RenamedKey<>(new ElementKey(0), "123"), new RenamedKey<>(new ElementKey(0), "234"));
+        assertEquals(Keys.renamedKey(Keys.elementKey(0), "123"), Keys.renamedKey(Keys.elementKey(0), "123"));
+        assertNotEquals(Keys.renamedKey(Keys.elementKey(0), "123"), Keys.renamedKey(Keys.elementKey(1), "123"));
+        assertNotEquals(Keys.renamedKey(Keys.elementKey(0), "123"), Keys.renamedKey(Keys.elementKey(0), "234"));
     }
 }

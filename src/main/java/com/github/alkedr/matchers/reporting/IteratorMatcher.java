@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
-import com.github.alkedr.matchers.reporting.keys.ElementKey;
+import com.github.alkedr.matchers.reporting.keys.Keys;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 
 import java.util.Iterator;
@@ -24,7 +24,7 @@ class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
         int i = 0;
         while (iterator.hasNext()) {
             int index = i++;
-            elementChecker.element(new ElementKey(index), iterator.next(), reporter);
+            elementChecker.element(Keys.elementKey(index), iterator.next(), reporter);
         }
         elementChecker.end(reporter);
     }

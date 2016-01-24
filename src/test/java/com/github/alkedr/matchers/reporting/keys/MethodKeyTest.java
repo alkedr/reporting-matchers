@@ -18,30 +18,30 @@ public class MethodKeyTest {
 
     @Test(expected = NullPointerException.class)
     public void nullMethod() {
-        new MethodKey(null);
+        Keys.methodKey(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullArguments() {
-        new MethodKey(method1, (Object[]) null);
+        Keys.methodKey(method1, (Object[]) null);
     }
 
     @Test
     public void asStringTest() {
-        assertEquals("method1()", new MethodKey(method1).asString());
-        assertEquals("method1(1, 2, qwe)", new MethodKey(method1, 1, 2, "qwe").asString());
+        assertEquals("method1()", Keys.methodKey(method1).asString());
+        assertEquals("method1(1, 2, qwe)", Keys.methodKey(method1, 1, 2, "qwe").asString());
     }
 
     @Test
     public void hashCodeTest() {
-        assertEquals(new MethodKey(method1).hashCode(), new MethodKey(method1).hashCode());
+        assertEquals(Keys.methodKey(method1).hashCode(), Keys.methodKey(method1).hashCode());
     }
 
     @Test
     public void equalsTest() {
-        assertEquals(new MethodKey(method1), new MethodKey(method1));
-        assertNotEquals(new MethodKey(method1), new MethodKey(method2));
-        assertNotEquals(new MethodKey(method1, 1), new MethodKey(method1, 2));
+        assertEquals(Keys.methodKey(method1), Keys.methodKey(method1));
+        assertNotEquals(Keys.methodKey(method1), Keys.methodKey(method2));
+        assertNotEquals(Keys.methodKey(method1, 1), Keys.methodKey(method1, 2));
     }
 
 

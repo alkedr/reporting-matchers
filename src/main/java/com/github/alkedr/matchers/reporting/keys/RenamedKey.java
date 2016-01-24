@@ -4,11 +4,11 @@ import org.apache.commons.lang3.Validate;
 
 // не объединяется с непереименованным Key
 // TODO: объединяться с непереименованным Key если названия совпадают?
-public class RenamedKey<K extends Key> implements Key {
+class RenamedKey<K extends Key> implements Key {
     private final K originalKey;
     private final String name;
 
-    public RenamedKey(K originalKey, String name) {
+    RenamedKey(K originalKey, String name) {
         Validate.notNull(originalKey, "originalKey");
         Validate.notBlank(name, "name");
         this.originalKey = originalKey;

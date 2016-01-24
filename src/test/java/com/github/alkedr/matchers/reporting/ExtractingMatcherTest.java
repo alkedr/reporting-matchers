@@ -1,8 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.extractors.Extractor;
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.keys.RenamedKey;
+import com.github.alkedr.matchers.reporting.keys.Keys;
 import com.github.alkedr.matchers.reporting.reporters.Reporter;
 import org.junit.After;
 import org.junit.Test;
@@ -27,7 +27,12 @@ public class ExtractingMatcherTest {
     private final Key key2 = mock(Key.class);
     private final Key key3 = mock(Key.class);
     private final Throwable throwable = new RuntimeException();
-    private final Extractor extractor = new Extractor() {
+    private final ExtractableKey extractor = new ExtractableKey() {
+        @Override
+        public String asString() {
+            return null;
+        }
+
         @Override
         public void extractFrom(Object item, ResultListener result) {
             result.present(key1, 1);
@@ -68,34 +73,34 @@ public class ExtractingMatcherTest {
     @Test
     public void run_nameInConstructor_noMatcher() {
         new ExtractingMatcher<>(extractor, "123").run(item, reporter);
-        inOrder.verify(reporter).presentNode(eq(new RenamedKey<>(key1, "123")), eq(1), emptyContents());
-        inOrder.verify(reporter).missingNode(eq(new RenamedKey<>(key2, "123")), emptyContents());
-        inOrder.verify(reporter).brokenNode(eq(new RenamedKey<>(key3, "123")), same(throwable), emptyContents());
+        inOrder.verify(reporter).presentNode(eq(Keys.renamedKey(key1, "123")), eq(1), emptyContents());
+        inOrder.verify(reporter).missingNode(eq(Keys.renamedKey(key2, "123")), emptyContents());
+        inOrder.verify(reporter).brokenNode(eq(Keys.renamedKey(key3, "123")), same(throwable), emptyContents());
     }
 
     @Test
     public void runForMissingItem_nameInConstructor_noMatcher() {
         new ExtractingMatcher<>(extractor, "123").runForMissingItem(reporter);
-        inOrder.verify(reporter).brokenNode(eq(new RenamedKey<>(key3, "123")), same(throwable), emptyContents());
-        inOrder.verify(reporter).missingNode(eq(new RenamedKey<>(key2, "123")), emptyContents());
-        inOrder.verify(reporter).presentNode(eq(new RenamedKey<>(key1, "123")), eq(1), emptyContents());
+        inOrder.verify(reporter).brokenNode(eq(Keys.renamedKey(key3, "123")), same(throwable), emptyContents());
+        inOrder.verify(reporter).missingNode(eq(Keys.renamedKey(key2, "123")), emptyContents());
+        inOrder.verify(reporter).presentNode(eq(Keys.renamedKey(key1, "123")), eq(1), emptyContents());
     }
 
 
     @Test
     public void run_nameInDisplayedAs_noMatcher() {
         new ExtractingMatcher<>(extractor).displayedAs("123").run(item, reporter);
-        inOrder.verify(reporter).presentNode(eq(new RenamedKey<>(key1, "123")), eq(1), emptyContents());
-        inOrder.verify(reporter).missingNode(eq(new RenamedKey<>(key2, "123")), emptyContents());
-        inOrder.verify(reporter).brokenNode(eq(new RenamedKey<>(key3, "123")), same(throwable), emptyContents());
+        inOrder.verify(reporter).presentNode(eq(Keys.renamedKey(key1, "123")), eq(1), emptyContents());
+        inOrder.verify(reporter).missingNode(eq(Keys.renamedKey(key2, "123")), emptyContents());
+        inOrder.verify(reporter).brokenNode(eq(Keys.renamedKey(key3, "123")), same(throwable), emptyContents());
     }
 
     @Test
     public void runForMissingItem_nameInDisplayedAs_noMatcher() {
         new ExtractingMatcher<>(extractor).displayedAs("123").runForMissingItem(reporter);
-        inOrder.verify(reporter).brokenNode(eq(new RenamedKey<>(key3, "123")), same(throwable), emptyContents());
-        inOrder.verify(reporter).missingNode(eq(new RenamedKey<>(key2, "123")), emptyContents());
-        inOrder.verify(reporter).presentNode(eq(new RenamedKey<>(key1, "123")), eq(1), emptyContents());
+        inOrder.verify(reporter).brokenNode(eq(Keys.renamedKey(key3, "123")), same(throwable), emptyContents());
+        inOrder.verify(reporter).missingNode(eq(Keys.renamedKey(key2, "123")), emptyContents());
+        inOrder.verify(reporter).presentNode(eq(Keys.renamedKey(key1, "123")), eq(1), emptyContents());
     }
 
 

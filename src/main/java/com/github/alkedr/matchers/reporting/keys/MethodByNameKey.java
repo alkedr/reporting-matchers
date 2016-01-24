@@ -1,7 +1,10 @@
 package com.github.alkedr.matchers.reporting.keys;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
@@ -12,14 +15,13 @@ import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNa
 // TODO: позволять указывать типы аргументов отдельно на случай нуллов и перегрузок
 // TODO: сравнивать аргументы так же, как и value в CheckResult'ах?
 // TODO: возможность указывать типы аргументов отдельно для случаев, когда какие-то аргументы null и есть перегрузки?
-@Deprecated
-public class MethodByNameKey implements Key {
+class MethodByNameKey implements ExtractableKey {
     private final String methodName;
 //    private final Class<?>[] argumentClasses;
     private final Object[] arguments;
 
     @Deprecated
-    public MethodByNameKey(String methodName, Object... arguments) {
+    MethodByNameKey(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
         this.methodName = methodName;
@@ -39,17 +41,9 @@ public class MethodByNameKey implements Key {
         this.arguments = arguments.clone();
     }*/
 
-    public String getMethodName() {
-        return methodName;
-    }
-
     /*public Class<?>[] getArgumentClasses() {
         return argumentClasses.clone();
     }*/
-
-    public Object[] getArguments() {
-        return arguments.clone();
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,5 +61,29 @@ public class MethodByNameKey implements Key {
     @Override
     public String asString() {
         return createNameForRegularMethodInvocation(methodName, arguments);
+    }
+
+    @Override
+    public void extractFrom(Object item, ResultListener result) {
+        if (item == null) {
+            result.missing(this);
+        } else {
+            // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
+            Method method = MethodUtils.getMatchingAccessibleMethod(
+                    item.getClass(),
+                    methodName,
+                    ClassUtils.toClass(arguments.clone())
+            );
+            if (method == null) {
+                result.broken(this, new NoSuchMethodException(item.getClass().getName() + "." + toString()));
+            } else {
+                Keys.methodKey(method, arguments.clone()).extractFrom(item, result);
+            }
+        }
+    }
+
+    @Override
+    public void extractFromMissingItem(ResultListener result) {
+        extractFrom(null, result);
     }
 }

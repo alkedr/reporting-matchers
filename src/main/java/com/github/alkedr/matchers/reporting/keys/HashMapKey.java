@@ -1,16 +1,14 @@
 package com.github.alkedr.matchers.reporting.keys;
 
+import java.util.Map;
+
 // не подходит для TreeMap, IdentityHashMap и пр.
 // подходит только для HashMap
-public class HashMapKey implements Key {
+class HashMapKey implements ExtractableKey {
     private final Object key;
 
-    public HashMapKey(Object key) {
+    HashMapKey(Object key) {
         this.key = key;
-    }
-
-    public Object getKey() {
-        return key;
     }
 
     @Override
@@ -29,5 +27,23 @@ public class HashMapKey implements Key {
     @Override
     public String asString() {
         return String.valueOf(key);
+    }
+
+    @Override
+    public void extractFrom(Object item, ResultListener result) {
+        try {
+            if (item == null || !((Map<?, ?>) item).containsKey(key)) {
+                result.missing(this);
+            } else {
+                result.present(this, ((Map<?, ?>) item).get(key));
+            }
+        } catch (ClassCastException e) {
+            result.broken(this, e);
+        }
+    }
+
+    @Override
+    public void extractFromMissingItem(ResultListener result) {
+        extractFrom(null, result);
     }
 }

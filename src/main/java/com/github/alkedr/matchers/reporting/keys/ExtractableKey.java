@@ -1,8 +1,6 @@
-package com.github.alkedr.matchers.reporting.extractors;
+package com.github.alkedr.matchers.reporting.keys;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
-
-public interface Extractor {
+public interface ExtractableKey extends Key {
     void extractFrom(Object item, ResultListener result);
     void extractFromMissingItem(ResultListener result);
 
