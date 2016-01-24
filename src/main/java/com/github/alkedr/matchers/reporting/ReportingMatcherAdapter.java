@@ -9,11 +9,10 @@ import org.hamcrest.StringDescription;
 /**
  * Обёртка для матчеров, которая позволяет сделать любой матчер ReportingMatcher'ом
  */
-class ReportingMatchersAdapter<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
+class ReportingMatcherAdapter<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     private final Matcher<T> regularMatcher;
 
-    // Если заранее неизвестно является ли матчер ReportingMatcher'ом, то лучше использовать toReportingMatcher()
-    ReportingMatchersAdapter(Matcher<T> regularMatcher) {
+    ReportingMatcherAdapter(Matcher<T> regularMatcher) {
         this.regularMatcher = regularMatcher;
     }
 

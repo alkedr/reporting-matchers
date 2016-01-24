@@ -26,7 +26,7 @@ public enum ReportingMatchers {
 
     // оборачивает переданный ему матчер если он не reporting.
     public static <T> ReportingMatcher<T> toReportingMatcher(Matcher<T> matcher) {
-        return matcher instanceof ReportingMatcher ? (ReportingMatcher<T>) matcher : new ReportingMatchersAdapter<>(matcher);
+        return matcher instanceof ReportingMatcher ? (ReportingMatcher<T>) matcher : new ReportingMatcherAdapter<>(matcher);
     }
 
     public static <U> Iterable<ReportingMatcher<? super U>> toReportingMatchers(Iterable<? extends Matcher<? super U>> matchers) {
