@@ -4,11 +4,11 @@ import org.apache.commons.lang3.Validate;
 
 // не объединяется с непереименованным Key
 // TODO: объединяться с непереименованным Key если названия совпадают?
-class RenamedKey implements Key {
-    private final Key originalKey;
+class RenamedExtractableKey implements ExtractableKey {
+    private final ExtractableKey originalKey;
     private final String name;
 
-    RenamedKey(Key originalKey, String name) {
+    RenamedExtractableKey(ExtractableKey originalKey, String name) {
         Validate.notNull(originalKey, "originalKey");
         Validate.notBlank(name, "name");
         this.originalKey = originalKey;
@@ -19,7 +19,7 @@ class RenamedKey implements Key {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RenamedKey that = (RenamedKey) o;
+        RenamedExtractableKey that = (RenamedExtractableKey) o;
         return originalKey.equals(that.originalKey) && name.equals(that.name);
     }
 
@@ -33,5 +33,15 @@ class RenamedKey implements Key {
     @Override
     public String asString() {
         return name;
+    }
+
+    @Override
+    public void extractFrom(Object item, ResultListener result) {
+        originalKey.extractFrom(item, result);
+    }
+
+    @Override
+    public void extractFromMissingItem(ResultListener result) {
+        originalKey.extractFromMissingItem(result);
     }
 }

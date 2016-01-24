@@ -6,15 +6,15 @@ public enum Reporters {
     ;
 
     public static SafeTreeReporter simpleTreeReporterToSafeTreeReporter(SimpleTreeReporter simpleTreeReporter) {
-        return new SimpleToSafeTreeReporterAdapter(simpleTreeReporter);
+        return new SimpleTreeReporterToSafeTreeReporterAdapter(simpleTreeReporter);
     }
 
     public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable, String title) {
         return new HtmlReporter(appendable, title);
     }
 
-    public static MatchesFlagRecordingReporter matchesFlagRecordingReporter() {
-        return new MatchesFlagRecordingReporterImpl();
+    public static MatchesFlagRecordingSimpleTreeReporter matchesFlagRecordingReporter() {
+        return new MatchesFlagRecordingSimpleTreeReporterImpl();
     }
 
     public static SafeTreeReporter noOpSafeTreeReporter() {
@@ -34,6 +34,6 @@ public enum Reporters {
     }
 
     public static CloseableSafeTreeReporter mergingReporter(SafeTreeReporter wrappedSafeTreeReporter) {
-        return new MergingReporter(wrappedSafeTreeReporter);
+        return new MergingSafeTreeReporter(wrappedSafeTreeReporter);
     }
 }

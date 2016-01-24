@@ -9,9 +9,6 @@ import java.util.Arrays;
 
 import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
 
-// TODO: в keys оставить только FieldKey и MethodKey, *ByNameKey перенести в экстракторы
-// Это нужно чтобы потенциально позволить произвольные критерии выбора полей и методов, а не только название/аргументы
-
 // TODO: позволять указывать типы аргументов отдельно на случай нуллов и перегрузок
 // TODO: сравнивать аргументы так же, как и value в CheckResult'ах?
 // TODO: возможность указывать типы аргументов отдельно для случаев, когда какие-то аргументы null и есть перегрузки?
@@ -20,7 +17,6 @@ class MethodByNameKey implements ExtractableKey {
 //    private final Class<?>[] argumentClasses;
     private final Object[] arguments;
 
-    @Deprecated
     MethodByNameKey(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");

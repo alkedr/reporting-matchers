@@ -3,6 +3,8 @@ package com.github.alkedr.matchers.reporting.keys;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForGetterMethodInvocation;
+
 public enum Keys {
     ;
 
@@ -30,7 +32,21 @@ public enum Keys {
         return new MethodKey(method, arguments);
     }
 
-    public static <K extends Key> Key renamedKey(K originalKey, String name) {
-        return new RenamedKey<K>(originalKey, name);
+    public static ExtractableKey getterByNameKey(String methodName) {
+        return renamedExtractableKey(methodByNameKey(methodName), createNameForGetterMethodInvocation(methodName));
     }
+
+    public static ExtractableKey getterKey(Method method, Object... arguments) {
+        return renamedExtractableKey(methodKey(method), createNameForGetterMethodInvocation(method.getName()));
+    }
+
+    public static ExtractableKey renamedExtractableKey(ExtractableKey originalKey, String name) {
+        return new RenamedExtractableKey(originalKey, name);
+    }
+
+    public static Key renamedKey(Key originalKey, String name) {
+        return new RenamedKey(originalKey, name);
+    }
+
+    // TODO: renamedKey(ExtractableKey)
 }

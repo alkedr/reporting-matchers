@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.keys.Keys;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
@@ -11,13 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
-import static java.lang.Character.isUpperCase;
-import static java.lang.Character.toLowerCase;
+import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
 
 // используй static import
-// TODO: использовать здесь только интерфейсы из корневого пакета?
-// TODO: сделать реализации матчеров package-private?
 public enum ReportingMatchers {
     ;
 
@@ -77,26 +73,26 @@ public enum ReportingMatchers {
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(Field field) {
-        return new ExtractingMatcher<>((Keys.fieldKey(field)));
+        return new ExtractingMatcher<>(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
-        return new ExtractingMatcher<>((Keys.fieldByNameKey(fieldName)));
+        return new ExtractingMatcher<>(fieldByNameKey(fieldName));
     }
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>((Keys.methodKey(method, arguments)));
+        return new ExtractingMatcher<>(methodKey(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>((Keys.methodByNameKey(methodName, arguments)));
+        return new ExtractingMatcher<>(methodByNameKey(methodName, arguments));
     }
 
 //    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
@@ -108,12 +104,12 @@ public enum ReportingMatchers {
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
-        return new ExtractingMatcher<T>((Keys.methodKey(method)), createNameForGetterMethodInvocation(method.getName()));
+        return new ExtractingMatcher<>(getterKey(method));
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
-        return new ExtractingMatcher<T>((Keys.methodByNameKey(methodName)), createNameForGetterMethodInvocation(methodName));
+        return new ExtractingMatcher<>(getterByNameKey(methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
@@ -123,22 +119,22 @@ public enum ReportingMatchers {
 
 
     public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>((Keys.elementKey(index)));
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
-        return new ExtractingMatcher<>((Keys.elementKey(index)));
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
     // O(N)
     public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>((Keys.elementKey(index)));
+        return new ExtractingMatcher<>(elementKey(index));
     }
 
 
     public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>((Keys.hashMapKey(key)));
+        return new ExtractingMatcher<>(hashMapKey(key));
     }
 
 
@@ -159,28 +155,13 @@ public enum ReportingMatchers {
 
     // TODO: рекурсивный матчер, который работает как equalTo
     // TODO: compare().fields().getters().with(expected)
+    @Deprecated
     public static <T> ComparingReportingMatcherBuilder<T> compare() {
         return new ComparingReportingMatcherBuilder<>();
     }
 
 
-
-
-    static String createNameForGetterMethodInvocation(String name) {
-        if (name == null) {
-            return "";
-        }
-        if (name.length() > 3 && name.startsWith("get") && isUpperCase(name.charAt(3))) {
-            return toLowerCase(name.charAt(3)) + name.substring(4);
-        }
-        if (name.length() > 2 && name.startsWith("is") && isUpperCase(name.charAt(2))) {
-            return toLowerCase(name.charAt(2)) + name.substring(3);
-        }
-        return name;
-    }
-
-
-//    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields() {
+    //    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields() {
 //        return fields(notStaticNotTransientNotSyntheticFieldsPredicate());
 //    }
 //

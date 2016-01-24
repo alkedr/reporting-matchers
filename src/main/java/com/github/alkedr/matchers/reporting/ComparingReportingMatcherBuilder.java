@@ -10,6 +10,7 @@ import java.util.function.Function;
 // позволяет задавать некоторые правила проверки для отдельных классов и их полей
 // (напр. учитывать ли порядок элементов в списках, поля или геттеры и пр.)
 // Предполагается, что для каждого набора матчеров будет static метод, строящий такой матчер
+@Deprecated
 class ComparingReportingMatcherBuilder<T> {
     private final Map<Class<?>, Function<Object, Matcher<?>>> classToMatcherFactory = new HashMap<>();
 
