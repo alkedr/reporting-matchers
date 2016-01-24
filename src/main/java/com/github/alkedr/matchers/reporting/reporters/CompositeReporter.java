@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 
+// TODO: вызывать contents только один раз!
+// TODO: или сделать MatchesFlagRecordingReporter обёрткой? Тогда нужен базовый класс для обёрток
+@Deprecated
 public class CompositeReporter implements Reporter {
     private final Iterable<Reporter> reporters;
 

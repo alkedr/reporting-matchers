@@ -13,6 +13,7 @@ import java.util.function.Consumer;
  * TODO: пример кода как создать Reporter и запустить на нём ReportingMatcher
  */
 // TODO: написать в доках интерфейсов как их реализовывать
+// TODO: сделать отдельный репортер с beginNode и endNode? Это упростит репортеры. Как его назвать?
 public interface Reporter {
     void presentNode(Key key, Object value, Consumer<Reporter> contents);
     void missingNode(Key key, Consumer<Reporter> contents);

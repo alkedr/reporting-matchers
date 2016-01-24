@@ -9,19 +9,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MergingReporter implements Reporter, Closeable {
-    private final Reporter reporter;
+public class MergingReporter extends ReporterWrapper implements Closeable {
     private final Map<Node, Collection<Consumer<Reporter>>> nodes = new LinkedHashMap<>();
 
-    public MergingReporter(Reporter reporter) {
-        this.reporter = reporter;
+    public MergingReporter(Reporter wrappedReporter) {
+        super(wrappedReporter);
     }
 
     @Override
     public void close() {
         for (Map.Entry<Node, Collection<Consumer<Reporter>>> entry : nodes.entrySet()) {
             entry.getKey().addToReporter(
-                    reporter,
+                    wrappedReporter,
                     r -> {  // TODO: сделать лямбду классом
                         try (MergingReporter mergingReporter = new MergingReporter(r)) {
                             for (Consumer<Reporter> contents : entry.getValue()) {
@@ -47,46 +46,6 @@ public class MergingReporter implements Reporter, Closeable {
     @Override
     public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
         nodes.computeIfAbsent(new BrokenNode(key, throwable), k -> new ArrayList<>()).add(contents);
-    }
-
-    @Override
-    public void correctlyPresent() {
-        reporter.correctlyPresent();
-    }
-
-    @Override
-    public void correctlyMissing() {
-        reporter.correctlyMissing();
-    }
-
-    @Override
-    public void incorrectlyPresent() {
-        reporter.incorrectlyPresent();
-    }
-
-    @Override
-    public void incorrectlyMissing() {
-        reporter.incorrectlyMissing();
-    }
-
-    @Override
-    public void passedCheck(String description) {
-        reporter.passedCheck(description);
-    }
-
-    @Override
-    public void failedCheck(String expected, String actual) {
-        reporter.failedCheck(expected, actual);
-    }
-
-    @Override
-    public void checkForMissingItem(String description) {
-        reporter.checkForMissingItem(description);
-    }
-
-    @Override
-    public void brokenCheck(String description, Throwable throwable) {
-        reporter.brokenCheck(description, throwable);
     }
 
 
