@@ -21,14 +21,17 @@ public class MergingReporter implements Reporter, Closeable {
     public void close() {
         for (Map.Entry<Node, Collection<Consumer<Reporter>>> entry : nodes.entrySet()) {
             entry.getKey().addToReporter(
-                    new MergingReporter(reporter),
-                    reporter -> {
-                        for (Consumer<Reporter> contents : entry.getValue()) {
-                            contents.accept(reporter);
+                    reporter,
+                    r -> {  // TODO: сделать лямбду классом
+                        try (MergingReporter mergingReporter = new MergingReporter(r)) {
+                            for (Consumer<Reporter> contents : entry.getValue()) {
+                                contents.accept(mergingReporter);
+                            }
                         }
                     }
             );
         }
+        nodes.clear();
     }
 
     @Override
