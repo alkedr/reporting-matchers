@@ -4,10 +4,10 @@ import com.github.alkedr.matchers.reporting.keys.Key;
 
 import java.util.function.Consumer;
 
-class SimpleToSafeTreeReporterAdapter implements SafeTreeReporter {
+class SimpleTreeReporterToSafeTreeReporterAdapter implements SafeTreeReporter {
     private final SimpleTreeReporter simpleTreeReporter;
 
-    SimpleToSafeTreeReporterAdapter(SimpleTreeReporter simpleTreeReporter) {
+    SimpleTreeReporterToSafeTreeReporterAdapter(SimpleTreeReporter simpleTreeReporter) {
         this.simpleTreeReporter = simpleTreeReporter;
     }
 

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-public class MergingReporterTest {
+public class MergingSafeTreeReporterTest {
     private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final InOrder inOrder = inOrder(simpleTreeReporter);
     private final CloseableSafeTreeReporter mergingReporter = mergingReporter(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));

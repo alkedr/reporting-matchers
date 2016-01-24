@@ -1,5 +1,5 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-public interface MatchesFlagRecordingReporter extends SimpleTreeReporter {
+public interface MatchesFlagRecordingSimpleTreeReporter extends SimpleTreeReporter {
     boolean getMatchesFlag();
 }

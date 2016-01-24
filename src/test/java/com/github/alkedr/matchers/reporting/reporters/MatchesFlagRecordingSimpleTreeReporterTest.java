@@ -6,8 +6,8 @@ import static com.github.alkedr.matchers.reporting.reporters.Reporters.matchesFl
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MatchesFlagRecordingReporterTest {
-    private final MatchesFlagRecordingReporter reporter = matchesFlagRecordingReporter();
+public class MatchesFlagRecordingSimpleTreeReporterTest {
+    private final MatchesFlagRecordingSimpleTreeReporter reporter = matchesFlagRecordingReporter();
 
     @Test
     public void initialValue() {

@@ -8,11 +8,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-class MergingReporter implements CloseableSafeTreeReporter {
+class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     protected final SafeTreeReporter reporter;
     private final Map<Node, Collection<Consumer<SafeTreeReporter>>> nodes = new LinkedHashMap<>();
 
-    MergingReporter(SafeTreeReporter reporter) {
+    MergingSafeTreeReporter(SafeTreeReporter reporter) {
         this.reporter = reporter;
     }
 

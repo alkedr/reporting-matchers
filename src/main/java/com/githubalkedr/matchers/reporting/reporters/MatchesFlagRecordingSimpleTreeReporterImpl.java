@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import com.github.alkedr.matchers.reporting.keys.Key;
 
-class MatchesFlagRecordingReporterImpl implements MatchesFlagRecordingReporter {
+class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecordingSimpleTreeReporter {
     private boolean matchesFlag = true;
 
     @Override
