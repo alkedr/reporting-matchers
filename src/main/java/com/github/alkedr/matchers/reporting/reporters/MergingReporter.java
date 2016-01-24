@@ -33,17 +33,17 @@ public class MergingReporter implements Reporter, Closeable {
 
     @Override
     public void presentNode(Key key, Object value, Consumer<Reporter> contents) {
-        nodes.getOrDefault(new PresentNode(key, value), new ArrayList<>()).add(contents);
+        nodes.computeIfAbsent(new PresentNode(key, value), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
     public void missingNode(Key key, Consumer<Reporter> contents) {
-        nodes.getOrDefault(new MissingNode(key), new ArrayList<>()).add(contents);
+        nodes.computeIfAbsent(new MissingNode(key), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
     public void brokenNode(Key key, Throwable throwable, Consumer<Reporter> contents) {
-        nodes.getOrDefault(new BrokenNode(key, throwable), new ArrayList<>()).add(contents);
+        nodes.computeIfAbsent(new BrokenNode(key, throwable), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
