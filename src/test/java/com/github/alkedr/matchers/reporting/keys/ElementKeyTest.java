@@ -13,8 +13,7 @@ public class ElementKeyTest {
 
     @Test
     public void getters() {
-        ElementKey key = new ElementKey(123);
-        assertEquals(123, key.getIndex());
+        assertEquals(123, new ElementKey(123).getIndex());
     }
 
     @Test

@@ -4,11 +4,17 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 
 public class HashMapKeyTest {
     @Test
+    public void getters() {
+        assertSame("123", new HashMapKey("123").getKey());
+    }
+
+    @Test
     public void asStringTest() {
-        assertEquals("123", new HashMapKey("123").asString());
+        assertEquals("123", new HashMapKey(123).asString());
     }
 
     @Test

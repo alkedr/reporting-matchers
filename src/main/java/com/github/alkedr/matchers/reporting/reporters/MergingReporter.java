@@ -9,9 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/*
-Будет ли проблема с сайд-эффектами IteratorMatcher?
- */
 public class MergingReporter implements Reporter, Closeable {
     private final Reporter reporter;
     private final Map<Node, Collection<Consumer<Reporter>>> nodes = new LinkedHashMap<>();

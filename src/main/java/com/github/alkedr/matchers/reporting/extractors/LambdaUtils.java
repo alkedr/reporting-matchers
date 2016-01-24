@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("UseOfSunClasses")
 @Deprecated
 class LambdaUtils {
     private static final Unsafe UNSAFE;

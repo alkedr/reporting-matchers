@@ -2,6 +2,7 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.apache.commons.lang3.Validate;
 
+@Deprecated
 public class FieldByNameKey implements Key {
     private final String fieldName;
 

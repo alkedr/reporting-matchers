@@ -6,7 +6,7 @@ public class ElementKey implements Key {
     private final int index;
 
     public ElementKey(int index) {
-        Validate.isTrue(index >= 0, "index must be positive");
+        Validate.isTrue(index >= 0, "index must be greater than 0");
         this.index = index;
     }
 
@@ -16,15 +16,8 @@ public class ElementKey implements Key {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        if (getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ElementKey that = (ElementKey) o;
         return index == that.index;
     }

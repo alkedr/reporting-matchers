@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 
 public class FieldKeyTest {
     private final Field myField1;
@@ -19,6 +20,11 @@ public class FieldKeyTest {
     @Test(expected = NullPointerException.class)
     public void nullField() {
         new FieldKey(null);
+    }
+
+    @Test
+    public void getters() {
+        assertSame(myField1, new FieldKey(myField1).getField());
     }
 
     @Test

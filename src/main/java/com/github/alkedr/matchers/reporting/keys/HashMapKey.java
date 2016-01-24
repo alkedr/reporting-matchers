@@ -2,7 +2,6 @@ package com.github.alkedr.matchers.reporting.keys;
 
 // не подходит для TreeMap, IdentityHashMap и пр.
 // подходит только для HashMap
-// TODO: hashMapEntryKey, в ReportingMatchers удобная объёртка valueForKey() ?
 public class HashMapKey implements Key {
     private final Object key;
 

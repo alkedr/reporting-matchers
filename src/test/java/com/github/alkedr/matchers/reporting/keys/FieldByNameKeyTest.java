@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 
 public class FieldByNameKeyTest {
     @Test(expected = NullPointerException.class)
@@ -13,12 +14,12 @@ public class FieldByNameKeyTest {
 
     @Test
     public void getters() {
-        assertEquals("123", new FieldByNameKey("123").getFieldName());
+        assertSame("123", new FieldByNameKey("123").getFieldName());
     }
 
     @Test
     public void asStringTest() {
-        assertEquals("field1", new FieldByNameKey("field1").asString());
+        assertSame("field1", new FieldByNameKey("field1").asString());
     }
 
     @Test
