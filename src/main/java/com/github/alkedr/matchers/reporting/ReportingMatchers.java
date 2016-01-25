@@ -59,11 +59,13 @@ public enum ReportingMatchers {
 
 
     public static <T> ReportingMatcher<T> present() {
-        return new PresentMatcher<>();
+        //noinspection unchecked
+        return (ReportingMatcher<T>) PresentMatcher.INSTANCE;
     }
 
     public static <T> ReportingMatcher<T> missing() {
-        return new MissingMatcher<>();
+        //noinspection unchecked
+        return (ReportingMatcher<T>) MissingMatcher.INSTANCE;
     }
 
 
