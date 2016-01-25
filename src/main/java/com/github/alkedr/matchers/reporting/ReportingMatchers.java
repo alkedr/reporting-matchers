@@ -159,10 +159,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T[]> array(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingReportingMatcher<>(
-                item -> asList((Object[]) item).iterator(),
-                new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers))
-        );
+        return new ConvertingReportingMatcher<>(item -> asList(item).iterator(), iterator(elementCheckers));
     }
 
 
@@ -171,10 +168,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingReportingMatcher<>(
-                item -> ((Iterable<T>) item).iterator(),
-                new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers))
-        );
+        return new ConvertingReportingMatcher<>(Iterable::iterator, iterator(elementCheckers));
     }
 
 
