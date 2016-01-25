@@ -6,12 +6,22 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public enum IteratorMatcherElementCheckers {
     ;
+
+    public static ElementChecker compositeElementChecker(ElementChecker... elementCheckers) {
+        return compositeElementChecker(asList(elementCheckers));
+    }
+
+    private static ElementChecker compositeElementChecker(Iterable<ElementChecker> elementCheckers) {
+        return new CompositeElementChecker(elementCheckers);
+    }
+
 
     public static ElementChecker containsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
         return new ContainsInSpecifiedOrderChecker(elementMatchers);

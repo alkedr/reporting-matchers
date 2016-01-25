@@ -3,9 +3,10 @@ package com.github.alkedr.matchers.reporting.element.checkers;
 import com.github.alkedr.matchers.reporting.keys.Key;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Consumer;
 
-@Deprecated
 class CompositeElementChecker implements ElementChecker {
     private final Iterable<ElementChecker> elementCheckers;
 
@@ -22,11 +23,15 @@ class CompositeElementChecker implements ElementChecker {
 
     @Override
     public Consumer<SafeTreeReporter> element(Key key, Object value) {
-//        for (ElementChecker elementChecker : elementCheckers) {
-//            elementChecker.element(key, value, safeTreeReporter);
-//        }
-        // TODO
-        return null;
+        Collection<Consumer<SafeTreeReporter>> results = new ArrayList<>();
+        for (ElementChecker elementChecker : elementCheckers) {
+            results.add(elementChecker.element(key, value));
+        }
+        return safeTreeReporter -> {
+            for (Consumer<SafeTreeReporter> result : results) {
+                result.accept(safeTreeReporter);
+            }
+        };
     }
 
     @Override
