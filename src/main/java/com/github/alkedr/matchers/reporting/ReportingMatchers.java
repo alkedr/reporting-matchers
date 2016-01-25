@@ -23,7 +23,6 @@ public enum ReportingMatchers {
     }
 
 
-
     // оборачивает переданный ему матчер если он не reporting.
     public static <T> ReportingMatcher<T> toReportingMatcher(Matcher<T> matcher) {
         return matcher instanceof ReportingMatcher ? (ReportingMatcher<T>) matcher : new ReportingMatcherAdapter<>(matcher);
@@ -37,7 +36,6 @@ public enum ReportingMatchers {
         }
         return result;
     }
-
 
 
     @SafeVarargs
@@ -60,14 +58,19 @@ public enum ReportingMatchers {
     }
 
 
-    // TODO: noOp() ?
-    // TODO: merge() ?
+    public static <T> ReportingMatcher<T> present() {
+        return new PresentMatcher<>();
+    }
+
+    public static <T> ReportingMatcher<T> missing() {
+        return new MissingMatcher<>();
+    }
+
+
     // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
     // TODO: everyElement(), everyArrayElement()
     // TODO: elementsThatAre(predicate/matcher).alsoAre()
-    // TODO: method(lambda), getter(lambda)
-
-    // TODO: present(), missing()
+    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 
 
     // пробивает доступ к private, protected и package-private полям
@@ -95,11 +98,9 @@ public enum ReportingMatchers {
         return new ExtractingMatcher<>(methodByNameKey(methodName, arguments));
     }
 
-//    public static <T> ExtractingMatcher<T> method(Function<T, ?> function) {
-        // Получить класс из параметра function'а?
-        // Mockito вроде как не требует конструктора без параметров, значит это возможно
-//        return new SimpleMethodByLambdaExtractingMatcher<>(function);
-//    }
+    /*public static <T> ExtractingMatcherBuilder<T> method(Function<T, ?> function) {
+        return new ExtractingMatcher<>(methodByLambdaKey(function));
+    }*/
 
 
     // как method(), только убирает 'get' и 'is'
@@ -113,9 +114,9 @@ public enum ReportingMatchers {
     }
 
     // как method(), только убирает 'get' и 'is'
-//    public static <T> ExtractingMatcher<T> getter(Function<T, ?> function) {
-//        return new GetterMethodByLambdaExtractingMatcher<>(function);
-//    }
+    /*public static <T> ExtractingMatcherBuilder<T> getter(Function<T, ?> function) {
+        return new ExtractingMatcher<>(getterByLambdaKey(function));
+    }*/
 
 
     public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
@@ -155,10 +156,9 @@ public enum ReportingMatchers {
 
     // TODO: рекурсивный матчер, который работает как equalTo
     // TODO: compare().fields().getters().with(expected)
-    @Deprecated
-    public static <T> ComparingReportingMatcherBuilder<T> compare() {
+    /*public static <T> ComparingReportingMatcherBuilder<T> compare() {
         return new ComparingReportingMatcherBuilder<>();
-    }
+    }*/
 
 
     //    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields() {
@@ -186,9 +186,6 @@ public enum ReportingMatchers {
 //    }
 
 
-
-    // TODO: метод, который принимает мапу и лямбду, которая преобразовывает значение в матчер, то же для массивов и списков?
-
     /*public static <E> ReportingMatcher<List<E>> listWithElements(Collection<E> elements) {
         return listWithElementsMatching(
                 elements.stream()
@@ -197,7 +194,6 @@ public enum ReportingMatchers {
         );
     }
 */
-    // TODO: пробовать пропускать элементы чтобы лишний элемент в начале списка не сделал весь список красным?
     // если не использовать uncheckedIsFail() и извлекатель непроверенных элементов, то непроверенные элементы в конце
     // будут проигнорированы, даже в отчёт не попадут, в будущем поведение может измениться
     /*public static <E> ReportingMatcher<List<E>> listWithElementsMatching(Iterable<Matcher<E>> matchers) {
@@ -209,6 +205,5 @@ public enum ReportingMatchers {
         return sequence(elementMatchers);
     }*/
 
-    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 
 }
