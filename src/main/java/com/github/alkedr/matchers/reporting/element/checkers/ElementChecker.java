@@ -8,5 +8,5 @@ import java.util.function.Consumer;
 public interface ElementChecker {
     void begin(SafeTreeReporter safeTreeReporter);
     Consumer<SafeTreeReporter> element(Key key, Object value);
-    void end(SafeTreeReporter safeTreeReporter);
+    void end(SafeTreeReporter safeTreeReporter);  // TODO: передавать здесь кол-во элементов чтобы реализациям не нужно было считать элементы?
 }

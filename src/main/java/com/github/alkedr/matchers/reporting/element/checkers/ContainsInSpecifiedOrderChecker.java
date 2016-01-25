@@ -13,7 +13,7 @@ import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 // TODO: пробовать пропускать элементы?
 class ContainsInSpecifiedOrderChecker implements ElementChecker {
     private final Iterator<ReportingMatcher<?>> elementMatchers;
-    private int index;
+    private int index = 0;
 
     ContainsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
         this.elementMatchers = elementMatchers;

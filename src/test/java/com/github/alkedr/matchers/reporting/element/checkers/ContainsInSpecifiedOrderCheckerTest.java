@@ -7,11 +7,13 @@ import org.junit.Test;
 import org.mockito.InOrder;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
-import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
+import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInAnyOrderChecker;
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -20,11 +22,11 @@ public class ContainsInSpecifiedOrderCheckerTest {
     private final SafeTreeReporter safeTreeReporter = simpleTreeReporterToSafeTreeReporter(simpleTreeReporter);
     private final InOrder inOrder = inOrder(simpleTreeReporter);
     private final Key key1 = mock(Key.class);
-    private final Object value1 = 1;
+    private final Key key2 = mock(Key.class);
 
     @Test
     public void expectedEmpty_gotEmpty() {
-        ElementChecker elementChecker = containsInSpecifiedOrderChecker();
+        ElementChecker elementChecker = containsInAnyOrderChecker();
         elementChecker.begin(safeTreeReporter);
         elementChecker.end(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -32,12 +34,12 @@ public class ContainsInSpecifiedOrderCheckerTest {
 
     @Test
     public void expectedEmpty_gotOneItem() {
-        ElementChecker elementChecker = containsInSpecifiedOrderChecker();
+        ElementChecker elementChecker = containsInAnyOrderChecker();
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
 
-        elementChecker.element(key1, value1).accept(safeTreeReporter);
+        elementChecker.element(key1, 1).accept(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).incorrectlyPresent();
         inOrder.verifyNoMoreInteractions();
 
@@ -47,7 +49,7 @@ public class ContainsInSpecifiedOrderCheckerTest {
 
     @Test
     public void expectedOneItem_gotEmpty() {
-        ElementChecker elementChecker = containsInSpecifiedOrderChecker(singleton(toReportingMatcher(anything("1"))));
+        ElementChecker elementChecker = containsInAnyOrderChecker(singleton(toReportingMatcher(anything("1"))));
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -61,13 +63,32 @@ public class ContainsInSpecifiedOrderCheckerTest {
 
     @Test
     public void expectedOneItem_gotOneItem() {
-        ElementChecker elementChecker = containsInSpecifiedOrderChecker(singleton(toReportingMatcher(anything("1"))));
+        ElementChecker elementChecker = containsInAnyOrderChecker(singleton(toReportingMatcher(anything("1"))));
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
 
-        elementChecker.element(key1, value1).accept(safeTreeReporter);
+        elementChecker.element(key1, 1).accept(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).passedCheck("1");
+        inOrder.verifyNoMoreInteractions();
+
+        elementChecker.end(safeTreeReporter);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void expectedTwoItems_gotTwoItemsInDifferentOrder() {
+        ElementChecker elementChecker = containsInAnyOrderChecker(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2))));
+
+        elementChecker.begin(safeTreeReporter);
+        inOrder.verifyNoMoreInteractions();
+
+        elementChecker.element(key1, 2).accept(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).passedCheck("<2>");
+        inOrder.verifyNoMoreInteractions();
+
+        elementChecker.element(key2, 1).accept(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).passedCheck("<1>");
         inOrder.verifyNoMoreInteractions();
 
         elementChecker.end(safeTreeReporter);

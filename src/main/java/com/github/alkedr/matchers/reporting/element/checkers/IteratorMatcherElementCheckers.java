@@ -2,6 +2,7 @@ package com.github.alkedr.matchers.reporting.element.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
@@ -23,6 +24,21 @@ public enum IteratorMatcherElementCheckers {
     @SafeVarargs
     public static <T> ElementChecker containsInSpecifiedOrderChecker(T... elements) {
         return containsInSpecifiedOrderChecker(
+                stream(elements)
+                        .map(element -> toReportingMatcher(equalTo(element)))
+                        .collect(toList())
+        );
+    }
+
+
+    // TODO: Iterable?
+    public static ElementChecker containsInAnyOrderChecker(Collection<ReportingMatcher<?>> elementMatchers) {
+        return new ContainsInAnyOrderChecker(elementMatchers);
+    }
+
+    @SafeVarargs
+    public static <T> ElementChecker containsInAnyOrderChecker(T... elements) {
+        return containsInAnyOrderChecker(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
