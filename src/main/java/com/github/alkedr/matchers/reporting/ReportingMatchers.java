@@ -72,7 +72,7 @@ public enum ReportingMatchers {
         return new ExtractingMatcher<>(extractableKey);
     }
 
-    // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
+    // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)    customKey(), customUnmergeableKey()
     /*public static <T> ExtractingMatcherBuilder<T> value(String name, Function<T, Object> function) {
         return new ExtractingMatcher<>(extractableKey);
     }*/
@@ -159,7 +159,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T[]> array(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingReportingMatcher<>(item -> asList(item).iterator(), iterator(elementCheckers));
+        return new ConvertingMatcher<>(item -> asList(item).iterator(), iterator(elementCheckers));
     }
 
 
@@ -168,7 +168,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingReportingMatcher<>(Iterable::iterator, iterator(elementCheckers));
+        return new ConvertingMatcher<>(Iterable::iterator, iterator(elementCheckers));
     }
 
 
