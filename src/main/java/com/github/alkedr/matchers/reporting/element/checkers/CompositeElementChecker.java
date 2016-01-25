@@ -5,6 +5,7 @@ import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.function.Consumer;
 
+@Deprecated
 class CompositeElementChecker implements ElementChecker {
     private final Iterable<ElementChecker> elementCheckers;
 

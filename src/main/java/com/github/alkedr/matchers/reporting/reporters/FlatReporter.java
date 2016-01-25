@@ -11,4 +11,7 @@ public interface FlatReporter {
     void checkForMissingItem(String description);
     void brokenCheck(String description, Throwable throwable);
     // TODO: passedEqualToMatcher, failedEqualToMatcher?
+
+    // TODO: "..." на случай если отчёт получается слишком большой?
+    // TODO: Обёртка для SimpleTreeReporter, которая ограничивает размер?
 }
