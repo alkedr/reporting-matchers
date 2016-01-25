@@ -61,4 +61,5 @@ public enum ElementCheckers {
     // TODO: everyElement(), everyArrayElement()
     // TODO: elementsThatAre(predicate/matcher).alsoAre()
     // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
+    // TODO: возможность указать мапу ключ -> матчер?
 }
