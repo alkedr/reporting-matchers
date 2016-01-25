@@ -1,5 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
@@ -67,75 +68,89 @@ public enum ReportingMatchers {
     }
 
 
-    // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
-    // TODO: everyElement(), everyArrayElement()
-    // TODO: elementsThatAre(predicate/matcher).alsoAre()
-    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
+    public static <T> ExtractingMatcherBuilder<T> value(ExtractableKey extractableKey) {
+        return new ExtractingMatcher<>(extractableKey);
+    }
 
+    // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)
+    /*public static <T> ExtractingMatcherBuilder<T> value(String name, Function<T, Object> function) {
+        return new ExtractingMatcher<>(extractableKey);
+    }*/
+
+    /*public static <T> ExtractingMatcherBuilder<T> mergeableValue(String name, Function<T, Object> function) {
+        return new ExtractingMatcher<>(extractableKey);
+    }*/
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(Field field) {
-        return new ExtractingMatcher<>(fieldKey(field));
+        return value(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
     public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
-        return new ExtractingMatcher<>(fieldByNameKey(fieldName));
+        return value(fieldByNameKey(fieldName));
     }
+
+    // TODO: вытаскивание поля из лямбды
+    /*public static <T> ExtractingMatcherBuilder<T> field(Function<T, ?> function) {
+        return value(fieldByLambdaKey(function));
+    }*/
 
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
-        return new ExtractingMatcher<>(methodKey(method, arguments));
+        return value(methodKey(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
     public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
-        return new ExtractingMatcher<>(methodByNameKey(methodName, arguments));
+        return value(methodByNameKey(methodName, arguments));
     }
 
+    // TODO: вытаскивание метода из лямбды
     /*public static <T> ExtractingMatcherBuilder<T> method(Function<T, ?> function) {
-        return new ExtractingMatcher<>(methodByLambdaKey(function));
+        return value(methodByLambdaKey(function));
     }*/
 
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
-        return new ExtractingMatcher<>(getterKey(method));
+        return value(getterKey(method));
     }
 
     // как method(), только убирает 'get' и 'is'
     public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
-        return new ExtractingMatcher<>(getterByNameKey(methodName));
+        return value(getterByNameKey(methodName));
     }
 
     // как method(), только убирает 'get' и 'is'
+    // TODO: вытаскивание метода из лямбды
     /*public static <T> ExtractingMatcherBuilder<T> getter(Function<T, ?> function) {
-        return new ExtractingMatcher<>(getterByLambdaKey(function));
+        return value(getterByLambdaKey(function));
     }*/
 
 
     public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return value(elementKey(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
     public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return value(elementKey(index));
     }
 
     // O(N)
     public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
-        return new ExtractingMatcher<>(elementKey(index));
+        return value(elementKey(index));
     }
 
 
     public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
-        return new ExtractingMatcher<>(hashMapKey(key));
+        return value(hashMapKey(key));
     }
 
 
@@ -151,6 +166,9 @@ public enum ReportingMatchers {
     }
 
 
+    // TODO: everyElement(), everyArrayElement()
+    // TODO: elementsThatAre(predicate/matcher).alsoAre()
+    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 
 
 
