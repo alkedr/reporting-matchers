@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
+import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.containsInSpecifiedOrder;
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static java.util.Arrays.asList;
@@ -48,7 +49,7 @@ public class ContainsInAnyOrderCheckerTest {
 
     @Test
     public void expectedOneItem_gotEmpty() {
-        ElementChecker elementChecker = ElementCheckers.containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        ElementChecker elementChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -62,7 +63,7 @@ public class ContainsInAnyOrderCheckerTest {
 
     @Test
     public void expectedOneItem_gotOneItem() {
-        ElementChecker elementChecker = ElementCheckers.containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        ElementChecker elementChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -77,7 +78,7 @@ public class ContainsInAnyOrderCheckerTest {
 
     @Test
     public void expectedTwoItems_gotTwoItemsInDifferentOrder() {
-        ElementChecker elementChecker = ElementCheckers.containsInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2))));
+        ElementChecker elementChecker = containsInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2))));
 
         elementChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();

@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
+import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.containsInSpecifiedOrder;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.htmlReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static org.hamcrest.Matchers.greaterThan;
