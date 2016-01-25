@@ -1,15 +1,14 @@
 package com.github.alkedr.matchers.reporting;
 
+import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
 import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.compositeElementChecker;
 import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
 import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
@@ -154,9 +153,44 @@ public enum ReportingMatchers {
     }
 
 
+    public static <T> ReportingMatcher<T[]> array(ElementChecker... elementCheckers) {
+        return array(asList(elementCheckers));
+    }
+
+    public static <T> ReportingMatcher<T[]> array(Iterable<ElementChecker> elementCheckers) {
+        return new ConvertingReportingMatcher<>(
+                item -> asList((Object[]) item).iterator(),
+                new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers))
+        );
+    }
+
+
+    public static <T> ReportingMatcher<Iterable<T>> iterable(ElementChecker... elementCheckers) {
+        return iterable(asList(elementCheckers));
+    }
+
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementChecker> elementCheckers) {
+        return new ConvertingReportingMatcher<>(
+                item -> ((Iterable<T>) item).iterator(),
+                new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers))
+        );
+    }
+
+
+    public static <T> ReportingMatcher<Iterator<T>> iterator(ElementChecker... elementCheckers) {
+        return iterator(asList(elementCheckers));
+    }
+
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementChecker> elementCheckers) {
+        return new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers));
+    }
+
+
+
 
     // TODO: поддерживать массивы, итераторы, итераблы ?мапы?  (это всё обёртки для IteratorMatcher, которые преобразовывают item)
     // TODO: тут нужны перегрузки для всех примитивных типов
+    @Deprecated
     @SafeVarargs
     public static <T> ReportingMatcher<T[]> arrayWithElements(T... elements) {
         return new ConvertingReportingMatcher<>(
@@ -166,9 +200,6 @@ public enum ReportingMatchers {
     }
 
 
-    // TODO: everyElement(), everyArrayElement()
-    // TODO: elementsThatAre(predicate/matcher).alsoAre()
-    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 
 
 

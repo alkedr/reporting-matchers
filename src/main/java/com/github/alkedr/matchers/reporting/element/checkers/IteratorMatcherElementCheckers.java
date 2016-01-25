@@ -18,7 +18,7 @@ public enum IteratorMatcherElementCheckers {
         return compositeElementChecker(asList(elementCheckers));
     }
 
-    private static ElementChecker compositeElementChecker(Iterable<ElementChecker> elementCheckers) {
+    public static ElementChecker compositeElementChecker(Iterable<ElementChecker> elementCheckers) {
         return new CompositeElementChecker(elementCheckers);
     }
 
@@ -54,4 +54,9 @@ public enum IteratorMatcherElementCheckers {
                         .collect(toList())
         );
     }
+
+
+    // TODO: everyElement(), everyArrayElement()
+    // TODO: elementsThatAre(predicate/matcher).alsoAre()
+    // TODO: listWithElementsInAnyOrder, listWithElementsMatchingInAnyOrder
 }
