@@ -10,7 +10,7 @@ import org.mockito.InOrder;
 
 import java.util.function.Consumer;
 
-import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.compositeElementChecker;
+import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.compositeElementChecker;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.inOrder;

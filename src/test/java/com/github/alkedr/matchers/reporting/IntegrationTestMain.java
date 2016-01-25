@@ -41,7 +41,7 @@ public class IntegrationTestMain {
                 ),
                 method("getArray").is(
                         arrayElement(0).is(1),
-                        arrayWithElements(1, 2, 3, 4)
+                        array(containsInSpecifiedOrder(1, 2, 3, 4))
                 )
         );
     }

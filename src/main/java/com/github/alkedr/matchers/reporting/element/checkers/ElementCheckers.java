@@ -11,7 +11,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public enum IteratorMatcherElementCheckers {
+public enum ElementCheckers {
     ;
 
     public static ElementChecker compositeElementChecker(ElementChecker... elementCheckers) {
@@ -23,17 +23,18 @@ public enum IteratorMatcherElementCheckers {
     }
 
 
-    public static ElementChecker containsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
+    public static ElementChecker containsInSpecifiedOrder(Iterator<ReportingMatcher<?>> elementMatchers) {
         return new ContainsInSpecifiedOrderChecker(elementMatchers);
     }
 
-    public static ElementChecker containsInSpecifiedOrderChecker(Iterable<ReportingMatcher<?>> elementMatchers) {
-        return containsInSpecifiedOrderChecker(elementMatchers.iterator());
+    public static ElementChecker containsInSpecifiedOrder(Iterable<ReportingMatcher<?>> elementMatchers) {
+        return containsInSpecifiedOrder(elementMatchers.iterator());
     }
 
+    // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
-    public static <T> ElementChecker containsInSpecifiedOrderChecker(T... elements) {
-        return containsInSpecifiedOrderChecker(
+    public static <T> ElementChecker containsInSpecifiedOrder(T... elements) {
+        return containsInSpecifiedOrder(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
@@ -42,13 +43,14 @@ public enum IteratorMatcherElementCheckers {
 
 
     // TODO: Iterable?
-    public static ElementChecker containsInAnyOrderChecker(Collection<ReportingMatcher<?>> elementMatchers) {
+    public static ElementChecker containsInAnyOrder(Collection<ReportingMatcher<?>> elementMatchers) {
         return new ContainsInAnyOrderChecker(elementMatchers);
     }
 
+    // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
-    public static <T> ElementChecker containsInAnyOrderChecker(T... elements) {
-        return containsInAnyOrderChecker(
+    public static <T> ElementChecker containsInAnyOrder(T... elements) {
+        return containsInAnyOrder(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())

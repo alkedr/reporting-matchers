@@ -8,8 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.compositeElementChecker;
-import static com.github.alkedr.matchers.reporting.element.checkers.IteratorMatcherElementCheckers.containsInSpecifiedOrderChecker;
+import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.compositeElementChecker;
 import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
 
@@ -186,23 +185,6 @@ public enum ReportingMatchers {
     public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementChecker> elementCheckers) {
         return new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers));
     }
-
-
-
-
-    // TODO: поддерживать массивы, итераторы, итераблы ?мапы?  (это всё обёртки для IteratorMatcher, которые преобразовывают item)
-    // TODO: тут нужны перегрузки для всех примитивных типов
-    @Deprecated
-    @SafeVarargs
-    public static <T> ReportingMatcher<T[]> arrayWithElements(T... elements) {
-        return new ConvertingReportingMatcher<>(
-                item -> asList((Object[]) item).iterator(),
-                new IteratorMatcher<>(() -> containsInSpecifiedOrderChecker(elements))
-        );
-    }
-
-
-
 
 
     // TODO: рекурсивный матчер, который работает как equalTo
