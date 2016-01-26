@@ -30,20 +30,19 @@ class HashMapKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
         try {
             if (item == null || !((Map<?, ?>) item).containsKey(key)) {
-                result.missing(this);
-            } else {
-                result.present(this, ((Map<?, ?>) item).get(key));
+                throw new MissingException(this);
             }
+            return new ExtractionResult(this, ((Map<?, ?>) item).get(key));
         } catch (ClassCastException e) {
-            result.broken(this, e);
+            throw new BrokenException(this, e);
         }
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        extractFrom(null, result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        throw new MissingException(this);
     }
 }

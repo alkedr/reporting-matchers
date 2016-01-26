@@ -4,18 +4,17 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.methodByNameKey;
 import static com.github.alkedr.matchers.reporting.keys.Keys.methodKey;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class MethodByNameKeyTest {
-    private final ExtractableKey.ResultListener result = mock(ExtractableKey.ResultListener.class);
     private final Method returnArgMethod;
     private final Method returnArgStaticMethod;
 
@@ -55,57 +54,69 @@ public class MethodByNameKeyTest {
 
     @Test
     public void nullItem() {
-        ExtractableKey returnArgKey = methodByNameKey("returnArg", 1);
-        returnArgKey.extractFrom(null, result);
-        verify(result).missing(returnArgKey);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = methodByNameKey("returnArg", 1);
+        verifyMissing(
+                () -> key.extractFrom(null),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void inaccessibleMethodWithArguments() {
-        ExtractableKey returnArgKey = methodByNameKey("returnArg", 1);
-        returnArgKey.extractFrom(new MyClass(), result);
-        verify(result).present(methodKey(returnArgMethod, 1), 1);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = methodByNameKey("returnArg", 1);
+        verifyPresent(
+                () -> key.extractFrom(new MyClass()),
+                equalTo(methodKey(returnArgMethod, 1)),
+                equalTo(1)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments() {
-        methodByNameKey("returnArgStatic", 2).extractFrom(new MyClass(), result);
-        verify(result).present(methodKey(returnArgStaticMethod, 2), 2);
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> methodByNameKey("returnArgStatic", 2).extractFrom(new MyClass()),
+                equalTo(methodKey(returnArgStaticMethod, 2)),
+                equalTo(2)
+        );
     }
 
     @Test
     public void noSuchMethod() {
         ExtractableKey key = methodByNameKey("returnArg", 1);
-        key.extractFrom(new Object(), result);
-        verify(result).broken(eq(key), isA(NoSuchMethodException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> key.extractFrom(new Object()),
+                sameInstance(key),
+                NoSuchMethodException.class
+        );
     }
 
     @Test
     public void wrongParameterCount() {
         ExtractableKey key = methodByNameKey("returnArg");
-        key.extractFrom(new MyClass(), result);
-        verify(result).broken(eq(key), isA(NoSuchMethodException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> key.extractFrom(new MyClass()),
+                sameInstance(key),
+                NoSuchMethodException.class
+        );
     }
 
     @Test
     public void wrongParameterType() {
         ExtractableKey key = methodByNameKey("returnArg", "1");
-        key.extractFrom(new MyClass(), result);
-        verify(result).broken(eq(key), isA(NoSuchMethodException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> key.extractFrom(new MyClass()),
+                sameInstance(key),
+                NoSuchMethodException.class
+        );
     }
 
     @Test
     public void extractFromMissingItem() {
-        ExtractableKey returnArgKey = methodByNameKey("returnArg", 1);
-        returnArgKey.extractFromMissingItem(result);
-        verify(result).missing(returnArgKey);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = methodByNameKey("returnArg", 1);
+        verifyMissing(
+                key::extractFromMissingItem,
+                sameInstance(key)
+        );
     }
 
 

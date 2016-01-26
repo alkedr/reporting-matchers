@@ -36,12 +36,39 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
 
     @Override
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
-        extractor.extractFrom(item, new ExtractionResultListenerImpl(name, matcherForExtractedValue, safeTreeReporter));
+        run(() -> extractor.extractFrom(item), safeTreeReporter);
     }
 
     @Override
     public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
-        extractor.extractFromMissingItem(new ExtractionResultListenerImpl(name, matcherForExtractedValue, safeTreeReporter));
+        run(extractor::extractFromMissingItem, safeTreeReporter);
+    }
+
+    private void run(Runner runner, SafeTreeReporter safeTreeReporter) {
+        try {
+            ExtractableKey.ExtractionResult extractionResult = runner.getExtractionResult();
+            safeTreeReporter.presentNode(
+                    renameKeyIfNecessary(extractionResult.getKey()),
+                    extractionResult.getValue(),
+                    r -> matcherForExtractedValue.run(extractionResult.getValue(), r)
+            );
+        } catch (ExtractableKey.MissingException e) {
+            safeTreeReporter.missingNode(
+                    renameKeyIfNecessary(e.getKey()),
+                    matcherForExtractedValue::runForMissingItem
+            );
+        } catch (ExtractableKey.BrokenException e) {
+            safeTreeReporter.brokenNode(
+                    renameKeyIfNecessary(e.getKey()),
+                    e.getCause(),
+                    matcherForExtractedValue::runForMissingItem
+            );
+        }
+    }
+
+    private interface Runner {
+        ExtractableKey.ExtractionResult getExtractionResult()
+                throws ExtractableKey.MissingException, ExtractableKey.BrokenException;
     }
 
 
@@ -72,34 +99,7 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
     }
 
 
-    private static class ExtractionResultListenerImpl implements ExtractableKey.ResultListener {
-        private final String name;
-        private final ReportingMatcher<?> matcherForExtractedValue;
-        private final SafeTreeReporter safeTreeReporter;
-
-        private ExtractionResultListenerImpl(String name, ReportingMatcher<?> matcherForExtractedValue, SafeTreeReporter safeTreeReporter) {
-            this.name = name;
-            this.matcherForExtractedValue = matcherForExtractedValue;
-            this.safeTreeReporter = safeTreeReporter;
-        }
-
-        @Override
-        public void present(Key key, Object value) {
-            safeTreeReporter.presentNode(renameKeyIfNecessary(key), value, r -> matcherForExtractedValue.run(value, r));
-        }
-
-        @Override
-        public void missing(Key key) {
-            safeTreeReporter.missingNode(renameKeyIfNecessary(key), matcherForExtractedValue::runForMissingItem);
-        }
-
-        @Override
-        public void broken(Key key, Throwable throwable) {
-            safeTreeReporter.brokenNode(renameKeyIfNecessary(key), throwable, matcherForExtractedValue::runForMissingItem);
-        }
-
-        private Key renameKeyIfNecessary(Key key) {
-            return name == null ? key : Keys.renamedKey(key, name);
-        }
+    private Key renameKeyIfNecessary(Key key) {
+        return name == null ? key : Keys.renamedKey(key, name);
     }
 }

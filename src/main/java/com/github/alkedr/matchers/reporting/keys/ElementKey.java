@@ -32,53 +32,50 @@ class ElementKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
         if (item == null) {
-            result.missing(this);
-        } else {
-            if (item instanceof Object[]) {
-                extractFromArray((Object[]) item, result);
-            } else if (item instanceof List) {
-                extractFromList((List<?>) item, result);
-            } else if (item instanceof Iterable) {
-                extractFromIterable((Iterable<?>) item, result);
-            } else {
-                result.broken(this, new ClassCastException());  // FIXME ClassCastException? своё исключение?
-            }
+            throw new MissingException(this);
         }
+        if (item instanceof Object[]) {
+            return extractFromArray((Object[]) item);
+        }
+        if (item instanceof List) {
+            return extractFromList((List<?>) item);
+        }
+        if (item instanceof Iterable) {
+            return extractFromIterable((Iterable<?>) item);
+        }
+        throw new BrokenException(this, new ClassCastException());  // FIXME ClassCastException? своё исключение?
     }
 
-    private void extractFromArray(Object[] array, ResultListener result) {
+    private ExtractionResult extractFromArray(Object... array) throws MissingException {
         if (index < 0 || index >= array.length) {
-            result.missing(this);
-        } else {
-            result.present(this, array[index]);
+            throw new MissingException(this);
         }
+        return new ExtractionResult(this, array[index]);
     }
 
-    private void extractFromList(List<?> list, ResultListener result) {
+    private ExtractionResult extractFromList(List<?> list) throws MissingException {
         if (index < 0 || index >= list.size()) {
-            result.missing(this);
-        } else {
-            result.present(this, list.get(index));
+            throw new MissingException(this);
         }
+        return new ExtractionResult(this, list.get(index));
     }
 
-    private void extractFromIterable(Iterable<?> iterable, ResultListener result) {
+    private ExtractionResult extractFromIterable(Iterable<?> iterable) throws MissingException {
         Iterator<?> iterator = iterable.iterator();
         int currentIndex = 0;
         while (iterator.hasNext()) {
             Object currentElement = iterator.next();
             if (currentIndex == index) {
-                result.present(this, currentElement);
-                return;
+                return new ExtractionResult(this, currentElement);
             }
         }
-        result.missing(this);
+        throw new MissingException(this);
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        extractFrom(null, result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        throw new MissingException(this);
     }
 }

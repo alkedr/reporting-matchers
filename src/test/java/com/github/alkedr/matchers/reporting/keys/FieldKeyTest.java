@@ -2,18 +2,16 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.junit.Test;
 
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.fieldKey;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class FieldKeyTest {
-    private final ExtractableKey.ResultListener result = mock(ExtractableKey.ResultListener.class);
     private final ExtractableKey inaccessibleFieldKey;
     private final ExtractableKey staticFieldKey;
 
@@ -46,44 +44,54 @@ public class FieldKeyTest {
 
     @Test
     public void extractFrom_nullItem() {
-        inaccessibleFieldKey.extractFrom(null, result);
-        verify(result).missing(same(inaccessibleFieldKey));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> inaccessibleFieldKey.extractFrom(null),
+                sameInstance(inaccessibleFieldKey)
+        );
     }
 
     @Test
     public void extractFrom_inaccessibleField() {
-        inaccessibleFieldKey.extractFrom(new MyClass(), result);
-        verify(result).present(same(inaccessibleFieldKey), eq(2));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> inaccessibleFieldKey.extractFrom(new MyClass()),
+                sameInstance(inaccessibleFieldKey),
+                equalTo(2)
+        );
     }
 
     @Test
     public void extractFrom_inaccessibleStaticField_nullItem() {
-        staticFieldKey.extractFrom(null, result);
-        verify(result).present(same(staticFieldKey), eq(3));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> staticFieldKey.extractFrom(null),
+                sameInstance(staticFieldKey),
+                equalTo(3)
+        );
     }
 
     @Test
     public void extractFrom_inaccessibleStaticField_missingItem() {
-        staticFieldKey.extractFromMissingItem(result);
-        verify(result).present(same(staticFieldKey), eq(3));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                staticFieldKey::extractFromMissingItem,
+                sameInstance(staticFieldKey),
+                equalTo(3)
+        );
     }
 
     @Test
     public void extractFrom_itemHasWrongClass() {
-        inaccessibleFieldKey.extractFrom(new Object(), result);
-        verify(result).broken(eq(inaccessibleFieldKey), isA(IllegalArgumentException.class)); // TODO: missing?
-        verifyNoMoreInteractions(result);
+        verifyBroken(   // TODO: missing?
+                () -> inaccessibleFieldKey.extractFrom(new Object()),
+                sameInstance(inaccessibleFieldKey),
+                IllegalArgumentException.class
+        );
     }
 
     @Test
     public void extractFrom_missingItem() {
-        inaccessibleFieldKey.extractFromMissingItem(result);
-        verify(result).missing(same(inaccessibleFieldKey));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                inaccessibleFieldKey::extractFromMissingItem,
+                sameInstance(inaccessibleFieldKey)
+        );
     }
 
     private static class MyClass {

@@ -2,81 +2,90 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.junit.Test;
 
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
+import static com.github.alkedr.matchers.reporting.keys.Keys.hashMapKey;
 import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class HashMapKeyTest {
-    private final ExtractableKey.ResultListener result = mock(ExtractableKey.ResultListener.class);
-
     @Test
     public void asStringTest() {
-        assertEquals("123", Keys.hashMapKey(123).asString());
+        assertEquals("123", hashMapKey(123).asString());
     }
 
     @Test
     public void hashCodeTest() {
-        assertEquals(Keys.hashMapKey(0).hashCode(), Keys.hashMapKey(0).hashCode());
+        assertEquals(hashMapKey(0).hashCode(), hashMapKey(0).hashCode());
     }
 
     @Test
     public void equalsTest() {
-        assertEquals(Keys.hashMapKey(0), Keys.hashMapKey(0));
-        assertNotEquals(Keys.hashMapKey(0), Keys.hashMapKey(1));
+        assertEquals(hashMapKey(0), hashMapKey(0));
+        assertNotEquals(hashMapKey(0), hashMapKey(1));
     }
 
 
     @Test
     public void nullItem() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFrom(null, result);
-        verify(result).missing(key);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyMissing(
+                () -> key.extractFrom(null),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void itemIsNotMap() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFrom(new Object(), result);
-        verify(result).broken(same(key), isA(ClassCastException.class));
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyBroken(
+                () -> key.extractFrom(new Object()),
+                sameInstance(key),
+                ClassCastException.class
+        );
     }
 
     @Test
     public void keyIsMissing() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFrom(singletonMap("2", "q"), result);
-        verify(result).missing(key);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyMissing(
+                () -> key.extractFrom(singletonMap("2", "q")),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void keyIsPresent() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFrom(singletonMap("1", "q"), result);
-        verify(result).present(key, "q");
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyPresent(
+                () -> key.extractFrom(singletonMap("1", "q")),
+                sameInstance(key),
+                equalTo("q")
+        );
     }
 
     @Test
     public void keyIsPresentButValueIsNull() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFrom(singletonMap("1", null), result);
-        verify(result).present(key, null);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyPresent(
+                () -> key.extractFrom(singletonMap("1", null)),
+                sameInstance(key),
+                nullValue()
+        );
     }
 
     @Test
     public void extractFrom_missingItem() {
-        ExtractableKey key = Keys.hashMapKey("1");
-        key.extractFromMissingItem(result);
-        verify(result).missing(key);
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = hashMapKey("1");
+        verifyMissing(
+                key::extractFromMissingItem,
+                sameInstance(key)
+        );
     }
 
     // TODO: key is null?

@@ -4,17 +4,16 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.methodKey;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class MethodExtractorTest {
-    private final ExtractableKey.ResultListener result = mock(ExtractableKey.ResultListener.class);
     private final ExtractableKey inaccessibleMethodKey;
     private final ExtractableKey inaccessibleStaticMethodKey;
     private final ExtractableKey throwingMethodKey;
@@ -61,74 +60,92 @@ public class MethodExtractorTest {
 
     @Test
     public void nullItem() {
-        inaccessibleMethodKey.extractFrom(null, result);
-        verify(result).missing(inaccessibleMethodKey);
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> inaccessibleMethodKey.extractFrom(null),
+                sameInstance(inaccessibleMethodKey)
+        );
     }
 
     @Test
     public void inaccessibleMethodWithArguments() {
-        inaccessibleMethodKey.extractFrom(new MyClass(), result);
-        verify(result).present(inaccessibleMethodKey, 1);
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> inaccessibleMethodKey.extractFrom(new MyClass()),
+                sameInstance(inaccessibleMethodKey),
+                equalTo(1)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments() {
-        inaccessibleStaticMethodKey.extractFrom(new MyClass(), result);
-        verify(result).present(inaccessibleStaticMethodKey, 2);
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> inaccessibleStaticMethodKey.extractFrom(new MyClass()),
+                sameInstance(inaccessibleStaticMethodKey),
+                equalTo(2)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments_nullItem() {
-        inaccessibleStaticMethodKey.extractFrom(null, result);
-        verify(result).present(inaccessibleStaticMethodKey, 2);
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> inaccessibleStaticMethodKey.extractFrom(null),
+                sameInstance(inaccessibleStaticMethodKey),
+                equalTo(2)
+        );
     }
 
     @Test
     public void itemHasWrongClass() {
-        inaccessibleMethodKey.extractFrom(new Object(), result);
-        verify(result).broken(same(inaccessibleMethodKey), isA(IllegalArgumentException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> inaccessibleMethodKey.extractFrom(new Object()),
+                sameInstance(inaccessibleMethodKey),
+                IllegalArgumentException.class
+        );
     }
 
     @Test
     public void wrongParameterCount() {
         ExtractableKey keyWithWrongNumberOfParameters = methodKey(returnArgMethod);
-        keyWithWrongNumberOfParameters.extractFrom(new MyClass(), result);
-        verify(result).broken(same(keyWithWrongNumberOfParameters), isA(IllegalArgumentException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> keyWithWrongNumberOfParameters.extractFrom(new MyClass()),
+                sameInstance(keyWithWrongNumberOfParameters),
+                IllegalArgumentException.class
+        );
     }
 
     @Test
     public void wrongParameterType() {
         ExtractableKey keyWithWrongParameterType = methodKey(returnArgMethod, "1");
-        keyWithWrongParameterType.extractFrom(new MyClass(), result);
-        verify(result).broken(same(keyWithWrongParameterType), isA(IllegalArgumentException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> keyWithWrongParameterType.extractFrom(new MyClass()),
+                sameInstance(keyWithWrongParameterType),
+                IllegalArgumentException.class
+        );
     }
 
     @Test
     public void throwingMethod() {
-        throwingMethodKey.extractFrom(new MyClass(), result);
-        verify(result).broken(same(throwingMethodKey), isA(RuntimeException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> throwingMethodKey.extractFrom(new MyClass()),
+                sameInstance(throwingMethodKey),
+                RuntimeException.class
+        );
     }
 
     @Test
     public void extractFromMissingItem() {
-        inaccessibleMethodKey.extractFromMissingItem(result);
-        verify(result).missing(inaccessibleMethodKey);
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                inaccessibleMethodKey::extractFromMissingItem,
+                sameInstance(inaccessibleMethodKey)
+        );
     }
 
     @Test
     public void inaccessibleStaticMethodWithArguments_missingItem() {
-        inaccessibleStaticMethodKey.extractFromMissingItem(result);
-        verify(result).present(inaccessibleStaticMethodKey, 2);
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                inaccessibleStaticMethodKey::extractFromMissingItem,
+                sameInstance(inaccessibleStaticMethodKey),
+                equalTo(2)
+        );
     }
 
 

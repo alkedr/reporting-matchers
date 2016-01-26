@@ -41,23 +41,22 @@ class MethodKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
         if (item == null && !isStatic(method.getModifiers())) {
-            result.missing(this);
-        } else {
-            try {
-                method.setAccessible(true);
-                result.present(this, method.invoke(item, arguments.clone()));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                result.broken(this, e);  // TODO: rethrow?
-            } catch (InvocationTargetException e) {
-                result.broken(this, e.getCause());
-            }
+            throw new MissingException(this);
+        }
+        try {
+            method.setAccessible(true);
+            return new ExtractionResult(this, method.invoke(item, arguments.clone()));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            throw new BrokenException(this, e); // TODO: rethrow as is?
+        } catch (InvocationTargetException e) {
+            throw new BrokenException(this, e.getCause());
         }
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        extractFrom(null, result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        return extractFrom(null);
     }
 }

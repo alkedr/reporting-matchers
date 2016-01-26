@@ -7,6 +7,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import static com.github.alkedr.matchers.reporting.keys.Keys.methodKey;
 import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
 
 // TODO: позволять указывать типы аргументов отдельно на случай нуллов и перегрузок
@@ -60,26 +61,20 @@ class MethodByNameKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
         if (item == null) {
-            result.missing(this);
-        } else {
-            // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
-            Method method = MethodUtils.getMatchingAccessibleMethod(
-                    item.getClass(),
-                    methodName,
-                    ClassUtils.toClass(arguments.clone())
-            );
-            if (method == null) {
-                result.broken(this, new NoSuchMethodException(item.getClass().getName() + "." + toString()));
-            } else {
-                Keys.methodKey(method, arguments.clone()).extractFrom(item, result);
-            }
+            throw new MissingException(this);
         }
+        // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
+        Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments.clone()));
+        if (method == null) {
+            throw new BrokenException(this, new NoSuchMethodException(item.getClass().getName() + "." + toString()));
+        }
+        return methodKey(method, arguments.clone()).extractFrom(item);
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        extractFrom(null, result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        throw new MissingException(this);
     }
 }

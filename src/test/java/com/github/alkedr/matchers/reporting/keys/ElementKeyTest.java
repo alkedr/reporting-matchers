@@ -4,19 +4,17 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ElementKeyTest {
-    private final ExtractableKey.ResultListener result = mock(ExtractableKey.ResultListener.class);
     private final Object[] array = {1};
     private final List<Object> list = asList(array);
     private final Iterable<Object> iterable = list::iterator;
@@ -47,72 +45,85 @@ public class ElementKeyTest {
     @Test
     public void nullItem() {
         ExtractableKey key = elementKey(0);
-        key.extractFrom(null, result);
-        verify(result).missing(same(key));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> key.extractFrom(null),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void itemHasWrongClass() {
         ExtractableKey key = elementKey(0);
-        key.extractFrom(new Object(), result);
-        verify(result).broken(same(key), isA(ClassCastException.class));
-        verifyNoMoreInteractions(result);
+        verifyBroken(
+                () -> key.extractFrom(new Object()),
+                sameInstance(key),
+                ClassCastException.class
+        );
     }
 
     @Test
     public void array_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        key.extractFrom(array, result);
-        verify(result).missing(same(key));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> key.extractFrom(array),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void array_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        key.extractFrom(array, result);
-        verify(result).present(same(key), eq(1));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> key.extractFrom(array),
+                sameInstance(key),
+                equalTo(1)
+        );
     }
 
     @Test
     public void list_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        key.extractFrom(list, result);
-        verify(result).missing(same(key));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> key.extractFrom(list),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void list_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        key.extractFrom(list, result);
-        verify(result).present(same(key), eq(1));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> key.extractFrom(list),
+                sameInstance(key),
+                equalTo(1)
+        );
     }
 
     @Test
     public void iterable_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        key.extractFrom(iterable, result);
-        verify(result).missing(same(key));
-        verifyNoMoreInteractions(result);
+        verifyMissing(
+                () -> key.extractFrom(iterable),
+                sameInstance(key)
+        );
     }
 
     @Test
     public void iterable_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        key.extractFrom(iterable, result);
-        verify(result).present(same(key), eq(1));
-        verifyNoMoreInteractions(result);
+        verifyPresent(
+                () -> key.extractFrom(iterable),
+                sameInstance(key),
+                equalTo(1)
+        );
     }
 
     @Test
     public void extractFromMissingItem() {
-        ExtractableKey key = elementKey(1);
-        key.extractFromMissingItem(result);
-        verify(result).missing(same(key));
-        verifyNoMoreInteractions(result);
+        ExtractableKey key = elementKey(0);
+        verifyMissing(
+                key::extractFromMissingItem,
+                sameInstance(key)
+        );
     }
 }

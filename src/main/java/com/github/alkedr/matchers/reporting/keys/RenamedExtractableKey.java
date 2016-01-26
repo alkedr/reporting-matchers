@@ -36,12 +36,12 @@ class RenamedExtractableKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
-        originalKey.extractFrom(item, result);
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
+        return originalKey.extractFrom(item);
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        originalKey.extractFromMissingItem(result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        return originalKey.extractFromMissingItem();
     }
 }

@@ -1,15 +1,49 @@
 package com.github.alkedr.matchers.reporting.keys;
 
 public interface ExtractableKey extends Key {
-    void extractFrom(Object item, ResultListener result);
-    void extractFromMissingItem(ResultListener result);
+    ExtractionResult extractFrom(Object item) throws MissingException, BrokenException;
+    ExtractionResult extractFromMissingItem() throws MissingException, BrokenException;
 
-    // Можно извлекать несколько значений!
-    // Можно сделать IteratorMatcher реализацией ResultListener'а, а ElementChecker'ы - плагинами для этой реализации
-    // Или лучше всё-таки сделать здесь исключения, а несколько значений извлекать IteratorMatcher'ом?
-    interface ResultListener {
-        void present(Key key, Object value);
-        void missing(Key key);
-        void broken(Key key, Throwable throwable);
+    class ExtractionResult {
+        private final Key key;
+        private final Object value;
+
+        public ExtractionResult(Key key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Key getKey() {
+            return key;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+    }
+
+    class MissingException extends Exception {
+        private final Key key;
+
+        public MissingException(Key key) {
+            this.key = key;
+        }
+
+        public Key getKey() {
+            return key;
+        }
+    }
+
+    class BrokenException extends Exception {
+        private final Key key;
+
+        public BrokenException(Key key, Throwable cause) {   // TODO: только description без cause?
+            super(cause);
+            this.key = key;
+        }
+
+        public Key getKey() {
+            return key;
+        }
     }
 }

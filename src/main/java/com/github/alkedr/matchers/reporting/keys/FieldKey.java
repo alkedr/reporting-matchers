@@ -34,22 +34,21 @@ class FieldKey implements ExtractableKey {
     }
 
     @Override
-    public void extractFrom(Object item, ResultListener result) {
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
         if (item == null && !isStatic(field.getModifiers())) {
-            result.missing(this);
-        } else {
-            try {
-                result.present(this, FieldUtils.readField(field, item, true));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                // IllegalArgumentException быть не может, потому что мы уже проверили field на null в конструкторе FieldKey
-                // IllegalAccessException быть не может, потому что мы пробиваем доступ с пом. readField(*, *, true)
-                result.broken(this, e);
-            }
+            throw new MissingException(this);
+        }
+        try {
+            return new ExtractionResult(this, FieldUtils.readField(field, item, true));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            // IllegalArgumentException быть не может, потому что мы уже проверили field на null в конструкторе FieldKey
+            // IllegalAccessException быть не может, потому что мы пробиваем доступ с пом. readField(*, *, true)
+            throw new BrokenException(this, e);
         }
     }
 
     @Override
-    public void extractFromMissingItem(ResultListener result) {
-        extractFrom(null, result);
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        return extractFrom(null);
     }
 }
