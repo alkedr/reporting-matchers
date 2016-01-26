@@ -12,8 +12,10 @@ import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
 import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.containsInSpecifiedOrder;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.htmlReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 
 public class IntegrationTestMain {
     private static final User USER = new User();
@@ -35,10 +37,10 @@ public class IntegrationTestMain {
                 field("id").is(123),
                 field("login").is("login"),
                 field("password").is("drowssap"),
-                getter("getBirthDate").is(
-                        field("year").is(greaterThan(1900), lessThan(2016)),
-                        field("month").is(greaterThan(0), lessThan(13)),
-                        field("day").is(greaterThan(0), lessThan(32))
+                getter("getNames").is(
+                        field("first").is(startsWith("qwe"), endsWith("rty")),
+                        field("middle").is(equalTo("123456")),
+                        field("last").is(is("ytrewq"))
                 ),
                 method("getArray").is(
                         arrayElement(0).is(1),
@@ -52,20 +54,20 @@ public class IntegrationTestMain {
         private final int id = 123;
         private final String login = "login";
         private final String password = "drowssap";
-        private final Date birthDate = new Date();
+        private final Names names = new Names();
 
-        public Date getBirthDate() {
-            return birthDate;
+        public Names getNames() {
+            return names;
         }
 
         public Integer[] getArray() {
             return new Integer[]{1, 2, 3};
         }
 
-        public static class Date {
-            private final int year = 2050;
-            private final int month = 14;
-            private final int day = -1;
+        public static class Names {
+            private final String first = "qwerty";
+            private final String middle = "123456";
+            private final String last = "ytrewq";
         }
     }
 }
