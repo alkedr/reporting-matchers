@@ -7,9 +7,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.value;
 import static com.github.alkedr.matchers.reporting.keys.Keys.renamedKey;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
@@ -37,21 +38,21 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_present_noName_noMatcher() {
-        new ExtractingMatcher<>(presentKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void run_missing_noName_noMatcher() {
-        new ExtractingMatcher<>(missingKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void run_broken_noName_noMatcher() {
-        new ExtractingMatcher<>(brokenKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter).endNode();
     }
@@ -59,21 +60,21 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_present_noName_noMatcher() {
-        new ExtractingMatcher<>(presentKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void runForMissingItem_missing_noName_noMatcher() {
-        new ExtractingMatcher<>(missingKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void runForMissingItem_broken_noName_noMatcher() {
-        new ExtractingMatcher<>(brokenKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter).endNode();
     }
@@ -81,21 +82,21 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_present_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(presentKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(eq(renamedKey(key, "123")), same(value));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void run_missing_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(missingKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(eq(renamedKey(key, "123")));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void run_broken_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(brokenKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).displayedAs("123").run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(eq(renamedKey(key, "123")), same(throwable));
         inOrder.verify(simpleTreeReporter).endNode();
     }
@@ -103,21 +104,21 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_present_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(presentKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(eq(renamedKey(key, "123")), same(value));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void runForMissingItem_missing_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(missingKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(eq(renamedKey(key, "123")));
         inOrder.verify(simpleTreeReporter).endNode();
     }
 
     @Test
     public void runForMissingItem_broken_nameInDisplayedAs_noMatcher() {
-        new ExtractingMatcher<>(brokenKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).displayedAs("123").runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(eq(renamedKey(key, "123")), same(throwable));
         inOrder.verify(simpleTreeReporter).endNode();
     }
@@ -125,7 +126,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_present_noName_isValue() {
-        new ExtractingMatcher<>(presentKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter).passedCheck("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -133,7 +134,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_missing_noName_isValue() {
-        new ExtractingMatcher<>(missingKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -141,7 +142,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_broken_noName_isValue() {
-        new ExtractingMatcher<>(brokenKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).is(1).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -150,7 +151,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_present_noName_isValue() {
-        new ExtractingMatcher<>(presentKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter).passedCheck("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -158,7 +159,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_missing_noName_isValue() {
-        new ExtractingMatcher<>(missingKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -166,7 +167,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_broken_noName_isValue() {
-        new ExtractingMatcher<>(brokenKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).is(1).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -175,7 +176,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_present_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(presentKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter, times(2)).passedCheck("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -183,7 +184,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_missing_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(missingKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter, times(2)).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -191,7 +192,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void run_broken_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(brokenKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).is(equalTo(1), equalTo(1)).run(item, simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter, times(2)).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -200,7 +201,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_present_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(presentKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(presentKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginPresentNode(same(key), same(value));
         inOrder.verify(simpleTreeReporter, times(2)).passedCheck("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -208,7 +209,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_missing_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(missingKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(missingKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
         inOrder.verify(simpleTreeReporter, times(2)).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();
@@ -216,7 +217,7 @@ public class ExtractingMatcherTest {
 
     @Test
     public void runForMissingItem_broken_noName_arrayOfMatchers() {
-        new ExtractingMatcher<>(brokenKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
+        value(brokenKey).is(equalTo(1), equalTo(1)).runForMissingItem(simpleTreeReporterToSafeTreeReporter(simpleTreeReporter));
         inOrder.verify(simpleTreeReporter).beginBrokenNode(same(key), same(throwable));
         inOrder.verify(simpleTreeReporter, times(2)).checkForMissingItem("<1>");
         inOrder.verify(simpleTreeReporter).endNode();

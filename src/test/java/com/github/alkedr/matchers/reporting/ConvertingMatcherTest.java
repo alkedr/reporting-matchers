@@ -1,7 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
-import org.hamcrest.Matchers;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -16,7 +16,7 @@ public class ConvertingMatcherTest {
     private final SafeTreeReporter reporter = mock(SafeTreeReporter.class);
     private final InOrder inOrder = inOrder(reporter);
     private final ReportingMatcher<String> convertingMatcher =
-            new ConvertingMatcher<>(Integer::parseInt, toReportingMatcher(Matchers.equalTo(1)));
+            new ConvertingMatcher<>(Integer::parseInt, toReportingMatcher(CoreMatchers.equalTo(1)));
 
     @Test
     public void run_passed() {

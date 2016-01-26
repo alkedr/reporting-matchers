@@ -12,8 +12,8 @@ import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 

@@ -6,8 +6,8 @@ import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUti
 import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.fieldByNameKey;
 import static com.github.alkedr.matchers.reporting.keys.Keys.fieldKey;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;

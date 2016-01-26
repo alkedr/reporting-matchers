@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.hamcrest.Matcher;
 
-import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
 public class ExtractorVerificationUtils {
