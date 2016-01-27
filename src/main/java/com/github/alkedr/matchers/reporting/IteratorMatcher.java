@@ -9,8 +9,6 @@ import java.util.function.Supplier;
 
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 
-// По-хорошему надо объединять missing?
-// TODO: IteratingMatcher!: вынести итерацию в отдельный интерфейс чтобы поддержать итерацию по разным объектам
 class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
     private final Supplier<ElementChecker> elementCheckerSupplier;
 

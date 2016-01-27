@@ -14,9 +14,11 @@ import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 
 class ContainsInAnyOrderChecker implements ElementChecker {
     private final Iterable<ReportingMatcher<?>> elementMatchers;
+    private final boolean extraElementsAllowed;
     private int index = 0;
 
-    ContainsInAnyOrderChecker(Collection<ReportingMatcher<?>> elementMatchers) {
+    ContainsInAnyOrderChecker(Collection<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
+        this.extraElementsAllowed = extraElementsAllowed;
         this.elementMatchers = new ArrayList<>(elementMatchers);
     }
 
@@ -35,7 +37,7 @@ class ContainsInAnyOrderChecker implements ElementChecker {
                 return safeTreeReporter -> matcher.run(value, safeTreeReporter);
             }
         }
-        return FlatReporter::incorrectlyPresent;
+        return extraElementsAllowed ? reporter -> {} : FlatReporter::incorrectlyPresent;
     }
 
     @Override

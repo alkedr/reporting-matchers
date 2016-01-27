@@ -66,6 +66,11 @@ class ExtractingMatcher<T> extends BaseReportingMatcher<T> implements Extracting
         }
     }
 
+    @Override
+    public ReportingMatcher<T> build() {
+        return this;
+    }
+
     private interface Runner {
         ExtractableKey.ExtractionResult getExtractionResult()
                 throws ExtractableKey.MissingException, ExtractableKey.BrokenException;

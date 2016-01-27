@@ -7,6 +7,7 @@ import org.hamcrest.Matcher;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.compositeElementChecker;
 import static com.github.alkedr.matchers.reporting.keys.Keys.*;
@@ -154,6 +155,10 @@ public enum ReportingMatchers {
     }
 
 
+    public static <T> IteratingMatcherBuilder<T[], T> array() {
+        return new IteratingMatcherBuilderImpl<>(item -> asList(item).iterator());
+    }
+
     public static <T> ReportingMatcher<T[]> array(ElementChecker... elementCheckers) {
         return array(asList(elementCheckers));
     }
@@ -162,6 +167,10 @@ public enum ReportingMatchers {
         return new ConvertingMatcher<>(item -> asList(item).iterator(), iterator(elementCheckers));
     }
 
+
+    public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable() {
+        return new IteratingMatcherBuilderImpl<>(Iterable::iterator);
+    }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(ElementChecker... elementCheckers) {
         return iterable(asList(elementCheckers));
@@ -172,6 +181,10 @@ public enum ReportingMatchers {
     }
 
 
+    public static <T> IteratingMatcherBuilder<Iterator<T>, T> iterator() {
+        return new IteratingMatcherBuilderImpl<>(Function.identity());
+    }
+
     public static <T> ReportingMatcher<Iterator<T>> iterator(ElementChecker... elementCheckers) {
         return iterator(asList(elementCheckers));
     }
@@ -179,6 +192,22 @@ public enum ReportingMatchers {
     public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementChecker> elementCheckers) {
         return new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers));
     }
+
+
+    // TODO: IteratingMatcher для hashMap
+    /*public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
+    }
+
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementChecker... elementCheckers) {
+    }
+
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<ElementChecker> elementCheckers) {
+    }*/
+
+
+    // TODO: IteratingMatcher'ы для полей и геттеров (добавление непроверенных элементов)
+
+
 
 
     // TODO: рекурсивный матчер, который работает как equalTo

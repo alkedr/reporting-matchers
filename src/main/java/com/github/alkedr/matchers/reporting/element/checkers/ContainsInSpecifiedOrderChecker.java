@@ -13,10 +13,12 @@ import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 // TODO: пробовать пропускать элементы?
 class ContainsInSpecifiedOrderChecker implements ElementChecker {
     private final Iterator<ReportingMatcher<?>> elementMatchers;
+    private final boolean extraElementsAllowed;
     private int index = 0;
 
-    ContainsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
+    ContainsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
         this.elementMatchers = elementMatchers;
+        this.extraElementsAllowed = extraElementsAllowed;
     }
 
     @Override
@@ -30,7 +32,7 @@ class ContainsInSpecifiedOrderChecker implements ElementChecker {
             ReportingMatcher<?> matcher = elementMatchers.next();
             return safeTreeReporter -> matcher.run(value, safeTreeReporter);
         }
-        return FlatReporter::incorrectlyPresent;
+        return extraElementsAllowed ? reporter -> {} : FlatReporter::incorrectlyPresent;
     }
 
     @Override
