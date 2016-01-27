@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 // TODO: эскейпить
@@ -55,7 +56,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
     @Override
     public void beginPresentNode(Key key, Object value) {
         appendDiv("key", escapeHtml4(key.asString()));
-        if (value != null) {
+        if (value != null && isPrimitiveOrWrapper(value.getClass()) || value instanceof String) {
             appendDiv("value", escapeHtml4(value.toString()));
         }
         appendDivStart("checks");
