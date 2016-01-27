@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
+import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers;
 import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
@@ -205,8 +206,29 @@ public enum ReportingMatchers {
     }*/
 
 
-    // TODO: IteratingMatcher'ы для полей и геттеров (добавление непроверенных элементов)
+    public static <T> ReportingMatcher<T> uncheckedFields() {
+        return new FieldsIteratingMatcher<>(ElementCheckers::noOpElementChecker);
+    }
 
+    public static <T> ReportingMatcher<T> uncheckedGetters() {
+        return new GettersIteratingMatcher<>(ElementCheckers::noOpElementChecker);
+    }
+
+    public static <T> ReportingMatcher<T[]> uncheckedArrayElements() {
+        return ReportingMatchers.<T>array().extraElementsAreAllowed();
+    }
+
+    public static <T> ReportingMatcher<Iterable<T>> uncheckedIterableElements() {
+        return ReportingMatchers.<T>iterable().extraElementsAreAllowed();
+    }
+
+    public static <T> ReportingMatcher<Iterator<T>> uncheckedIteratorElements() {
+        return ReportingMatchers.<T>iterator().extraElementsAreAllowed();
+    }
+
+    /*public static <T> ReportingMatcher<T> uncheckedMapEntries() {
+        return hashMap().extraElementsAreAllowed();
+    }*/
 
 
 

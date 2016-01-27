@@ -12,8 +12,14 @@ import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 // TODO: убрать дублирование кода
+// TODO: флаг extraElementsAllowed можно реализовать с пом. бесконечной коллекции матчеров, которая возвращает noOp() или missing()
 public enum ElementCheckers {
     ;
+
+    public static ElementChecker noOpElementChecker() {
+        return NoOpElementChecker.INSTANCE;
+    }
+
 
     public static ElementChecker compositeElementChecker(ElementChecker... elementCheckers) {
         return compositeElementChecker(asList(elementCheckers));
