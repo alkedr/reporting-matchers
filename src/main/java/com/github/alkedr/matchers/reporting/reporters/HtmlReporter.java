@@ -64,12 +64,14 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
     @Override
     public void beginMissingNode(Key key) {
         appendDiv("key", escapeHtml4(key.asString()));
+        appendDiv("value", "(отсутствует)");
         appendDivStart("checks");
     }
 
     @Override
     public void beginBrokenNode(Key key, Throwable throwable) {
         appendDiv("key", escapeHtml4(key.asString()));
+        appendDiv("value", "(сломано)");
         appendDivStart("checks");
         appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
     }

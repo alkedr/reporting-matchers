@@ -11,6 +11,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+// TODO: убрать дублирование кода
 public enum ElementCheckers {
     ;
 
