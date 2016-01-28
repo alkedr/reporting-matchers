@@ -21,8 +21,8 @@ class FieldsForeachAdapter implements ForeachAdapter<Object> {
         for (Field field : FieldUtils.getAllFieldsList(item.getClass())) {
             ExtractableKey key = fieldKey(field);
             try {
-                consumer.accept(key, key.extractFrom(item));
-            } catch (ExtractableKey.MissingException | ExtractableKey.BrokenException e) {
+                consumer.accept(key, FieldUtils.readField(field, item, true));
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);  // FIXME
             }
         }

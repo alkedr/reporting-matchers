@@ -7,10 +7,10 @@ import java.util.function.BiConsumer;
 
 import static com.github.alkedr.matchers.reporting.keys.Keys.hashMapKey;
 
-class HashMapForeachAdepter implements ForeachAdapter<Map<?, ?>> {
-    static final HashMapForeachAdepter INSTANCE = new HashMapForeachAdepter();
+class HashMapForeachAdapter implements ForeachAdapter<Map<?, ?>> {
+    static final HashMapForeachAdapter INSTANCE = new HashMapForeachAdapter();
 
-    private HashMapForeachAdepter() {
+    private HashMapForeachAdapter() {
     }
 
     @Override

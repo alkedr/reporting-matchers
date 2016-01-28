@@ -16,8 +16,8 @@ public class ForeachAdapters {
         return ArrayForeachAdapter.INSTANCE;
     }
 
-    public static ForeachAdapter<Map<?, ?>> hashMapForeachAdepter() {
-        return HashMapForeachAdepter.INSTANCE;
+    public static ForeachAdapter<Map<?, ?>> hashMapForeachAdapter() {
+        return HashMapForeachAdapter.INSTANCE;
     }
 
     public static ForeachAdapter<Object> fieldsForeachAdepter() {

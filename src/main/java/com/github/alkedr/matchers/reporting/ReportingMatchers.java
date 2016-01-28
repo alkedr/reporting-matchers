@@ -197,7 +197,7 @@ public enum ReportingMatchers {
 
 
     public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
-        return new IteratingMatcherBuilder<>(hashMapForeachAdepter());
+        return new IteratingMatcherBuilder<>(hashMapForeachAdapter());
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementCheckerFactory... elementCheckerFactories) {
@@ -205,7 +205,7 @@ public enum ReportingMatchers {
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<ElementCheckerFactory> elementCheckerFactories) {
-        return iteratingMatcher(hashMapForeachAdepter(), compositeElementCheckerFactory(elementCheckerFactories));
+        return iteratingMatcher(hashMapForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
 
