@@ -1,18 +1,18 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactory;
-import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers;
-import com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapter;
-import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
+import com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers;
+import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
+import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
+import com.github.alkedr.matchers.reporting.sub.value.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactories.compositeElementCheckerFactory;
-import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.*;
-import static com.github.alkedr.matchers.reporting.keys.Keys.*;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckerFactories.compositeElementCheckerFactory;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.*;
+import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.*;
 import static java.util.Arrays.asList;
 
 // используй static import
@@ -65,14 +65,15 @@ public enum ReportingMatchers {
         return (ReportingMatcher<T>) PresentMatcher.INSTANCE;
     }
 
+    // TODO: absent?
     public static <T> ReportingMatcher<T> missing() {
         //noinspection unchecked
         return (ReportingMatcher<T>) MissingMatcher.INSTANCE;
     }
 
 
-    public static <T> ExtractingMatcher<T> value(ExtractableKey extractableKey) {
-        return new ExtractingMatcher<>(extractableKey);
+    public static <T> ExtractingMatcherBuilder<T> value(ExtractableKey extractableKey) {
+        return new ExtractingMatcherBuilder<>(extractableKey);
     }
 
     // TODO: что-то очень универсальное, принимающее лямбду? value("name", <lambda>)  mergeableValue("name", <lambda>)    customKey(), customUnmergeableKey()
@@ -86,13 +87,13 @@ public enum ReportingMatchers {
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то BROKEN ?
-    public static <T> ExtractingMatcher<T> field(Field field) {
+    public static <T> ExtractingMatcherBuilder<T> field(Field field) {
         return value(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то BROKEN ?
-    public static <T> ExtractingMatcher<T> field(String fieldName) {
+    public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
         return value(fieldByNameKey(fieldName));
     }
 
@@ -104,13 +105,13 @@ public enum ReportingMatchers {
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то BROKEN
-    public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
+    public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
         return value(methodKey(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям, в будущем может измениться TODO: пофиксить это?
     // если метод не найден, то BROKEN
-    public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
+    public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
         return value(methodByNameKey(methodName, arguments));
     }
 
@@ -121,12 +122,12 @@ public enum ReportingMatchers {
 
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcher<T> getter(Method method) {
+    public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
         return value(getterKey(method));
     }
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcher<T> getter(String methodName) {
+    public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
         return value(getterByNameKey(methodName));
     }
 
@@ -137,22 +138,22 @@ public enum ReportingMatchers {
     }*/
 
 
-    public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
+    public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
         return value(elementKey(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
-    public static <T> ExtractingMatcher<List<T>> element(int index) {
+    public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
         return value(elementKey(index));
     }
 
     // O(N)
-    public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
+    public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
         return value(elementKey(index));
     }
 
 
-    public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
+    public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
         return value(hashMapKey(key));
     }
 
@@ -161,11 +162,11 @@ public enum ReportingMatchers {
         return new IteratingMatcherBuilder<>(arrayForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<T[]> array(ElementCheckerFactory... elementCheckerFactories) {
+    public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory... elementCheckerFactories) {
         return array(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<T[]> array(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+    public static <T> ReportingMatcher<T[]> array(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
         return iteratingMatcher(arrayForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
@@ -174,11 +175,11 @@ public enum ReportingMatchers {
         return new IteratingMatcherBuilder<>(iterableForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(ElementCheckerFactory... elementCheckerFactories) {
+    public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory... elementCheckerFactories) {
         return iterable(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
         return iteratingMatcher(iterableForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
@@ -187,11 +188,11 @@ public enum ReportingMatchers {
         return new IteratingMatcherBuilder<>(iteratorForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(ElementCheckerFactory... elementCheckerFactories) {
+    public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory... elementCheckerFactories) {
         return iterator(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
         return iteratingMatcher(iteratorForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
@@ -200,18 +201,18 @@ public enum ReportingMatchers {
         return new IteratingMatcherBuilder<>(hashMapForeachAdapter());
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementCheckerFactory... elementCheckerFactories) {
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory... elementCheckerFactories) {
         return hashMap(asList(elementCheckerFactories));
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
         return iteratingMatcher(hashMapForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
 
-    public static <T> ReportingMatcher<T> iteratingMatcher(ForeachAdapter<? super T> foreachAdapter,
-                                                           ElementCheckerFactory elementCheckerFactory) {
-        return new IteratingMatcher<>(foreachAdapter, elementCheckerFactory);
+    public static <T> ReportingMatcher<T> iteratingMatcher(SubValuesExtractor<? super T> foreachAdapter,
+                                                           SubValuesCheckerFactory elementCheckerFactory) {
+        return new SubValuesMatcher<>(foreachAdapter, elementCheckerFactory);
     }
 
 

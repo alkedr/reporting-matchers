@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.InOrder;

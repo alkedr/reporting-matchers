@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.io.IOException;
 import java.io.PrintWriter;

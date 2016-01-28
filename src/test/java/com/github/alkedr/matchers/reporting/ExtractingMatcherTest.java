@@ -1,26 +1,8 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
-import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.SimpleTreeReporter;
-import org.junit.After;
-import org.junit.Test;
-import org.mockito.InOrder;
-
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.value;
-import static com.github.alkedr.matchers.reporting.keys.Keys.renamedKey;
-import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-
 // TODO: протестировать merge!
 public class ExtractingMatcherTest {
-    private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
+    /*private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final InOrder inOrder = inOrder(simpleTreeReporter);
     private final Object item = new Object();
     private final Key key = mock(Key.class);
@@ -278,5 +260,5 @@ public class ExtractingMatcherTest {
         public String asString() {
             return null;
         }
-    }
+    }*/
 }
