@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 
+@Deprecated
 class IteratorMatcher<T> extends BaseReportingMatcher<Iterator<T>> {
     private final Supplier<ElementChecker> elementCheckerSupplier;
 

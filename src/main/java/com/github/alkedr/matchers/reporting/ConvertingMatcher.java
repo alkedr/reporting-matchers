@@ -4,6 +4,7 @@ import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.function.Function;
 
+@Deprecated
 class ConvertingMatcher<T, U> extends BaseReportingMatcher<T> {
     private final Function<T, U> converter;
     private final ReportingMatcher<U> matcher;

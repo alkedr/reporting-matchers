@@ -5,7 +5,7 @@ import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
 import java.util.function.Consumer;
 
-public class NoOpElementChecker implements ElementChecker {
+class NoOpElementChecker implements ElementChecker {
     static final ElementChecker INSTANCE = new NoOpElementChecker();
 
     private NoOpElementChecker() {

@@ -1,16 +1,20 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
+import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactory;
 import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers;
+import com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapter;
 import com.github.alkedr.matchers.reporting.keys.ExtractableKey;
 import org.hamcrest.Matcher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 
-import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.compositeElementChecker;
+import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactories.compositeElementCheckerFactory;
+import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.arrayForeachAdapter;
+import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.hashMapForeachAdepter;
+import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.iterableForeachAdapter;
+import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.iteratorForeachAdapter;
 import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
 
@@ -157,53 +161,62 @@ public enum ReportingMatchers {
 
 
     public static <T> IteratingMatcherBuilder<T[], T> array() {
-        return new IteratingMatcherBuilderImpl<>(item -> asList(item).iterator());
+        return new IteratingMatcherBuilderImpl<>(arrayForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<T[]> array(ElementChecker... elementCheckers) {
-        return array(asList(elementCheckers));
+    public static <T> ReportingMatcher<T[]> array(ElementCheckerFactory... elementCheckerFactories) {
+        return array(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<T[]> array(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingMatcher<>(item -> asList(item).iterator(), iterator(elementCheckers));
+    public static <T> ReportingMatcher<T[]> array(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+        return iteratingMatcher(arrayForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
 
     public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable() {
-        return new IteratingMatcherBuilderImpl<>(Iterable::iterator);
+        return new IteratingMatcherBuilderImpl<>(iterableForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(ElementChecker... elementCheckers) {
-        return iterable(asList(elementCheckers));
+    public static <T> ReportingMatcher<Iterable<T>> iterable(ElementCheckerFactory... elementCheckerFactories) {
+        return iterable(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementChecker> elementCheckers) {
-        return new ConvertingMatcher<>(Iterable::iterator, iterator(elementCheckers));
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+        return iteratingMatcher(iterableForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
 
     public static <T> IteratingMatcherBuilder<Iterator<T>, T> iterator() {
-        return new IteratingMatcherBuilderImpl<>(Function.identity());
+        return new IteratingMatcherBuilderImpl<>(iteratorForeachAdapter());
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(ElementChecker... elementCheckers) {
-        return iterator(asList(elementCheckers));
+    public static <T> ReportingMatcher<Iterator<T>> iterator(ElementCheckerFactory... elementCheckerFactories) {
+        return iterator(asList(elementCheckerFactories));
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementChecker> elementCheckers) {
-        return new IteratorMatcher<>(() -> compositeElementChecker(elementCheckers));
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+        return iteratingMatcher(iteratorForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
     }
 
 
-    // TODO: IteratingMatcher для hashMap
-    /*public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
+    public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
+        return new IteratingMatcherBuilderImpl<>(hashMapForeachAdepter());
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementChecker... elementCheckers) {
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementCheckerFactory... elementCheckerFactories) {
+        return hashMap(asList(elementCheckerFactories));
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<ElementChecker> elementCheckers) {
-    }*/
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<ElementCheckerFactory> elementCheckerFactories) {
+        return iteratingMatcher(hashMapForeachAdepter(), compositeElementCheckerFactory(elementCheckerFactories));
+    }
+
+
+    public static <T> ReportingMatcher<T> iteratingMatcher(ForeachAdapter<? super T> foreachAdapter,
+                                                           ElementCheckerFactory elementCheckerFactory) {
+        return new IteratingMatcher<>(foreachAdapter, elementCheckerFactory);
+    }
+
 
 
     public static <T> ReportingMatcher<T> uncheckedFields() {
@@ -226,9 +239,9 @@ public enum ReportingMatchers {
         return ReportingMatchers.<T>iterator().extraElementsAreAllowed();
     }
 
-    /*public static <T> ReportingMatcher<T> uncheckedMapEntries() {
-        return hashMap().extraElementsAreAllowed();
-    }*/
+    public static <K, V> ReportingMatcher<Map<K, V>> uncheckedMapEntries() {
+        return ReportingMatchers.<K, V>hashMap().extraElementsAreAllowed();
+    }
 
 
 

@@ -1,13 +1,11 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
+import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactory;
+import com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapter;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.containsInAnyOrder;
 import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckers.containsInAnyOrderWithExtraElementsAllowed;
@@ -18,19 +16,19 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 class IteratingMatcherBuilderImpl<T, U> extends BaseReportingMatcherBuilder<T> implements IteratingMatcherBuilder<T, U> {
-    private final Function<T, Iterator<U>> itemToIteratorConverter;
+    private final ForeachAdapter<? super T> foreachAdapter;
     private final Collection<Matcher<U>> elementMatchers;
     private final boolean orderIsImportant;
     private final boolean extraElementsAreAllowed;
 
-    IteratingMatcherBuilderImpl(Function<T, Iterator<U>> itemToIteratorConverter) {
-        this(itemToIteratorConverter, emptyList(), true, false);
+    IteratingMatcherBuilderImpl(ForeachAdapter<? super T> foreachAdapter) {
+        this(foreachAdapter, emptyList(), true, false);
     }
 
-    private IteratingMatcherBuilderImpl(Function<T, Iterator<U>> itemToIteratorConverter,
+    private IteratingMatcherBuilderImpl(ForeachAdapter<? super T> foreachAdapter,
                                         Collection<Matcher<U>> elementMatchers, boolean orderIsImportant,
                                         boolean extraElementsAreAllowed) {
-        this.itemToIteratorConverter = itemToIteratorConverter;
+        this.foreachAdapter = foreachAdapter;
         this.elementMatchers = elementMatchers;
         this.orderIsImportant = orderIsImportant;
         this.extraElementsAreAllowed = extraElementsAreAllowed;
@@ -53,8 +51,8 @@ class IteratingMatcherBuilderImpl<T, U> extends BaseReportingMatcherBuilder<T> i
         }
     }
 
-    private ReportingMatcher<T> build(Supplier<ElementChecker> elementCheckerSupplier) {
-        return new ConvertingMatcher<>(itemToIteratorConverter, new IteratorMatcher<>(elementCheckerSupplier));
+    private ReportingMatcher<T> build(ElementCheckerFactory elementCheckerSupplier) {
+        return new IteratingMatcher<>(foreachAdapter, elementCheckerSupplier);
     }
 
 
@@ -82,26 +80,26 @@ class IteratingMatcherBuilderImpl<T, U> extends BaseReportingMatcherBuilder<T> i
 
     @Override
     public IteratingMatcherBuilder<T, U> withElementsMatching(Collection<Matcher<U>> newElementMatchers) {
-        return new IteratingMatcherBuilderImpl<>(itemToIteratorConverter, newElementMatchers, orderIsImportant, extraElementsAreAllowed);
+        return new IteratingMatcherBuilderImpl<>(foreachAdapter, newElementMatchers, orderIsImportant, extraElementsAreAllowed);
     }
 
     @Override
     public IteratingMatcherBuilder<T, U> inAnyOrder() {
-        return new IteratingMatcherBuilderImpl<>(itemToIteratorConverter, elementMatchers, false, extraElementsAreAllowed);
+        return new IteratingMatcherBuilderImpl<>(foreachAdapter, elementMatchers, false, extraElementsAreAllowed);
     }
 
     @Override
     public IteratingMatcherBuilder<T, U> inSpecifiedOrder() {
-        return new IteratingMatcherBuilderImpl<>(itemToIteratorConverter, elementMatchers, true, extraElementsAreAllowed);
+        return new IteratingMatcherBuilderImpl<>(foreachAdapter, elementMatchers, true, extraElementsAreAllowed);
     }
 
     @Override
     public IteratingMatcherBuilder<T, U> extraElementsAreAllowed() {
-        return new IteratingMatcherBuilderImpl<>(itemToIteratorConverter, elementMatchers, orderIsImportant, true);
+        return new IteratingMatcherBuilderImpl<>(foreachAdapter, elementMatchers, orderIsImportant, true);
     }
 
     @Override
     public IteratingMatcherBuilder<T, U> extraElementsAreNotAllowed() {
-        return new IteratingMatcherBuilderImpl<>(itemToIteratorConverter, elementMatchers, orderIsImportant, false);
+        return new IteratingMatcherBuilderImpl<>(foreachAdapter, elementMatchers, orderIsImportant, false);
     }
 }

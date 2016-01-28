@@ -15,7 +15,7 @@ public interface ExtractingMatcherBuilder<T> extends ReportingMatcherBuilder<T> 
 
     ExtractingMatcherBuilder<T> is(Matcher<?> matcher);
 
-    // FIXME: warning
+    // FIXME: warning, убрать интерфейс, сделать это классом, повесить @SafeVarargs?
     <U> ExtractingMatcherBuilder<T> is(Matcher<? super U>... matchers);
 
     <U> ExtractingMatcherBuilder<T> is(Iterable<? extends Matcher<? super U>> matchers);
