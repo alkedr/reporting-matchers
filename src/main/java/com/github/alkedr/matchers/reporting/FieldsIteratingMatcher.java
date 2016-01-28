@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import static com.github.alkedr.matchers.reporting.keys.Keys.methodKey;
 
 // TODO: убрать дублирование с IteratorMatcher
+@Deprecated
 class FieldsIteratingMatcher<T> extends BaseReportingMatcher<T> {
     private final Supplier<ElementChecker> elementCheckerSupplier;
 

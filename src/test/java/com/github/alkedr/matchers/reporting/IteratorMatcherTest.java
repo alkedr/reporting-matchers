@@ -1,27 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.element.checkers.ElementChecker;
-import com.github.alkedr.matchers.reporting.keys.Key;
-import com.github.alkedr.matchers.reporting.reporters.FlatReporter;
-import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
-import com.github.alkedr.matchers.reporting.reporters.SimpleTreeReporter;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
-
-import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
-import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static java.util.Arrays.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class IteratorMatcherTest {
-    private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
+    /*private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final SafeTreeReporter safeTreeReporter = simpleTreeReporterToSafeTreeReporter(simpleTreeReporter);
     private final Object element1 = new Object();
     private final Object element2 = new Object();
@@ -97,5 +77,5 @@ public class IteratorMatcherTest {
         inOrder.verify(elementChecker).begin(same(safeTreeReporter));
         inOrder.verify(elementChecker).end(same(safeTreeReporter));
         inOrder.verifyNoMoreInteractions();
-    }
+    }*/
 }

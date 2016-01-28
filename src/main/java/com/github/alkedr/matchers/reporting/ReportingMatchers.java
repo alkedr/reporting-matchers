@@ -74,7 +74,7 @@ public enum ReportingMatchers {
     }
 
 
-    public static <T> ExtractingMatcherBuilder<T> value(ExtractableKey extractableKey) {
+    public static <T> ExtractingMatcher<T> value(ExtractableKey extractableKey) {
         return new ExtractingMatcher<>(extractableKey);
     }
 
@@ -89,13 +89,13 @@ public enum ReportingMatchers {
 
     // пробивает доступ к private, protected и package-private полям
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcherBuilder<T> field(Field field) {
+    public static <T> ExtractingMatcher<T> field(Field field) {
         return value(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
     // если поле не найдено, то бросает исключение в matches() ?
-    public static <T> ExtractingMatcherBuilder<T> field(String fieldName) {
+    public static <T> ExtractingMatcher<T> field(String fieldName) {
         return value(fieldByNameKey(fieldName));
     }
 
@@ -107,13 +107,13 @@ public enum ReportingMatchers {
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
-    public static <T> ExtractingMatcherBuilder<T> method(Method method, Object... arguments) {
+    public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
         return value(methodKey(method, arguments));
     }
 
     // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
     // если метод не найден, то бросает исключение в matches()
-    public static <T> ExtractingMatcherBuilder<T> method(String methodName, Object... arguments) {
+    public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
         return value(methodByNameKey(methodName, arguments));
     }
 
@@ -124,12 +124,12 @@ public enum ReportingMatchers {
 
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcherBuilder<T> getter(Method method) {
+    public static <T> ExtractingMatcher<T> getter(Method method) {
         return value(getterKey(method));
     }
 
     // как method(), только убирает 'get' и 'is'
-    public static <T> ExtractingMatcherBuilder<T> getter(String methodName) {
+    public static <T> ExtractingMatcher<T> getter(String methodName) {
         return value(getterByNameKey(methodName));
     }
 
@@ -140,22 +140,22 @@ public enum ReportingMatchers {
     }*/
 
 
-    public static <T> ExtractingMatcherBuilder<T[]> arrayElement(int index) {
+    public static <T> ExtractingMatcher<T[]> arrayElement(int index) {
         return value(elementKey(index));
     }
 
     // вызывает .get(), O(N) для не-RandomAccess
-    public static <T> ExtractingMatcherBuilder<List<T>> element(int index) {
+    public static <T> ExtractingMatcher<List<T>> element(int index) {
         return value(elementKey(index));
     }
 
     // O(N)
-    public static <T> ExtractingMatcherBuilder<Iterable<T>> iterableElement(int index) {
+    public static <T> ExtractingMatcher<Iterable<T>> iterableElement(int index) {
         return value(elementKey(index));
     }
 
 
-    public static <K, V> ExtractingMatcherBuilder<Map<K, V>> valueForKey(K key) {
+    public static <K, V> ExtractingMatcher<Map<K, V>> valueForKey(K key) {
         return value(hashMapKey(key));
     }
 

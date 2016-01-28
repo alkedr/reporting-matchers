@@ -1,19 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
-import org.mockito.InOrder;
-
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.missing;
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-
 public class ConvertingMatcherTest {
-    private final SafeTreeReporter reporter = mock(SafeTreeReporter.class);
+    /*private final SafeTreeReporter reporter = mock(SafeTreeReporter.class);
     private final InOrder inOrder = inOrder(reporter);
     private final ReportingMatcher<String> convertingMatcher =
             new ConvertingMatcher<>(Integer::parseInt, toReportingMatcher(CoreMatchers.equalTo(1)));
@@ -53,5 +41,5 @@ public class ConvertingMatcherTest {
         missing().runForMissingItem(reporter);
         inOrder.verify(reporter).correctlyMissing();
         inOrder.verifyNoMoreInteractions();
-    }
+    }*/
 }
