@@ -8,6 +8,11 @@ import java.util.function.BiConsumer;
 import static com.github.alkedr.matchers.reporting.keys.Keys.elementKey;
 
 class IteratorForeachAdapter implements ForeachAdapter<Iterator<?>> {
+    static final IteratorForeachAdapter INSTANCE = new IteratorForeachAdapter();
+
+    private IteratorForeachAdapter() {
+    }
+
     @Override
     public void run(Iterator<?> item, BiConsumer<Key, Object> consumer) {
         int i = 0;

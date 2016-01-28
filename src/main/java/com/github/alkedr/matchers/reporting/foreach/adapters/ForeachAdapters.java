@@ -3,21 +3,20 @@ package com.github.alkedr.matchers.reporting.foreach.adapters;
 import java.util.Iterator;
 import java.util.Map;
 
-// TODO: 1 static инстанс
 public class ForeachAdapters {
     public static ForeachAdapter<Iterator<?>> iteratorForeachAdapter() {
-        return new IteratorForeachAdapter();
+        return IteratorForeachAdapter.INSTANCE;
     }
 
     public static ForeachAdapter<Iterable<?>> iterableForeachAdapter() {
-        return new IterableForeachAdapter();
+        return IterableForeachAdapter.INSTANCE;
     }
 
     public static ForeachAdapter<Object[]> arrayForeachAdapter() {
-        return new ArrayForeachAdapter();
+        return ArrayForeachAdapter.INSTANCE;
     }
 
     public static ForeachAdapter<Map<?, ?>> hashMapForeachAdepter() {
-        return new HashMapForeachAdepter();
+        return HashMapForeachAdepter.INSTANCE;
     }
 }

@@ -8,6 +8,11 @@ import java.util.function.BiConsumer;
 import static com.github.alkedr.matchers.reporting.keys.Keys.hashMapKey;
 
 class HashMapForeachAdepter implements ForeachAdapter<Map<?, ?>> {
+    static final HashMapForeachAdepter INSTANCE = new HashMapForeachAdepter();
+
+    private HashMapForeachAdepter() {
+    }
+
     @Override
     public void run(Map<?, ?> item, BiConsumer<Key, Object> consumer) {
         for (Map.Entry<?, ?> entry : item.entrySet()) {
