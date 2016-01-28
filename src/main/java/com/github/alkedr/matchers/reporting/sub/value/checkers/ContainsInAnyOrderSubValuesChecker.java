@@ -5,20 +5,21 @@ import com.github.alkedr.matchers.reporting.reporters.FlatReporter;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
-// TODO: пробовать пропускать элементы?
-class ContainsInSpecifiedOrderChecker implements SubValuesChecker {
-    private final Iterator<ReportingMatcher<?>> elementMatchers;
+class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
+    private final Iterable<ReportingMatcher<?>> elementMatchers;
     private final boolean extraElementsAllowed;
     private int index = 0;
 
-    ContainsInSpecifiedOrderChecker(Iterator<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
-        this.elementMatchers = elementMatchers;
+    ContainsInAnyOrderSubValuesChecker(Collection<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
         this.extraElementsAllowed = extraElementsAllowed;
+        this.elementMatchers = new ArrayList<>(elementMatchers);
     }
 
     @Override
@@ -28,9 +29,13 @@ class ContainsInSpecifiedOrderChecker implements SubValuesChecker {
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
         index++;
-        if (elementMatchers.hasNext()) {
-            ReportingMatcher<?> matcher = elementMatchers.next();
-            return safeTreeReporter -> matcher.run(value, safeTreeReporter);
+        Iterator<ReportingMatcher<?>> iterator = elementMatchers.iterator();
+        while (iterator.hasNext()) {
+            ReportingMatcher<?> matcher = iterator.next();
+            if (matcher.matches(value)) {
+                iterator.remove();
+                return safeTreeReporter -> matcher.run(value, safeTreeReporter);
+            }
         }
         return extraElementsAllowed ? reporter -> {} : FlatReporter::incorrectlyPresent;
     }
@@ -47,8 +52,7 @@ class ContainsInSpecifiedOrderChecker implements SubValuesChecker {
 
     @Override
     public void end(SafeTreeReporter safeTreeReporter) {
-        while (elementMatchers.hasNext()) {
-            ReportingMatcher<?> matcher = elementMatchers.next();
+        for (ReportingMatcher<?> matcher : elementMatchers) {
             safeTreeReporter.missingNode(elementKey(index++), r -> matcher.runForMissingItem(safeTreeReporter));
         }
     }

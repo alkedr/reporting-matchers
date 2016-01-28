@@ -4,10 +4,10 @@ import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
-class IteratorForeachAdapter implements SubValuesExtractor<Iterator<?>> {
-    static final IteratorForeachAdapter INSTANCE = new IteratorForeachAdapter();
+class IteratorElementsExtractor implements SubValuesExtractor<Iterator<?>> {
+    static final IteratorElementsExtractor INSTANCE = new IteratorElementsExtractor();
 
-    private IteratorForeachAdapter() {
+    private IteratorElementsExtractor() {
     }
 
     @Override

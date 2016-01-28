@@ -7,10 +7,10 @@ import org.hamcrest.Matcher;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers.containsInAnyOrder;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers.containsInAnyOrderWithExtraElementsAllowed;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers.containsInSpecifiedOrder;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers.containsInSpecifiedOrderWithExtraElementsAllowed;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInAnyOrder;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInAnyOrderWithExtraElementsAllowed;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrder;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrderWithExtraElementsAllowed;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;

@@ -6,10 +6,10 @@ import java.util.Objects;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.getterKey;
 import static java.lang.Character.isUpperCase;
 
-class GettersForeachAdapter implements SubValuesExtractor<Object> {
+class ObjectGettersExtractor implements SubValuesExtractor<Object> {
     private static final Method objectGetClassMethod;
 
-    static final GettersForeachAdapter INSTANCE = new GettersForeachAdapter();
+    static final ObjectGettersExtractor INSTANCE = new ObjectGettersExtractor();
 
     static {
         try {
@@ -19,7 +19,7 @@ class GettersForeachAdapter implements SubValuesExtractor<Object> {
         }
     }
 
-    private GettersForeachAdapter() {
+    private ObjectGettersExtractor() {
     }
 
     @Override

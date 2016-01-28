@@ -13,11 +13,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 // TODO: убрать дублирование кода
 // TODO: флаг extraElementsAllowed можно реализовать с пом. бесконечной коллекции матчеров, которая возвращает noOp() или missing()
-public enum ElementCheckers {
+public enum SubValueCheckers {
     ;
 
     public static SubValuesChecker noOpElementChecker() {
-        return NoOpElementChecker.INSTANCE;
+        return NoOpSubValuesChecker.INSTANCE;
     }
 
 
@@ -26,12 +26,12 @@ public enum ElementCheckers {
     }
 
     public static SubValuesChecker compositeElementChecker(Iterable<SubValuesChecker> elementCheckers) {
-        return new CompositeElementChecker(elementCheckers);
+        return new CompositeSubValuesChecker(elementCheckers);
     }
 
 
     public static SubValuesChecker containsInSpecifiedOrder(Iterator<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInSpecifiedOrderChecker(elementMatchers, false);
+        return new ContainsInSpecifiedOrderSubValuesChecker(elementMatchers, false);
     }
 
     public static SubValuesChecker containsInSpecifiedOrder(Iterable<ReportingMatcher<?>> elementMatchers) {
@@ -50,7 +50,7 @@ public enum ElementCheckers {
 
 
     public static SubValuesChecker containsInSpecifiedOrderWithExtraElementsAllowed(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderChecker(elementMatchers, true);
+        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, true);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
@@ -66,7 +66,7 @@ public enum ElementCheckers {
 
     // TODO: Iterable?
     public static SubValuesChecker containsInAnyOrder(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderChecker(elementMatchers, false);
+        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, false);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
@@ -82,7 +82,7 @@ public enum ElementCheckers {
 
     // TODO: Iterable?
     public static SubValuesChecker containsInAnyOrderWithExtraElementsAllowed(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderChecker(elementMatchers, true);
+        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, true);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
@@ -93,6 +93,12 @@ public enum ElementCheckers {
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
         );
+    }
+
+
+    // TODO: переименовать? allSubValuesMatch() ?
+    public static SubValuesChecker matcherSubValuesChecker(ReportingMatcher<?> matcherForExtractedValue) {
+        return new MatcherSubValuesChecker(matcherForExtractedValue);
     }
 
 

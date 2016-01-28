@@ -2,7 +2,7 @@ package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
 import static java.util.Arrays.asList;
 
-public class ElementCheckerFactories {
+public class SubValueCheckerFactories {
     /*public static ElementCheckerFactory noOpElementCheckerFactory() {
         return ElementCheckers::noOpElementChecker;
     }*/
@@ -13,7 +13,7 @@ public class ElementCheckerFactories {
     }
 
     public static SubValuesCheckerFactory compositeElementCheckerFactory(Iterable<SubValuesCheckerFactory> elementCheckers) {
-        return new CompositeElementCheckerFactory(elementCheckers);
+        return new CompositeSubValuesCheckerFactory(elementCheckers);
     }
 
 

@@ -4,10 +4,10 @@ import java.util.Map;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapKey;
 
-class HashMapForeachAdapter implements SubValuesExtractor<Map<?,?>> {
-    static final HashMapForeachAdapter INSTANCE = new HashMapForeachAdapter();
+class HashMapEntriesExtractor implements SubValuesExtractor<Map<?,?>> {
+    static final HashMapEntriesExtractor INSTANCE = new HashMapEntriesExtractor();
 
-    private HashMapForeachAdapter() {
+    private HashMapEntriesExtractor() {
     }
 
     @Override

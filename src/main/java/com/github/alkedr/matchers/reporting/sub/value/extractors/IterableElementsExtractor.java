@@ -1,11 +1,11 @@
 package com.github.alkedr.matchers.reporting.sub.value.extractors;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.iteratorForeachAdapter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iteratorForeachAdapter;
 
-class IterableForeachAdapter implements SubValuesExtractor<Iterable<?>> {
-    static final IterableForeachAdapter INSTANCE = new IterableForeachAdapter();
+class IterableElementsExtractor implements SubValuesExtractor<Iterable<?>> {
+    static final IterableElementsExtractor INSTANCE = new IterableElementsExtractor();
 
-    private IterableForeachAdapter() {
+    private IterableElementsExtractor() {
     }
 
     @Override

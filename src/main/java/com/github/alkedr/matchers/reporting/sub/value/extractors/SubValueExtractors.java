@@ -3,30 +3,30 @@ package com.github.alkedr.matchers.reporting.sub.value.extractors;
 import java.util.Iterator;
 import java.util.Map;
 
-public enum ForeachAdapters {
+public enum SubValueExtractors {
     ;
 
     public static SubValuesExtractor<Iterator<?>> iteratorForeachAdapter() {
-        return IteratorForeachAdapter.INSTANCE;
+        return IteratorElementsExtractor.INSTANCE;
     }
 
     public static SubValuesExtractor<Iterable<?>> iterableForeachAdapter() {
-        return IterableForeachAdapter.INSTANCE;
+        return IterableElementsExtractor.INSTANCE;
     }
 
     public static SubValuesExtractor<Object[]> arrayForeachAdapter() {
-        return ArrayForeachAdapter.INSTANCE;
+        return ArrayElementsExtractor.INSTANCE;
     }
 
     public static SubValuesExtractor<Map<?, ?>> hashMapForeachAdapter() {
-        return HashMapForeachAdapter.INSTANCE;
+        return HashMapEntriesExtractor.INSTANCE;
     }
 
     public static SubValuesExtractor<Object> fieldsForeachAdepter() {
-        return FieldsForeachAdapter.INSTANCE;
+        return ObjectFieldsExtractor.INSTANCE;
     }
 
     public static SubValuesExtractor<Object> gettersForeachAdepter() {
-        return GettersForeachAdapter.INSTANCE;
+        return ObjectGettersExtractor.INSTANCE;
     }
 }

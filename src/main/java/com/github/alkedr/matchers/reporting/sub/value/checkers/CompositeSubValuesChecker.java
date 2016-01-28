@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-class CompositeElementChecker implements SubValuesChecker {
+class CompositeSubValuesChecker implements SubValuesChecker {
     private final Iterable<SubValuesChecker> elementCheckers;
 
-    CompositeElementChecker(Iterable<SubValuesChecker> elementCheckers) {
+    CompositeSubValuesChecker(Iterable<SubValuesChecker> elementCheckers) {
         this.elementCheckers = elementCheckers;
     }
 

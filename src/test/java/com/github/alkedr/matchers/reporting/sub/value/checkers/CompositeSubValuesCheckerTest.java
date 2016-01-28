@@ -11,13 +11,13 @@ import org.mockito.InOrder;
 import java.util.function.Consumer;
 
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers.compositeElementChecker;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.compositeElementChecker;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CompositeElementCheckerTest {
+public class CompositeSubValuesCheckerTest {
     private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final SafeTreeReporter safeTreeReporter = simpleTreeReporterToSafeTreeReporter(simpleTreeReporter);
     private final Key key = mock(Key.class);

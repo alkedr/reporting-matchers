@@ -4,19 +4,19 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.fieldsForeachAdepter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.fieldsForeachAdepter;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class FieldsForeachAdapterTest {
+public class ObjectFieldsExtractorTest {
     private final SubValuesExtractor.SubValuesListener listener = mock(SubValuesExtractor.SubValuesListener.class);
     private final Field field = MyClassWithFields.class.getDeclaredField("field");
     private final Field staticField = MyClassWithFields.class.getDeclaredField("staticField");
 
-    public FieldsForeachAdapterTest() throws NoSuchFieldException {
+    public ObjectFieldsExtractorTest() throws NoSuchFieldException {
     }
 
     @Test

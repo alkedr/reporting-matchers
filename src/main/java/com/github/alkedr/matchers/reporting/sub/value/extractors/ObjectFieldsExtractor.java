@@ -6,10 +6,10 @@ import java.lang.reflect.Field;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
 
-class FieldsForeachAdapter implements SubValuesExtractor<Object> {
-    static final FieldsForeachAdapter INSTANCE = new FieldsForeachAdapter();
+class ObjectFieldsExtractor implements SubValuesExtractor<Object> {
+    static final ObjectFieldsExtractor INSTANCE = new ObjectFieldsExtractor();
 
-    private FieldsForeachAdapter() {
+    private ObjectFieldsExtractor() {
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.github.alkedr.matchers.reporting.sub.value.extractors;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.iterableForeachAdapter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iterableForeachAdapter;
 import static java.util.Arrays.asList;
 
-class ArrayForeachAdapter implements SubValuesExtractor<Object[]> {
-    static final ArrayForeachAdapter INSTANCE = new ArrayForeachAdapter();
+class ArrayElementsExtractor implements SubValuesExtractor<Object[]> {
+    static final ArrayElementsExtractor INSTANCE = new ArrayElementsExtractor();
 
-    private ArrayForeachAdapter() {
+    private ArrayElementsExtractor() {
     }
 
     @Override

@@ -1,14 +1,16 @@
 package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
+import com.github.alkedr.matchers.reporting.ReportingMatcher;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.util.function.Consumer;
 
-class NoOpElementChecker implements SubValuesChecker {
-    static final NoOpElementChecker INSTANCE = new NoOpElementChecker();
+class MatcherSubValuesChecker implements SubValuesChecker {
+    private final ReportingMatcher<?> matcherForExtractedValue;
 
-    private NoOpElementChecker() {
+    MatcherSubValuesChecker(ReportingMatcher<?> matcherForExtractedValue) {
+        this.matcherForExtractedValue = matcherForExtractedValue;
     }
 
     @Override
@@ -17,17 +19,17 @@ class NoOpElementChecker implements SubValuesChecker {
 
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
-        return safeTreeReporter -> {};
+        return safeTreeReporter -> matcherForExtractedValue.run(value, safeTreeReporter);
     }
 
     @Override
     public Consumer<SafeTreeReporter> missing(Key key) {
-        return safeTreeReporter -> {};
+        return matcherForExtractedValue::runForMissingItem;
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        return safeTreeReporter -> {};
+        return matcherForExtractedValue::runForMissingItem;
     }
 
     @Override

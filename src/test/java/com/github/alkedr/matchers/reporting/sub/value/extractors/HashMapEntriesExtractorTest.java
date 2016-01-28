@@ -6,7 +6,7 @@ import org.mockito.InOrder;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.hashMapForeachAdapter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.hashMapForeachAdapter;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapKey;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
@@ -14,7 +14,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-public class HashMapForeachAdapterTest {
+public class HashMapEntriesExtractorTest {
     private final SubValuesExtractor.SubValuesListener listener = mock(SubValuesExtractor.SubValuesListener.class);
     private final InOrder inOrder = inOrder(listener);
 

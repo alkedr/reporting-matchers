@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckers;
+import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers;
 import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.keys.ExtractableKey;
@@ -10,8 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.ElementCheckerFactories.compositeElementCheckerFactory;
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.ForeachAdapters.*;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckerFactories.compositeElementCheckerFactory;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.*;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.*;
 import static java.util.Arrays.asList;
 
@@ -218,11 +218,11 @@ public enum ReportingMatchers {
 
 
     public static <T> ReportingMatcher<T> uncheckedFields() {
-        return iteratingMatcher(fieldsForeachAdepter(), ElementCheckers::noOpElementChecker);
+        return iteratingMatcher(fieldsForeachAdepter(), SubValueCheckers::noOpElementChecker);
     }
 
     public static <T> ReportingMatcher<T> uncheckedGetters() {
-        return iteratingMatcher(gettersForeachAdepter(), ElementCheckers::noOpElementChecker);
+        return iteratingMatcher(gettersForeachAdepter(), SubValueCheckers::noOpElementChecker);
     }
 
     public static <T> ReportingMatcher<T[]> uncheckedArrayElements() {
