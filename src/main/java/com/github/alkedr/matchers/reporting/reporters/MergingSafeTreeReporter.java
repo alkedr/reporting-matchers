@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.mergingReporter;
+
 class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     protected final SafeTreeReporter reporter;
     private final Map<Node, Collection<Consumer<SafeTreeReporter>>> nodes = new LinkedHashMap<>();
@@ -19,16 +21,7 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     @Override
     public void close() {
         for (Map.Entry<Node, Collection<Consumer<SafeTreeReporter>>> entry : nodes.entrySet()) {
-            entry.getKey().addToReporter(
-                    reporter,
-                    r -> {  // TODO: сделать лямбду классом
-                        try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(r)) {
-                            for (Consumer<SafeTreeReporter> contents : entry.getValue()) {
-                                contents.accept(mergingReporter);
-                            }
-                        }
-                    }
-            );
+            entry.getKey().addToReporter(reporter, new MergedNodeContents(entry.getValue()));
         }
         nodes.clear();
     }
@@ -180,6 +173,24 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
             int result = key.hashCode();
             result = 31 * result + throwable.hashCode();
             return result;
+        }
+    }
+
+
+    private static class MergedNodeContents implements Consumer<SafeTreeReporter> {
+        private final Collection<Consumer<SafeTreeReporter>> contentsCollection;
+
+        MergedNodeContents(Collection<Consumer<SafeTreeReporter>> contentsCollection) {
+            this.contentsCollection = contentsCollection;
+        }
+
+        @Override
+        public void accept(SafeTreeReporter reporter) {
+            try (CloseableSafeTreeReporter mergingReporter = mergingReporter(reporter)) {
+                for (Consumer<SafeTreeReporter> contents : contentsCollection) {
+                    contents.accept(mergingReporter);
+                }
+            }
         }
     }
 }

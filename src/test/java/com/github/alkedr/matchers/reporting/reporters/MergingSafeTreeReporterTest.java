@@ -13,6 +13,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
+// TODO: тесты на == для value, примитивные типы
 public class MergingSafeTreeReporterTest {
     private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final InOrder inOrder = inOrder(simpleTreeReporter);
@@ -23,8 +24,6 @@ public class MergingSafeTreeReporterTest {
     private final Object value = new Object();
     private final Consumer<SafeTreeReporter> contents = mock(Consumer.class);
     private final Throwable throwable = new RuntimeException();
-    private final String s1 = "1";
-    private final String s2 = "1";
 
     @Test
     public void allReporterMethods_nodesFirst() {
@@ -53,10 +52,12 @@ public class MergingSafeTreeReporterTest {
         inOrder.verify(simpleTreeReporter).incorrectlyMissing();
         inOrder.verifyNoMoreInteractions();
 
+        String s1 = "1";
         mergingReporter.passedCheck(s1);
         inOrder.verify(simpleTreeReporter).passedCheck(same(s1));
         inOrder.verifyNoMoreInteractions();
 
+        String s2 = "2";
         mergingReporter.failedCheck(s1, s2);
         inOrder.verify(simpleTreeReporter).failedCheck(same(s1), same(s2));
         inOrder.verifyNoMoreInteractions();
@@ -144,6 +145,4 @@ public class MergingSafeTreeReporterTest {
         inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
-
-    // TODO: тесты на == для value, примитивные типы
 }
