@@ -12,12 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class FieldKeyTest {
-    private final ExtractableKey inaccessibleFieldKey;
-    private final ExtractableKey staticFieldKey;
+    private final ExtractableKey inaccessibleFieldKey = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
+    private final ExtractableKey staticFieldKey = fieldKey(MyClass.class.getDeclaredField("MY_STATIC_FIELD"));
 
     public FieldKeyTest() throws NoSuchFieldException {
-        inaccessibleFieldKey = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
-        staticFieldKey = fieldKey(MyClass.class.getDeclaredField("MY_STATIC_FIELD"));
     }
 
     @Test(expected = NullPointerException.class)

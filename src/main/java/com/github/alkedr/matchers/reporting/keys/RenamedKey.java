@@ -4,7 +4,7 @@ import org.apache.commons.lang3.Validate;
 
 // не объединяется с непереименованным Key
 // TODO: объединяться с непереименованным Key если названия совпадают?
-class RenamedKey implements Key {
+class RenamedKey implements ExtractableKey {
     private final Key originalKey;
     private final String name;
 
@@ -33,5 +33,21 @@ class RenamedKey implements Key {
     @Override
     public String asString() {
         return name;
+    }
+
+    @Override
+    public ExtractionResult extractFrom(Object item) throws MissingException, BrokenException {
+        if (originalKey instanceof ExtractableKey) {
+            return ((ExtractableKey) originalKey).extractFrom(item);
+        }
+        throw new RuntimeException();  // FIXME
+    }
+
+    @Override
+    public ExtractionResult extractFromMissingItem() throws MissingException, BrokenException {
+        if (originalKey instanceof ExtractableKey) {
+            return ((ExtractableKey) originalKey).extractFromMissingItem();
+        }
+        throw new RuntimeException();  // FIXME
     }
 }

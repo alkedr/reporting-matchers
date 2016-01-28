@@ -70,6 +70,16 @@ public class HashMapKeyTest {
     }
 
     @Test
+    public void keyIsNull() {
+        ExtractableKey key = hashMapKey(null);
+        verifyPresent(
+                () -> key.extractFrom(singletonMap(null, "1")),
+                sameInstance(key),
+                equalTo("1")
+        );
+    }
+
+    @Test
     public void keyIsPresentButValueIsNull() {
         ExtractableKey key = hashMapKey("1");
         verifyPresent(
@@ -87,6 +97,4 @@ public class HashMapKeyTest {
                 sameInstance(key)
         );
     }
-
-    // TODO: key is null?
 }

@@ -10,37 +10,16 @@ import java.util.Arrays;
 import static com.github.alkedr.matchers.reporting.keys.Keys.methodKey;
 import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
 
-// TODO: позволять указывать типы аргументов отдельно на случай нуллов и перегрузок
-// TODO: сравнивать аргументы так же, как и value в CheckResult'ах?
-// TODO: возможность указывать типы аргументов отдельно для случаев, когда какие-то аргументы null и есть перегрузки?
 class MethodByNameKey implements ExtractableKey {
     private final String methodName;
-//    private final Class<?>[] argumentClasses;
     private final Object[] arguments;
 
     MethodByNameKey(String methodName, Object... arguments) {
         Validate.notNull(methodName, "methodName");
         Validate.notNull(arguments, "arguments");
         this.methodName = methodName;
-        // FIXME: если аргумент null, то и argumentClass будет null
-//        this.argumentClasses = ClassUtils.toClass(arguments);
         this.arguments = arguments.clone();
     }
-
-    /*public MethodByNameKey(String methodName, Class<?>[] argumentClasses, Object... arguments) {
-        Validate.notNull(methodName, "method");
-        Validate.notNull(argumentClasses, "argumentClasses");
-        Validate.notNull(arguments, "arguments");
-        Validate.isTrue(argumentClasses.length == arguments.length,
-                "argumentClasses.length must be equal to arguments.length");
-        this.methodName = methodName;
-        this.argumentClasses = argumentClasses.clone();
-        this.arguments = arguments.clone();
-    }*/
-
-    /*public Class<?>[] getArgumentClasses() {
-        return argumentClasses.clone();
-    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -65,12 +44,11 @@ class MethodByNameKey implements ExtractableKey {
         if (item == null) {
             throw new MissingException(this);
         }
-        // TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять?
-        Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments.clone()));
+        Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));
         if (method == null) {
             throw new BrokenException(this, new NoSuchMethodException(item.getClass().getName() + "." + toString()));
         }
-        return methodKey(method, arguments.clone()).extractFrom(item);
+        return methodKey(method, arguments).extractFrom(item);
     }
 
     @Override

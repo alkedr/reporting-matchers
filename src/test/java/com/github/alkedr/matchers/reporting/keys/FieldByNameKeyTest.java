@@ -2,6 +2,9 @@ package com.github.alkedr.matchers.reporting.keys;
 
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
+import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyBroken;
 import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.keys.Keys.fieldByNameKey;
@@ -13,14 +16,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 
 public class FieldByNameKeyTest {
-    private final ExtractableKey myInaccessibleFieldByNameKey;
-    private final ExtractableKey myInaccessibleField1Key;
-    private final ExtractableKey myInaccessibleField2Key;
+    private final ExtractableKey myInaccessibleFieldByNameKey = fieldByNameKey("myInaccessibleField");
+    private final Field myInaccessibleField1 = MyClass.class.getDeclaredField("myInaccessibleField");
+    private final Field myInaccessibleField2 = MyClassWithTwoFields.class.getDeclaredField("myInaccessibleField");
+    private final Field myStaticField1 = I1.class.getDeclaredField("MY_INT");
 
     public FieldByNameKeyTest() throws NoSuchFieldException {
-        myInaccessibleFieldByNameKey = fieldByNameKey("myInaccessibleField");
-        myInaccessibleField1Key = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
-        myInaccessibleField2Key = fieldKey(MyClassWithTwoFields.class.getDeclaredField("myInaccessibleField"));
     }
 
     @Test(expected = NullPointerException.class)
@@ -57,7 +58,7 @@ public class FieldByNameKeyTest {
     public void extractFrom_inaccessibleField() {
         verifyPresent(
                 () -> myInaccessibleFieldByNameKey.extractFrom(new MyClass()),
-                equalTo(myInaccessibleField1Key),
+                equalTo(fieldKey(myInaccessibleField1)),
                 equalTo(2)
         );
     }
@@ -74,8 +75,27 @@ public class FieldByNameKeyTest {
     public void extractFrom_itemHasTwoMatchingFields() {
         verifyPresent(
                 () -> myInaccessibleFieldByNameKey.extractFrom(new MyClassWithTwoFields()),
-                equalTo(myInaccessibleField2Key),
+                equalTo(fieldKey(myInaccessibleField2)),
                 equalTo(3)
+        );
+    }
+
+    @Test
+    public void extractFrom_staticField() {
+        verifyPresent(
+                () -> fieldByNameKey("MY_INT").extractFrom(new I1(){}),
+                equalTo(fieldKey(myStaticField1)),
+                equalTo(4)
+        );
+    }
+
+    @Test
+    public void extractFrom_interfaceWithTwoFieldsWithTheSameNames() {
+        ExtractableKey key = fieldByNameKey("MY_INT");
+        verifyBroken(
+                () -> key.extractFrom(new InterfaceWithTwoFieldsWithTheSameNames(){}),
+                sameInstance(key),
+                IllegalArgumentException.class
         );
     }
 
@@ -87,15 +107,24 @@ public class FieldByNameKeyTest {
         );
     }
 
-    // TODO: static поле?
-    // TODO: static поле + не-static поле с одинаковыми именами
-    // TODO: 2 поля с одинаковыми именами, такие, что FieldUtils.getField бросает исключение
 
     private static class MyClass {
-        private final int myInaccessibleField = 2;
+        public final int myInaccessibleField = 2;
     }
 
     private static class MyClassWithTwoFields extends MyClass {
-        private final int myInaccessibleField = 3;
+        public final int myInaccessibleField = 3;
+    }
+
+
+    private interface I1 {
+        int MY_INT = 4;
+    }
+
+    private interface I2 {
+        int MY_INT = 5;
+    }
+
+    private interface InterfaceWithTwoFieldsWithTheSameNames extends I1, I2 {
     }
 }

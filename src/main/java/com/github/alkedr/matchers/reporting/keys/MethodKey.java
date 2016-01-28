@@ -9,8 +9,6 @@ import java.util.Arrays;
 import static com.github.alkedr.matchers.reporting.keys.MethodNameUtils.createNameForRegularMethodInvocation;
 import static java.lang.reflect.Modifier.isStatic;
 
-// TODO: сравнивать аргументы так же, как и value в CheckResult'ах?
-// TODO: брать метод, который выше всех в иерархии классов чтобы правильно объединять? это нужно делать не здесь.
 class MethodKey implements ExtractableKey {
     private final Method method;
     private final Object[] arguments;
@@ -47,9 +45,9 @@ class MethodKey implements ExtractableKey {
         }
         try {
             method.setAccessible(true);
-            return new ExtractionResult(this, method.invoke(item, arguments.clone()));
+            return new ExtractionResult(this, method.invoke(item, arguments));
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new BrokenException(this, e); // TODO: rethrow as is?
+            throw new BrokenException(this, e);
         } catch (InvocationTargetException e) {
             throw new BrokenException(this, e.getCause());
         }

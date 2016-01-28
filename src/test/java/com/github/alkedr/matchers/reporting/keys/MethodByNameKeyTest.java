@@ -14,13 +14,12 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+// TODO: аргумент null, аргумент null с перегрузками, из которых невозможно выбрать
 public class MethodByNameKeyTest {
-    private final Method returnArgMethod;
-    private final Method returnArgStaticMethod;
+    private final Method returnArgMethod = MyClass.class.getDeclaredMethod("returnArg", int.class);
+    private final Method returnArgStaticMethod = MyClass.class.getDeclaredMethod("returnArgStatic", int.class);
 
     public MethodByNameKeyTest() throws NoSuchMethodException {
-        returnArgMethod = MyClass.class.getDeclaredMethod("returnArg", int.class);
-        returnArgStaticMethod = MyClass.class.getDeclaredMethod("returnArgStatic", int.class);
     }
 
     @Test(expected = NullPointerException.class)

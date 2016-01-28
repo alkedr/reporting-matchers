@@ -41,7 +41,7 @@ class FieldKey implements ExtractableKey {
         try {
             return new ExtractionResult(this, FieldUtils.readField(field, item, true));
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            // IllegalArgumentException быть не может, потому что мы уже проверили field на null в конструкторе FieldKey
+            // IllegalArgumentException будет если у item неправильный класс
             // IllegalAccessException быть не может, потому что мы пробиваем доступ с пом. readField(*, *, true)
             throw new BrokenException(this, e);
         }

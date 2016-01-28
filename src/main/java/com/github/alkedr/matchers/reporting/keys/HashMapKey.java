@@ -3,7 +3,8 @@ package com.github.alkedr.matchers.reporting.keys;
 import java.util.Map;
 
 // не подходит для TreeMap, IdentityHashMap и пр.
-// подходит только для HashMap
+// подходит только для HashMap (использует key.equals() и key.hashCode())
+// TODO: иметь возможность настраивать способ преобразования ключа в строку?
 class HashMapKey implements ExtractableKey {
     private final Object key;
 

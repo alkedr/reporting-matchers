@@ -28,6 +28,10 @@ public enum Keys {
         return new MethodByNameKey(methodName, arguments);
     }
 
+    public static ExtractableKey methodByNameKey(String methodName, Class<?>[] argumentClasses, Object... arguments) {
+        return new MethodByNameKey(methodName, argumentClasses, arguments);
+    }
+
     public static ExtractableKey methodKey(Method method, Object... arguments) {
         return new MethodKey(method, arguments);
     }
@@ -36,17 +40,17 @@ public enum Keys {
         return renamedExtractableKey(methodByNameKey(methodName), createNameForGetterMethodInvocation(methodName));
     }
 
-    public static ExtractableKey getterKey(Method method, Object... arguments) {
+    public static ExtractableKey getterKey(Method method) {
         return renamedExtractableKey(methodKey(method), createNameForGetterMethodInvocation(method.getName()));
     }
 
     public static ExtractableKey renamedExtractableKey(ExtractableKey originalKey, String name) {
-        return new RenamedExtractableKey(originalKey, name);
+        return new RenamedKey(originalKey, name);
     }
 
     public static Key renamedKey(Key originalKey, String name) {
         return new RenamedKey(originalKey, name);
     }
 
-    // TODO: renamedKey(ExtractableKey)
+    // TODO: обёртка, которая запрещает мёржить (в основном для methodKey, methodByNameKey и hashMapKey)
 }
