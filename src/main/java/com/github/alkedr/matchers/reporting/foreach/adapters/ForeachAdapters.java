@@ -3,7 +3,9 @@ package com.github.alkedr.matchers.reporting.foreach.adapters;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ForeachAdapters {
+public enum ForeachAdapters {
+    ;
+
     public static ForeachAdapter<Iterator<?>> iteratorForeachAdapter() {
         return IteratorForeachAdapter.INSTANCE;
     }
