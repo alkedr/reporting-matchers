@@ -158,7 +158,7 @@ public enum ReportingMatchers {
 
 
     public static <T> IteratingMatcherBuilder<T[], T> array() {
-        return new IteratingMatcherBuilderImpl<>(arrayForeachAdapter());
+        return new IteratingMatcherBuilder<>(arrayForeachAdapter());
     }
 
     public static <T> ReportingMatcher<T[]> array(ElementCheckerFactory... elementCheckerFactories) {
@@ -171,7 +171,7 @@ public enum ReportingMatchers {
 
 
     public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable() {
-        return new IteratingMatcherBuilderImpl<>(iterableForeachAdapter());
+        return new IteratingMatcherBuilder<>(iterableForeachAdapter());
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(ElementCheckerFactory... elementCheckerFactories) {
@@ -184,7 +184,7 @@ public enum ReportingMatchers {
 
 
     public static <T> IteratingMatcherBuilder<Iterator<T>, T> iterator() {
-        return new IteratingMatcherBuilderImpl<>(iteratorForeachAdapter());
+        return new IteratingMatcherBuilder<>(iteratorForeachAdapter());
     }
 
     public static <T> ReportingMatcher<Iterator<T>> iterator(ElementCheckerFactory... elementCheckerFactories) {
@@ -197,7 +197,7 @@ public enum ReportingMatchers {
 
 
     public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
-        return new IteratingMatcherBuilderImpl<>(hashMapForeachAdepter());
+        return new IteratingMatcherBuilder<>(hashMapForeachAdepter());
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> hashMap(ElementCheckerFactory... elementCheckerFactories) {

@@ -17,7 +17,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // field("qwerty").displayedAs("12345").is(equalTo(1))
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
-// TODO: сделать конструкторы public?
 public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     private final ExtractableKey extractor;
     private final String name;
@@ -28,7 +27,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     // name может быть null, matcherForExtractedValue может быть noOp()
-    ExtractingMatcher(ExtractableKey extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
+    private ExtractingMatcher(ExtractableKey extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
         this.extractor = extractor;
         this.name = name;
         this.matcherForExtractedValue = matcherForExtractedValue;
