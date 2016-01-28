@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
 // TODO: сделать конструкторы public?
-public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
+class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
     private final ExtractableKey extractor;
     private final String name;
     private final ReportingMatcher<?> matcherForExtractedValue;
@@ -27,14 +27,7 @@ public class ExtractingMatcher<T> extends BaseReportingMatcher<T> {
         this(extractor, null, noOp());
     }
 
-    /*ExtractingMatcher(ExtractableKey extractor, String name) {
-        this(extractor, name, noOp());
-    }
-
-    ExtractingMatcher(ExtractableKey extractor, ReportingMatcher<?> matcherForExtractedValue) {
-        this(extractor, null, matcherForExtractedValue);
-    }*/
-
+    // name может быть null, matcherForExtractedValue может быть noOp()
     ExtractingMatcher(ExtractableKey extractor, String name, ReportingMatcher<?> matcherForExtractedValue) {
         this.extractor = extractor;
         this.name = name;

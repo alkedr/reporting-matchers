@@ -4,6 +4,7 @@ import org.hamcrest.Matcher;
 
 import java.util.Collection;
 
+@Deprecated
 public interface IteratingMatcherBuilder<T, U> extends ReportingMatcherBuilder<T> {
     IteratingMatcherBuilder<T, U> withElements(U... newElements);
     IteratingMatcherBuilder<T, U> withElements(Iterable<U> newElements);

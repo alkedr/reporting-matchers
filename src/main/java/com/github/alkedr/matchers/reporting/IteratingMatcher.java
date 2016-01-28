@@ -5,11 +5,11 @@ import com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFacto
 import com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapter;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 
-public class IteratingMatcher<T> extends BaseReportingMatcher<T> {
+class IteratingMatcher<T> extends BaseReportingMatcher<T> {
     private final ForeachAdapter<? super T> foreachAdapter;
     private final ElementCheckerFactory elementCheckerFactory;
 
-    public IteratingMatcher(ForeachAdapter<? super T> foreachAdapter, ElementCheckerFactory elementCheckerFactory) {
+    IteratingMatcher(ForeachAdapter<? super T> foreachAdapter, ElementCheckerFactory elementCheckerFactory) {
         this.foreachAdapter = foreachAdapter;
         this.elementCheckerFactory = elementCheckerFactory;
     }
@@ -18,7 +18,7 @@ public class IteratingMatcher<T> extends BaseReportingMatcher<T> {
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
         ElementChecker elementChecker = elementCheckerFactory.create();
         elementChecker.begin(safeTreeReporter);
-        // TODO: ловить исключения (хотя бы проверть instanceof T)
+        // TODO: ловить исключения (хотя бы проверить instanceof T)
         foreachAdapter.run(
                 (T) item,
                 (key, value) -> safeTreeReporter.presentNode(key, value, elementChecker.element(key, value))

@@ -11,10 +11,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.github.alkedr.matchers.reporting.element.checkers.ElementCheckerFactories.compositeElementCheckerFactory;
-import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.arrayForeachAdapter;
-import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.hashMapForeachAdepter;
-import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.iterableForeachAdapter;
-import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.iteratorForeachAdapter;
+import static com.github.alkedr.matchers.reporting.foreach.adapters.ForeachAdapters.*;
 import static com.github.alkedr.matchers.reporting.keys.Keys.*;
 import static java.util.Arrays.asList;
 
@@ -220,11 +217,11 @@ public enum ReportingMatchers {
 
 
     public static <T> ReportingMatcher<T> uncheckedFields() {
-        return new FieldsIteratingMatcher<>(ElementCheckers::noOpElementChecker);
+        return iteratingMatcher(fieldsForeachAdepter(), ElementCheckers::noOpElementChecker);
     }
 
     public static <T> ReportingMatcher<T> uncheckedGetters() {
-        return new GettersIteratingMatcher<>(ElementCheckers::noOpElementChecker);
+        return iteratingMatcher(gettersForeachAdepter(), ElementCheckers::noOpElementChecker);
     }
 
     public static <T> ReportingMatcher<T[]> uncheckedArrayElements() {

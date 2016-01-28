@@ -19,4 +19,12 @@ public class ForeachAdapters {
     public static ForeachAdapter<Map<?, ?>> hashMapForeachAdepter() {
         return HashMapForeachAdepter.INSTANCE;
     }
+
+    public static ForeachAdapter<Object> fieldsForeachAdepter() {
+        return FieldsForeachAdapter.INSTANCE;
+    }
+
+    public static ForeachAdapter<Object> gettersForeachAdepter() {
+        return GettersForeachAdapter.INSTANCE;
+    }
 }

@@ -15,6 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+@Deprecated
 class IteratingMatcherBuilderImpl<T, U> extends BaseReportingMatcherBuilder<T> implements IteratingMatcherBuilder<T, U> {
     private final ForeachAdapter<? super T> foreachAdapter;
     private final Collection<Matcher<U>> elementMatchers;
