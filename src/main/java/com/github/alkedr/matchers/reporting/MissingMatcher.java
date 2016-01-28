@@ -7,6 +7,9 @@ import org.hamcrest.Description;
 class MissingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     static final MissingMatcher<?> INSTANCE = new MissingMatcher<>();
 
+    private MissingMatcher() {
+    }
+
     @Override
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
         safeTreeReporter.incorrectlyPresent();

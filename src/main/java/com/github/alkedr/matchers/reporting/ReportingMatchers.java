@@ -85,13 +85,13 @@ public enum ReportingMatchers {
     }*/
 
     // пробивает доступ к private, protected и package-private полям
-    // если проверяемый объект имеет неправильный класс, то бросает исключение в matches() ?
+    // если проверяемый объект имеет неправильный класс, то BROKEN ?
     public static <T> ExtractingMatcher<T> field(Field field) {
         return value(fieldKey(field));
     }
 
     // пробивает доступ к private, protected и package-private полям
-    // если поле не найдено, то бросает исключение в matches() ?
+    // если поле не найдено, то BROKEN ?
     public static <T> ExtractingMatcher<T> field(String fieldName) {
         return value(fieldByNameKey(fieldName));
     }
@@ -102,14 +102,14 @@ public enum ReportingMatchers {
     }*/
 
 
-    // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
-    // если проверяемый объект имеет неправильный класс, то бросает исключение в matches()
+    // пробивает доступ к private, protected и package-private полям
+    // если проверяемый объект имеет неправильный класс, то BROKEN
     public static <T> ExtractingMatcher<T> method(Method method, Object... arguments) {
         return value(methodKey(method, arguments));
     }
 
-    // НЕ пробивает доступ к private, protected и package-private полям TODO: пофиксить это?
-    // если метод не найден, то бросает исключение в matches()
+    // НЕ пробивает доступ к private, protected и package-private полям, в будущем может измениться TODO: пофиксить это?
+    // если метод не найден, то BROKEN
     public static <T> ExtractingMatcher<T> method(String methodName, Object... arguments) {
         return value(methodByNameKey(methodName, arguments));
     }

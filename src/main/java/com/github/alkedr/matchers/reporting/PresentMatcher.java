@@ -7,6 +7,9 @@ import org.hamcrest.Description;
 class PresentMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     static final PresentMatcher<?> INSTANCE = new PresentMatcher<>();
 
+    private PresentMatcher() {
+    }
+
     @Override
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
         safeTreeReporter.correctlyPresent();

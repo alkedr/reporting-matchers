@@ -53,4 +53,5 @@ public enum Keys {
     }
 
     // TODO: обёртка, которая запрещает мёржить (в основном для methodKey, methodByNameKey и hashMapKey)
+    // TODO: customKey(name, lambda) ?
 }
