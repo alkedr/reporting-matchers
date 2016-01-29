@@ -3,6 +3,8 @@ package com.github.alkedr.matchers.reporting.sub.value.keys;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.MethodNameUtils.createNameForGetterMethodInvocation;
+
 public enum Keys {
     ;
 
@@ -26,20 +28,16 @@ public enum Keys {
         return new MethodByNameKey(methodName, arguments);
     }
 
-    public static ExtractableKey methodByNameKey(String methodName, Class<?>[] argumentClasses, Object... arguments) {
-        return new MethodByNameKey(methodName, argumentClasses, arguments);
-    }
-
     public static ExtractableKey methodKey(Method method, Object... arguments) {
         return new MethodKey(method, arguments);
     }
 
     public static ExtractableKey getterByNameKey(String methodName) {
-        return renamedExtractableKey(methodByNameKey(methodName), MethodNameUtils.createNameForGetterMethodInvocation(methodName));
+        return renamedExtractableKey(methodByNameKey(methodName), createNameForGetterMethodInvocation(methodName));
     }
 
     public static ExtractableKey getterKey(Method method) {
-        return renamedExtractableKey(methodKey(method), MethodNameUtils.createNameForGetterMethodInvocation(method.getName()));
+        return renamedExtractableKey(methodKey(method), createNameForGetterMethodInvocation(method.getName()));
     }
 
     public static ExtractableKey renamedExtractableKey(ExtractableKey originalKey, String name) {
@@ -51,5 +49,5 @@ public enum Keys {
     }
 
     // TODO: обёртка, которая запрещает мёржить (в основном для methodKey, methodByNameKey и hashMapKey)
-    // TODO: customKey(name, lambda) ?
+    // TODO: customKey(name, lambda) ?  customMergeableKey(name, lambda) ?
 }
