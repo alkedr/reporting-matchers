@@ -23,13 +23,13 @@ class MatcherSubValuesChecker implements SubValuesChecker {
     }
 
     @Override
-    public Consumer<SafeTreeReporter> missing(Key key) {
-        return matcherForExtractedValue::runForMissingItem;
+    public Consumer<SafeTreeReporter> absent(Key key) {
+        return matcherForExtractedValue::runForAbsentItem;
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        return matcherForExtractedValue::runForMissingItem;
+        return matcherForExtractedValue::runForAbsentItem;
     }
 
     @Override

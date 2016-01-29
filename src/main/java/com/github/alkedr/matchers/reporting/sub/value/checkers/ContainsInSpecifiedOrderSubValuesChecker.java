@@ -36,7 +36,7 @@ class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
     }
 
     @Override
-    public Consumer<SafeTreeReporter> missing(Key key) {
+    public Consumer<SafeTreeReporter> absent(Key key) {
         return null;
     }
 
@@ -49,7 +49,7 @@ class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
     public void end(SafeTreeReporter safeTreeReporter) {
         while (elementMatchers.hasNext()) {
             ReportingMatcher<?> matcher = elementMatchers.next();
-            safeTreeReporter.missingNode(elementKey(index++), r -> matcher.runForMissingItem(safeTreeReporter));
+            safeTreeReporter.absentNode(elementKey(index++), r -> matcher.runForAbsentItem(safeTreeReporter));
         }
     }
 }

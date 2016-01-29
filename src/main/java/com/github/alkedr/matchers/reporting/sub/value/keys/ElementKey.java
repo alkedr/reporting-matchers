@@ -34,18 +34,18 @@ class ElementKey implements ExtractableKey {
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
         if (item == null) {
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else if (item instanceof Object[]) {
             Object[] array = (Object[]) item;
             if (index < 0 || index >= array.length) {
-                subValuesListener.missing(this);
+                subValuesListener.absent(this);
             } else {
                 subValuesListener.present(this, array[index]);
             }
         } else if (item instanceof List) {
             List<?> list = (List<?>) item;
             if (index < 0 || index >= list.size()) {
-                subValuesListener.missing(this);
+                subValuesListener.absent(this);
             } else {
                 subValuesListener.present(this, list.get(index));
             }
@@ -59,14 +59,14 @@ class ElementKey implements ExtractableKey {
                     return;
                 }
             }
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else {
             subValuesListener.broken(this, new ClassCastException());  // FIXME ClassCastException? своё исключение?
         }
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
-        subValuesListener.missing(this);
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
+        subValuesListener.absent(this);
     }
 }

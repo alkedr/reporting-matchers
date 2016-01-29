@@ -55,8 +55,8 @@ public class ContainsInAnyOrderSubValuesCheckerTest {
         inOrder.verifyNoMoreInteractions();
 
         elementChecker.end(safeTreeReporter);
-        inOrder.verify(simpleTreeReporter).beginMissingNode(elementKey(0));
-        inOrder.verify(simpleTreeReporter).checkForMissingItem("1");
+        inOrder.verify(simpleTreeReporter).beginAbsentNode(elementKey(0));
+        inOrder.verify(simpleTreeReporter).checkForAbsentItem("1");
         inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }

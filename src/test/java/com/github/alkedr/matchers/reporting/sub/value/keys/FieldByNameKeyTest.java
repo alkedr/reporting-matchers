@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldByNameKey;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
@@ -48,7 +48,7 @@ public class FieldByNameKeyTest {
 
     @Test
     public void extractFrom_nullItem() {
-        verifyMissing(
+        verifyAbsent(
                 listener -> myInaccessibleFieldByNameKey.run(null, listener),
                 sameInstance(myInaccessibleFieldByNameKey)
         );
@@ -65,7 +65,7 @@ public class FieldByNameKeyTest {
 
     @Test
     public void extractFrom_itemDoesNotHaveSuchField() {
-        verifyMissing(
+        verifyAbsent(
                 listener -> myInaccessibleFieldByNameKey.run(new Object(), listener),
                 sameInstance(myInaccessibleFieldByNameKey)
         );
@@ -100,9 +100,9 @@ public class FieldByNameKeyTest {
     }
 
     @Test
-    public void extractFrom_missingItem() {
-        verifyMissing(
-                myInaccessibleFieldByNameKey::runForMissingItem,
+    public void extractFrom_absentItem() {
+        verifyAbsent(
+                myInaccessibleFieldByNameKey::runForAbsentItem,
                 sameInstance(myInaccessibleFieldByNameKey)
         );
     }

@@ -17,9 +17,9 @@ class SequenceMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
         for (ReportingMatcher<? super T> reportingMatcher : reportingMatchers) {
-            reportingMatcher.runForMissingItem(safeTreeReporter);
+            reportingMatcher.runForAbsentItem(safeTreeReporter);
         }
     }
 }

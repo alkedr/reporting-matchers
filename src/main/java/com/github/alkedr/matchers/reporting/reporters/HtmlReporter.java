@@ -38,7 +38,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
                 + ".PASSED{background-color:#DFF0D8}"
                 + ".FAILED{background-color:#F2DEDE}"
                 + ".BROKEN{background-color:#FAEBCC}"
-                + ".MISSING{background-color:#F2DEDE;}"
+                + ".ABSENT{background-color:#F2DEDE;}"
                 + ".checks{margin:0px 0px 10px 20px;}"
                 + "</style>"
                 + "</head>"
@@ -63,7 +63,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
     }
 
     @Override
-    public void beginMissingNode(Key key) {
+    public void beginAbsentNode(Key key) {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDiv("value", "(отсутствует)");
         appendDivStart("checks");
@@ -89,18 +89,18 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
-        passedCheck("missing");
+    public void correctlyAbsent() {
+        passedCheck("absent");
     }
 
     @Override
     public void incorrectlyPresent() {
-        failedCheck("missing", "present");
+        failedCheck("absent", "present");
     }
 
     @Override
-    public void incorrectlyMissing() {
-        failedCheck("present", "missing");
+    public void incorrectlyAbsent() {
+        failedCheck("present", "absent");
     }
 
     @Override
@@ -114,7 +114,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
+    public void checkForAbsentItem(String description) {
         appendDiv("FAILED", description);
     }
 

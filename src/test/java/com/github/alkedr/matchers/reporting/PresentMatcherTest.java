@@ -40,9 +40,9 @@ public class PresentMatcherTest {
     }
 
     @Test
-    public void runForMissingItem() {
-        present().runForMissingItem(safeTreeReporter);
-        inOrder.verify(safeTreeReporter).incorrectlyMissing();
+    public void runForAbsentItem() {
+        present().runForAbsentItem(safeTreeReporter);
+        inOrder.verify(safeTreeReporter).incorrectlyAbsent();
         inOrder.verifyNoMoreInteractions();
     }
 }

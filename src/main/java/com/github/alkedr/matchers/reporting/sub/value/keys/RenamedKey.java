@@ -48,9 +48,9 @@ class RenamedKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
         if (originalKey instanceof SubValuesExtractor) {
-            ((SubValuesExtractor<Object>) originalKey).runForMissingItem(new KeyRenamingSubValuesListener(subValuesListener, name));
+            ((SubValuesExtractor<Object>) originalKey).runForAbsentItem(new KeyRenamingSubValuesListener(subValuesListener, name));
         } else {
             throw new RuntimeException();  // FIXME
         }
@@ -72,8 +72,8 @@ class RenamedKey implements ExtractableKey {
         }
 
         @Override
-        public void missing(Key key) {
-            subValuesListener.missing(renamedKey(key, name));
+        public void absent(Key key) {
+            subValuesListener.absent(renamedKey(key, name));
         }
 
         @Override

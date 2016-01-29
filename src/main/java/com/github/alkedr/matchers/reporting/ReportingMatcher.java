@@ -9,5 +9,5 @@ import org.hamcrest.Matcher;
 // TODO: написать в доках интерфейсов как их реализовывать
 public interface ReportingMatcher<T> extends Matcher<T> {
     void run(Object item, SafeTreeReporter safeTreeReporter);
-    void runForMissingItem(SafeTreeReporter safeTreeReporter);
+    void runForAbsentItem(SafeTreeReporter safeTreeReporter);
 }

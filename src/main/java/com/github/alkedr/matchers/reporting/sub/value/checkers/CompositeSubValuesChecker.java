@@ -34,7 +34,7 @@ class CompositeSubValuesChecker implements SubValuesChecker {
     }
 
     @Override
-    public Consumer<SafeTreeReporter> missing(Key key) {
+    public Consumer<SafeTreeReporter> absent(Key key) {
         // TODO
         return null;
     }

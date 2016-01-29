@@ -18,6 +18,6 @@ class HashMapEntriesExtractor implements SubValuesExtractor<Map<?,?>> {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
     }
 }

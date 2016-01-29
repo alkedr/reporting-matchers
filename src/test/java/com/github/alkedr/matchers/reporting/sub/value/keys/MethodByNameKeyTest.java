@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodByNameKey;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodKey;
@@ -54,7 +54,7 @@ public class MethodByNameKeyTest {
     @Test
     public void nullItem() {
         ExtractableKey key = methodByNameKey("returnArg", 1);
-        verifyMissing(
+        verifyAbsent(
                 listener -> key.run(null, listener),
                 sameInstance(key)
         );
@@ -110,10 +110,10 @@ public class MethodByNameKeyTest {
     }
 
     @Test
-    public void extractFromMissingItem() {
+    public void extractFromAbsentItem() {
         ExtractableKey key = methodByNameKey("returnArg", 1);
-        verifyMissing(
-                key::runForMissingItem,
+        verifyAbsent(
+                key::runForAbsentItem,
                 sameInstance(key)
         );
     }

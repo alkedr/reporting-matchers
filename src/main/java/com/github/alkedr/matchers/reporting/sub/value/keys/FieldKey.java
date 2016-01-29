@@ -36,7 +36,7 @@ class FieldKey implements ExtractableKey {
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
         if (item == null && !isStatic(field.getModifiers())) {
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else {
             try {
                 subValuesListener.present(this, FieldUtils.readField(field, item, true));
@@ -49,7 +49,7 @@ class FieldKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
         run(null, subValuesListener);
     }
 }

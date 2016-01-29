@@ -66,9 +66,9 @@ public enum ReportingMatchers {
     }
 
     // TODO: absent?
-    public static <T> ReportingMatcher<T> missing() {
+    public static <T> ReportingMatcher<T> absent() {
         //noinspection unchecked
-        return (ReportingMatcher<T>) MissingMatcher.INSTANCE;
+        return (ReportingMatcher<T>) AbsentMatcher.INSTANCE;
     }
 
 

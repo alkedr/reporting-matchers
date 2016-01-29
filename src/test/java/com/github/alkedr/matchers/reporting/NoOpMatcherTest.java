@@ -39,8 +39,8 @@ public class NoOpMatcherTest {
     }
 
     @Test
-    public void runForMissingItem() {
-        noOp().runForMissingItem(safeTreeReporter);
+    public void runForAbsentItem() {
+        noOp().runForAbsentItem(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
     }
 }

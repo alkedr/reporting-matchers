@@ -34,10 +34,10 @@ public class CompositeSimpleTreeReporterTest {
     }
 
     @Test
-    public void beginMissingNode() {
-        compositeReporter.beginMissingNode(key);
-        inOrder.verify(reporter1).beginMissingNode(same(key));
-        inOrder.verify(reporter2).beginMissingNode(same(key));
+    public void beginAbsentNode() {
+        compositeReporter.beginAbsentNode(key);
+        inOrder.verify(reporter1).beginAbsentNode(same(key));
+        inOrder.verify(reporter2).beginAbsentNode(same(key));
     }
 
     @Test
@@ -62,10 +62,10 @@ public class CompositeSimpleTreeReporterTest {
     }
 
     @Test
-    public void correctlyMissing() {
-        compositeReporter.correctlyMissing();
-        inOrder.verify(reporter1).correctlyMissing();
-        inOrder.verify(reporter2).correctlyMissing();
+    public void correctlyAbsent() {
+        compositeReporter.correctlyAbsent();
+        inOrder.verify(reporter1).correctlyAbsent();
+        inOrder.verify(reporter2).correctlyAbsent();
     }
 
     @Test
@@ -76,10 +76,10 @@ public class CompositeSimpleTreeReporterTest {
     }
 
     @Test
-    public void incorrectlyMissing() {
-        compositeReporter.incorrectlyMissing();
-        inOrder.verify(reporter1).incorrectlyMissing();
-        inOrder.verify(reporter2).incorrectlyMissing();
+    public void incorrectlyAbsent() {
+        compositeReporter.incorrectlyAbsent();
+        inOrder.verify(reporter1).incorrectlyAbsent();
+        inOrder.verify(reporter2).incorrectlyAbsent();
     }
 
     @Test
@@ -97,10 +97,10 @@ public class CompositeSimpleTreeReporterTest {
     }
 
     @Test
-    public void checkForMissingItem() {
-        compositeReporter.checkForMissingItem(S1);
-        inOrder.verify(reporter1).checkForMissingItem(same(S1));
-        inOrder.verify(reporter2).checkForMissingItem(same(S1));
+    public void checkForAbsentItem() {
+        compositeReporter.checkForAbsentItem(S1);
+        inOrder.verify(reporter1).checkForAbsentItem(same(S1));
+        inOrder.verify(reporter2).checkForAbsentItem(same(S1));
     }
 
     @Test

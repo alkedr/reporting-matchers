@@ -34,7 +34,7 @@ class HashMapKey implements ExtractableKey {
     public void run(Object item, SubValuesListener subValuesListener) {
         try {
             if (item == null || !((Map<?, ?>) item).containsKey(key)) {
-                subValuesListener.missing(this);
+                subValuesListener.absent(this);
             } else {
                 subValuesListener.present(this, ((Map<?, ?>) item).get(key));
             }
@@ -44,7 +44,7 @@ class HashMapKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
-        subValuesListener.missing(this);
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
+        subValuesListener.absent(this);
     }
 }

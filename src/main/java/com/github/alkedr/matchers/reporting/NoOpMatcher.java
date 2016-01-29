@@ -13,7 +13,7 @@ class NoOpMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
     }
 
 

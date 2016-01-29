@@ -75,9 +75,9 @@ public class ReportingMatcherAdapterTest {
 
 
     @Test
-    public void runForMissingItem() {
-        toReportingMatcher(is(1)).runForMissingItem(reporter);
-        verify(reporter).checkForMissingItem("is <1>");
+    public void runForAbsentItem() {
+        toReportingMatcher(is(1)).runForAbsentItem(reporter);
+        verify(reporter).checkForAbsentItem("is <1>");
         verifyNoMoreInteractions(reporter);
     }
 

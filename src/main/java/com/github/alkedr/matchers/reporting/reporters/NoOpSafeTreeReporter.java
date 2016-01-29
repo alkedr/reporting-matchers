@@ -10,7 +10,7 @@ class NoOpSafeTreeReporter implements SafeTreeReporter {
     }
 
     @Override
-    public void missingNode(Key key, Consumer<SafeTreeReporter> contents) {
+    public void absentNode(Key key, Consumer<SafeTreeReporter> contents) {
     }
 
     @Override
@@ -22,7 +22,7 @@ class NoOpSafeTreeReporter implements SafeTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
+    public void correctlyAbsent() {
     }
 
     @Override
@@ -30,7 +30,7 @@ class NoOpSafeTreeReporter implements SafeTreeReporter {
     }
 
     @Override
-    public void incorrectlyMissing() {
+    public void incorrectlyAbsent() {
     }
 
     @Override
@@ -42,7 +42,7 @@ class NoOpSafeTreeReporter implements SafeTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
+    public void checkForAbsentItem(String description) {
     }
 
     @Override

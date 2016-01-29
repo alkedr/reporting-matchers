@@ -41,7 +41,7 @@ class MethodByNameKey implements ExtractableKey {
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
         if (item == null) {
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else {
             Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));
             if (method == null) {
@@ -53,7 +53,7 @@ class MethodByNameKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
-        subValuesListener.missing(this);
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
+        subValuesListener.absent(this);
     }
 }

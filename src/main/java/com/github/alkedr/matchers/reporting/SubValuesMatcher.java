@@ -27,7 +27,7 @@ class SubValuesMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
         SubValuesChecker subValuesChecker = subValuesCheckerFactory.create();
         subValuesChecker.begin(safeTreeReporter);
         subValuesChecker.end(safeTreeReporter);
@@ -49,8 +49,8 @@ class SubValuesMatcher<T> extends BaseReportingMatcher<T> {
         }
 
         @Override
-        public void missing(Key key) {
-            safeTreeReporter.missingNode(key, subValuesChecker.missing(key));
+        public void absent(Key key) {
+            safeTreeReporter.absentNode(key, subValuesChecker.absent(key));
         }
 
         @Override

@@ -14,6 +14,6 @@ class IterableElementsExtractor implements SubValuesExtractor<Iterable<?>> {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
     }
 }

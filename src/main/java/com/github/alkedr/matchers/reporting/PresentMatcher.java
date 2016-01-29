@@ -16,8 +16,8 @@ class PresentMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
-        safeTreeReporter.incorrectlyMissing();
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
+        safeTreeReporter.incorrectlyAbsent();
     }
 
     @Override

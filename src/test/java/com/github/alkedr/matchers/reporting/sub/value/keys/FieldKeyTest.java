@@ -2,8 +2,8 @@ package com.github.alkedr.matchers.reporting.sub.value.keys;
 
 import org.junit.Test;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -42,7 +42,7 @@ public class FieldKeyTest {
 
     @Test
     public void extractFrom_nullItem() {
-        verifyMissing(
+        verifyAbsent(
                 listener -> inaccessibleFieldKey.run(null, listener),
                 sameInstance(inaccessibleFieldKey)
         );
@@ -67,9 +67,9 @@ public class FieldKeyTest {
     }
 
     @Test
-    public void extractFrom_inaccessibleStaticField_missingItem() {
+    public void extractFrom_inaccessibleStaticField_absentItem() {
         verifyPresent(
-                staticFieldKey::runForMissingItem,
+                staticFieldKey::runForAbsentItem,
                 sameInstance(staticFieldKey),
                 equalTo(3)
         );
@@ -85,9 +85,9 @@ public class FieldKeyTest {
     }
 
     @Test
-    public void extractFrom_missingItem() {
-        verifyMissing(
-                inaccessibleFieldKey::runForMissingItem,
+    public void extractFrom_absentItem() {
+        verifyAbsent(
+                inaccessibleFieldKey::runForAbsentItem,
                 sameInstance(inaccessibleFieldKey)
         );
     }

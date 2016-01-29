@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
+// TODO: inline?
 public class ExtractorVerificationUtils {
     public static void verifyPresent(Consumer<SubValuesExtractor.SubValuesListener> consumer, Matcher<Key> keyMatcher, Matcher<Object> valueMatcher) {
         SubValuesExtractor.SubValuesListener subValuesListener = mock(SubValuesExtractor.SubValuesListener.class);
@@ -19,10 +20,10 @@ public class ExtractorVerificationUtils {
         verifyNoMoreInteractions(subValuesListener);
     }
 
-    public static void verifyMissing(Consumer<SubValuesExtractor.SubValuesListener> consumer, Matcher<Key> keyMatcher) {
+    public static void verifyAbsent(Consumer<SubValuesExtractor.SubValuesListener> consumer, Matcher<Key> keyMatcher) {
         SubValuesExtractor.SubValuesListener subValuesListener = mock(SubValuesExtractor.SubValuesListener.class);
         consumer.accept(subValuesListener);
-        verify(subValuesListener).missing(argThat(keyMatcher));
+        verify(subValuesListener).absent(argThat(keyMatcher));
         verifyNoMoreInteractions(subValuesListener);
     }
 

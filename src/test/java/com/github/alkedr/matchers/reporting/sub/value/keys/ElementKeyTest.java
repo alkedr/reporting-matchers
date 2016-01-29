@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -42,7 +45,7 @@ public class ElementKeyTest {
     @Test
     public void nullItem() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyMissing(
+        verifyAbsent(
                 listener -> key.run(null, listener),
                 sameInstance(key)
         );
@@ -51,7 +54,7 @@ public class ElementKeyTest {
     @Test
     public void itemHasWrongClass() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyBroken(
+        verifyBroken(
                 listener -> key.run(new Object(), listener),
                 sameInstance(key),
                 ClassCastException.class
@@ -61,7 +64,7 @@ public class ElementKeyTest {
     @Test
     public void array_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        ExtractorVerificationUtils.verifyMissing(
+        verifyAbsent(
                 listener -> key.run(array, listener),
                 sameInstance(key)
         );
@@ -70,7 +73,7 @@ public class ElementKeyTest {
     @Test
     public void array_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyPresent(
+        verifyPresent(
                 listener -> key.run(array, listener),
                 sameInstance(key),
                 equalTo(1)
@@ -80,7 +83,7 @@ public class ElementKeyTest {
     @Test
     public void list_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        ExtractorVerificationUtils.verifyMissing(
+        verifyAbsent(
                 listener -> key.run(list, listener),
                 sameInstance(key)
         );
@@ -89,7 +92,7 @@ public class ElementKeyTest {
     @Test
     public void list_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyPresent(
+        verifyPresent(
                 listener -> key.run(list, listener),
                 sameInstance(key),
                 equalTo(1)
@@ -99,7 +102,7 @@ public class ElementKeyTest {
     @Test
     public void iterable_indexIsGreaterThanSize() {
         ExtractableKey key = elementKey(1);
-        ExtractorVerificationUtils.verifyMissing(
+        verifyAbsent(
                 listener -> key.run(iterable, listener),
                 sameInstance(key)
         );
@@ -108,7 +111,7 @@ public class ElementKeyTest {
     @Test
     public void iterable_elementIsPresent() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyPresent(
+        verifyPresent(
                 listener -> key.run(iterable, listener),
                 sameInstance(key),
                 equalTo(1)
@@ -116,10 +119,10 @@ public class ElementKeyTest {
     }
 
     @Test
-    public void extractFromMissingItem() {
+    public void extractFromAbsentItem() {
         ExtractableKey key = elementKey(0);
-        ExtractorVerificationUtils.verifyMissing(
-                key::runForMissingItem,
+        verifyAbsent(
+                key::runForAbsentItem,
                 sameInstance(key)
         );
     }

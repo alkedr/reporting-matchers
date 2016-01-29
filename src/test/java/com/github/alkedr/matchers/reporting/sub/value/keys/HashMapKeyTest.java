@@ -2,8 +2,8 @@ package com.github.alkedr.matchers.reporting.sub.value.keys;
 
 import org.junit.Test;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapKey;
 import static java.util.Collections.singletonMap;
@@ -34,7 +34,7 @@ public class HashMapKeyTest {
     @Test
     public void nullItem() {
         ExtractableKey key = hashMapKey("1");
-        verifyMissing(
+        verifyAbsent(
                 listener -> key.run(null, listener),
                 sameInstance(key)
         );
@@ -51,9 +51,9 @@ public class HashMapKeyTest {
     }
 
     @Test
-    public void keyIsMissing() {
+    public void keyIsAbsent() {
         ExtractableKey key = hashMapKey("1");
-        verifyMissing(
+        verifyAbsent(
                 listener -> key.run(singletonMap("2", "q"), listener),
                 sameInstance(key)
         );
@@ -90,10 +90,10 @@ public class HashMapKeyTest {
     }
 
     @Test
-    public void extractFrom_missingItem() {
+    public void extractFrom_absentItem() {
         ExtractableKey key = hashMapKey("1");
-        verifyMissing(
-                key::runForMissingItem,
+        verifyAbsent(
+                key::runForAbsentItem,
                 sameInstance(key)
         );
     }

@@ -4,10 +4,10 @@ import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-class MissingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
-    static final MissingMatcher<?> INSTANCE = new MissingMatcher<>();
+class AbsentMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
+    static final AbsentMatcher<?> INSTANCE = new AbsentMatcher<>();
 
-    private MissingMatcher() {
+    private AbsentMatcher() {
     }
 
     @Override
@@ -16,8 +16,8 @@ class MissingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
-        safeTreeReporter.correctlyMissing();
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
+        safeTreeReporter.correctlyAbsent();
     }
 
     @Override
@@ -27,6 +27,6 @@ class MissingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("missing");
+        description.appendText("absent");
     }
 }

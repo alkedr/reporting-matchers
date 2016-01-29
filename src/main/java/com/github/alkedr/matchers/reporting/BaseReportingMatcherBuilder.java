@@ -9,7 +9,7 @@ abstract class BaseReportingMatcherBuilder<T> extends BaseReportingMatcher<T> im
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
-        build().runForMissingItem(safeTreeReporter);
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
+        build().runForAbsentItem(safeTreeReporter);
     }
 }

@@ -10,8 +10,7 @@ public interface SubValuesChecker {
     // TODO: убрать begin()
     void begin(SafeTreeReporter safeTreeReporter);
     Consumer<SafeTreeReporter> present(Key key, Object value);
-    // TODO: absent?
-    Consumer<SafeTreeReporter> missing(Key key);
+    Consumer<SafeTreeReporter> absent(Key key);
     Consumer<SafeTreeReporter> broken(Key key, Throwable throwable);
     void end(SafeTreeReporter safeTreeReporter);
 }

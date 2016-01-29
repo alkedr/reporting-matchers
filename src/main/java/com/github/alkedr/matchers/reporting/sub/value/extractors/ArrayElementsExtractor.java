@@ -15,6 +15,6 @@ class ArrayElementsExtractor implements SubValuesExtractor<Object[]> {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
     }
 }

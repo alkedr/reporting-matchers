@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyMissing;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodKey;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -53,7 +53,7 @@ public class MethodKeyTest {
     @Test
     public void nullItem() {
         ExtractableKey key = methodKey(returnArgMethod, 1);
-        verifyMissing(
+        verifyAbsent(
                 listener -> key.run(null, listener),
                 sameInstance(key)
         );
@@ -130,19 +130,19 @@ public class MethodKeyTest {
     }
 
     @Test
-    public void extractFromMissingItem() {
+    public void extractFromAbsentItem() {
         ExtractableKey key = methodKey(returnArgMethod, 1);
-        verifyMissing(
-                key::runForMissingItem,
+        verifyAbsent(
+                key::runForAbsentItem,
                 sameInstance(key)
         );
     }
 
     @Test
-    public void inaccessibleStaticMethodWithArguments_missingItem() {
+    public void inaccessibleStaticMethodWithArguments_absentItem() {
         ExtractableKey key = methodKey(returnArgStaticMethod, 2);
         verifyPresent(
-                key::runForMissingItem,
+                key::runForAbsentItem,
                 sameInstance(key),
                 equalTo(2)
         );

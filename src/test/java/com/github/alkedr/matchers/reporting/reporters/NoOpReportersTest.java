@@ -10,7 +10,7 @@ public class NoOpReportersTest {
     public void noOpSafeTreeReporter_methodsShouldNotUseArgumentsOrThrow() {
         SafeTreeReporter reporter = noOpSafeTreeReporter();
         reporter.presentNode(null, null, null);
-        reporter.missingNode(null, null);
+        reporter.absentNode(null, null);
         reporter.brokenNode(null, null, null);
         callAllFlatReporterMethods(reporter);
     }
@@ -19,7 +19,7 @@ public class NoOpReportersTest {
     public void noOpSimpleTreeReporter_methodsShouldNotUseArgumentsOrThrow() {
         SimpleTreeReporter reporter = noOpSimpleTreeReporter();
         reporter.beginPresentNode(null, null);
-        reporter.beginMissingNode(null);
+        reporter.beginAbsentNode(null);
         reporter.beginBrokenNode(null, null);
         reporter.endNode();
         callAllFlatReporterMethods(reporter);
@@ -27,12 +27,12 @@ public class NoOpReportersTest {
 
     private static void callAllFlatReporterMethods(FlatReporter reporter) {
         reporter.correctlyPresent();
-        reporter.correctlyMissing();
+        reporter.correctlyAbsent();
         reporter.incorrectlyPresent();
-        reporter.incorrectlyMissing();
+        reporter.incorrectlyAbsent();
         reporter.passedCheck(null);
         reporter.failedCheck(null, null);
-        reporter.checkForMissingItem(null);
+        reporter.checkForAbsentItem(null);
         reporter.brokenCheck(null, null);
     }
 }

@@ -36,8 +36,8 @@ class ReportingMatcherAdapter<T> extends BaseMatcher<T> implements ReportingMatc
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
-        safeTreeReporter.checkForMissingItem(StringDescription.asString(regularMatcher));
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
+        safeTreeReporter.checkForAbsentItem(StringDescription.asString(regularMatcher));
     }
 
     @Override

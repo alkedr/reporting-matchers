@@ -17,9 +17,9 @@ class CompositeSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
+    public void correctlyAbsent() {
         for (SimpleTreeReporter safeTreeReporter : reporters) {
-            safeTreeReporter.correctlyMissing();
+            safeTreeReporter.correctlyAbsent();
         }
     }
 
@@ -31,9 +31,9 @@ class CompositeSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void incorrectlyMissing() {
+    public void incorrectlyAbsent() {
         for (SimpleTreeReporter safeTreeReporter : reporters) {
-            safeTreeReporter.incorrectlyMissing();
+            safeTreeReporter.incorrectlyAbsent();
         }
     }
 
@@ -52,9 +52,9 @@ class CompositeSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
+    public void checkForAbsentItem(String description) {
         for (SimpleTreeReporter safeTreeReporter : reporters) {
-            safeTreeReporter.checkForMissingItem(description);
+            safeTreeReporter.checkForAbsentItem(description);
         }
     }
 
@@ -73,9 +73,9 @@ class CompositeSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void beginMissingNode(Key key) {
+    public void beginAbsentNode(Key key) {
         for (SimpleTreeReporter safeTreeReporter : reporters) {
-            safeTreeReporter.beginMissingNode(key);
+            safeTreeReporter.beginAbsentNode(key);
         }
     }
 

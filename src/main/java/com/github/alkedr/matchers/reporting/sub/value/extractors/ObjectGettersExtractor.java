@@ -32,7 +32,7 @@ class ObjectGettersExtractor implements SubValuesExtractor<Object> {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
     }
 
     private static boolean isGetter(Method method) {

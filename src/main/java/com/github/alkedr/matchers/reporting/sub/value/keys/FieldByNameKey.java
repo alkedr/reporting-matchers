@@ -34,7 +34,7 @@ class FieldByNameKey implements ExtractableKey {
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
         if (item == null) {
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else {
             Field field;
             try {
@@ -46,7 +46,7 @@ class FieldByNameKey implements ExtractableKey {
             }
             if (field == null) {
                 // TODO: broken если нет такого поля?
-                subValuesListener.missing(this);
+                subValuesListener.absent(this);
             } else {
                 Keys.fieldKey(field).run(item, subValuesListener);
             }
@@ -54,7 +54,7 @@ class FieldByNameKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
-        subValuesListener.missing(this);
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
+        subValuesListener.absent(this);
     }
 }

@@ -40,7 +40,7 @@ class MethodKey implements ExtractableKey {
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
         if (item == null && !isStatic(method.getModifiers())) {
-            subValuesListener.missing(this);
+            subValuesListener.absent(this);
         } else {
             try {
                 method.setAccessible(true);
@@ -54,7 +54,7 @@ class MethodKey implements ExtractableKey {
     }
 
     @Override
-    public void runForMissingItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener subValuesListener) {
         run(null, subValuesListener);
     }
 }

@@ -5,44 +5,44 @@ import org.hamcrest.StringDescription;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static com.github.alkedr.matchers.reporting.ReportingMatchers.missing;
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.absent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-public class MissingMatcherTest {
+public class AbsentMatcherTest {
     private final SafeTreeReporter safeTreeReporter = mock(SafeTreeReporter.class);
     private final InOrder inOrder = inOrder(safeTreeReporter);
 
     @Test
     public void singleton() {
-        assertSame(missing(), missing());
+        assertSame(absent(), absent());
     }
 
     @Test
     public void matches() {
-        assertFalse(missing().matches(null));
-        assertFalse(missing().matches(1));
+        assertFalse(absent().matches(null));
+        assertFalse(absent().matches(1));
     }
 
     @Test
     public void describeTo() {
-        assertEquals("missing", StringDescription.asString(missing()));
+        assertEquals("absent", StringDescription.asString(absent()));
     }
 
     @Test
     public void run() {
-        missing().run(null, safeTreeReporter);
+        absent().run(null, safeTreeReporter);
         inOrder.verify(safeTreeReporter).incorrectlyPresent();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void runForMissingItem() {
-        missing().runForMissingItem(safeTreeReporter);
-        inOrder.verify(safeTreeReporter).correctlyMissing();
+    public void runForAbsentItem() {
+        absent().runForAbsentItem(safeTreeReporter);
+        inOrder.verify(safeTreeReporter).correctlyAbsent();
         inOrder.verifyNoMoreInteractions();
     }
 }
