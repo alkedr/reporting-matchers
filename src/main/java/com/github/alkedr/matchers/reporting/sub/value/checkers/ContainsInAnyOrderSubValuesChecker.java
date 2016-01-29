@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.reporters.FlatReporter;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
@@ -14,11 +13,9 @@ import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKe
 
 class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
     private final Iterable<ReportingMatcher<?>> elementMatchers;
-    private final boolean extraElementsAllowed;
     private int index = 0;
 
-    ContainsInAnyOrderSubValuesChecker(Collection<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
-        this.extraElementsAllowed = extraElementsAllowed;
+    ContainsInAnyOrderSubValuesChecker(Collection<ReportingMatcher<?>> elementMatchers) {
         this.elementMatchers = new ArrayList<>(elementMatchers);
     }
 
@@ -37,7 +34,7 @@ class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
                 return safeTreeReporter -> matcher.run(value, safeTreeReporter);
             }
         }
-        return extraElementsAllowed ? reporter -> {} : FlatReporter::incorrectlyPresent;
+        return reporter -> {};
     }
 
     @Override

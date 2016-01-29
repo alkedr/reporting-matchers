@@ -40,7 +40,6 @@ public class ContainsInAnyOrderSubValuesCheckerTest {
         inOrder.verifyNoMoreInteractions();
 
         elementChecker.present(key1, 1).accept(safeTreeReporter);
-        inOrder.verify(simpleTreeReporter).incorrectlyPresent();
         inOrder.verifyNoMoreInteractions();
 
         elementChecker.end(safeTreeReporter);

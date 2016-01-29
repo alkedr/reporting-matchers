@@ -65,7 +65,6 @@ public enum ReportingMatchers {
         return (ReportingMatcher<T>) PresentMatcher.INSTANCE;
     }
 
-    // TODO: absent?
     public static <T> ReportingMatcher<T> absent() {
         //noinspection unchecked
         return (ReportingMatcher<T>) AbsentMatcher.INSTANCE;
@@ -226,19 +225,19 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T[]> uncheckedArrayElements() {
-        return ReportingMatchers.<T>array().extraElementsAreAllowed();
+        return ReportingMatchers.<T>array().build();
     }
 
     public static <T> ReportingMatcher<Iterable<T>> uncheckedIterableElements() {
-        return ReportingMatchers.<T>iterable().extraElementsAreAllowed();
+        return ReportingMatchers.<T>iterable().build();
     }
 
     public static <T> ReportingMatcher<Iterator<T>> uncheckedIteratorElements() {
-        return ReportingMatchers.<T>iterator().extraElementsAreAllowed();
+        return ReportingMatchers.<T>iterator().build();
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> uncheckedMapEntries() {
-        return ReportingMatchers.<K, V>hashMap().extraElementsAreAllowed();
+        return ReportingMatchers.<K, V>hashMap().build();
     }
 
 

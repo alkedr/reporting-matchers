@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
-import com.github.alkedr.matchers.reporting.reporters.FlatReporter;
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
@@ -13,12 +12,10 @@ import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKe
 // TODO: пробовать пропускать элементы?
 class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
     private final Iterator<ReportingMatcher<?>> elementMatchers;
-    private final boolean extraElementsAllowed;
     private int index = 0;
 
-    ContainsInSpecifiedOrderSubValuesChecker(Iterator<ReportingMatcher<?>> elementMatchers, boolean extraElementsAllowed) {
+    ContainsInSpecifiedOrderSubValuesChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
         this.elementMatchers = elementMatchers;
-        this.extraElementsAllowed = extraElementsAllowed;
     }
 
     @Override
@@ -32,7 +29,7 @@ class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
             ReportingMatcher<?> matcher = elementMatchers.next();
             return safeTreeReporter -> matcher.run(value, safeTreeReporter);
         }
-        return extraElementsAllowed ? reporter -> {} : FlatReporter::incorrectlyPresent;
+        return reporter -> {};
     }
 
     @Override

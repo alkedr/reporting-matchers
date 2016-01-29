@@ -31,7 +31,7 @@ public enum SubValueCheckers {
 
 
     public static SubValuesChecker containsInSpecifiedOrder(Iterator<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInSpecifiedOrderSubValuesChecker(elementMatchers, false);
+        return new ContainsInSpecifiedOrderSubValuesChecker(elementMatchers);
     }
 
     public static SubValuesChecker containsInSpecifiedOrder(Iterable<ReportingMatcher<?>> elementMatchers) {
@@ -49,46 +49,15 @@ public enum SubValueCheckers {
     }
 
 
-    public static SubValuesChecker containsInSpecifiedOrderWithExtraElementsAllowed(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, true);
-    }
-
-    // TODO: тут нужны перегрузки для всех примитивных типов?
-    @SafeVarargs
-    public static <T> SubValuesChecker containsInSpecifiedOrderWithExtraElementsAllowed(T... elements) {
-        return containsInSpecifiedOrderWithExtraElementsAllowed(
-                stream(elements)
-                        .map(element -> toReportingMatcher(equalTo(element)))
-                        .collect(toList())
-        );
-    }
-
-
     // TODO: Iterable?
     public static SubValuesChecker containsInAnyOrder(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, false);
+        return new ContainsInAnyOrderSubValuesChecker(elementMatchers);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
     public static <T> SubValuesChecker containsInAnyOrder(T... elements) {
         return containsInAnyOrder(
-                stream(elements)
-                        .map(element -> toReportingMatcher(equalTo(element)))
-                        .collect(toList())
-        );
-    }
-
-
-    // TODO: Iterable?
-    public static SubValuesChecker containsInAnyOrderWithExtraElementsAllowed(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderSubValuesChecker(elementMatchers, true);
-    }
-
-    // TODO: тут нужны перегрузки для всех примитивных типов?
-    @SafeVarargs
-    public static <T> SubValuesChecker containsInAnyOrderWithExtraElementsAllowed(T... elements) {
-        return containsInAnyOrderWithExtraElementsAllowed(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
