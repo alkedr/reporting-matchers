@@ -3,6 +3,8 @@ package com.github.alkedr.matchers.reporting.sub.value.checkers;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.compositeElementChecker;
+
 class CompositeSubValuesCheckerFactory implements SubValuesCheckerFactory {
     private final Iterable<SubValuesCheckerFactory> elementCheckerFactories;
 
@@ -16,6 +18,6 @@ class CompositeSubValuesCheckerFactory implements SubValuesCheckerFactory {
         for (SubValuesCheckerFactory factory : elementCheckerFactories) {
             elementCheckers.add(factory.create());
         }
-        return SubValueCheckers.compositeElementChecker(elementCheckers);
+        return compositeElementChecker(elementCheckers);
     }
 }
