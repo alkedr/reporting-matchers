@@ -3,7 +3,9 @@ package com.github.alkedr.matchers.reporting.sub.value.keys;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
-class MethodNameUtils {
+enum MethodNameUtils {
+    ;
+
     // TODO: что делать с очень большими toString()?
     static String createNameForRegularMethodInvocation(String methodName, Object... arguments) {
         StringBuilder sb = new StringBuilder();
