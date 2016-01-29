@@ -17,12 +17,11 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
 
     @Override
     public void describeTo(Description description) {
-        // TODO
+        description.appendText("<use run() or runForMissingItem() to get description>");
     }
 
     @Override
     public void describeMismatch(Object item, Description description) {
-        // TODO
         super.describeMismatch(item, description);
     }
 }
