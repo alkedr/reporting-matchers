@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.getterKey;
 import static java.lang.Character.isUpperCase;
+import static java.lang.reflect.Modifier.isStatic;
 
 class ObjectGettersExtractor implements SubValuesExtractor<Object> {
     private static final Method objectGetClassMethod;
@@ -24,9 +25,11 @@ class ObjectGettersExtractor implements SubValuesExtractor<Object> {
 
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
-        for (Method method : item.getClass().getMethods()) {
-            if (isGetter(method)) {
-                getterKey(method).run(item, subValuesListener);
+        if (item != null) {
+            for (Method method : item.getClass().getMethods()) {
+                if (isGetter(method)) {
+                    getterKey(method).run(item, subValuesListener);
+                }
             }
         }
     }
@@ -36,6 +39,9 @@ class ObjectGettersExtractor implements SubValuesExtractor<Object> {
     }
 
     private static boolean isGetter(Method method) {
+        if (isStatic(method.getModifiers())) {
+            return false;
+        }
         if (method.getParameterCount() > 0) {
             return false;
         }

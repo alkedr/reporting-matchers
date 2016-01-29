@@ -11,7 +11,9 @@ class ArrayElementsExtractor implements SubValuesExtractor<Object[]> {
 
     @Override
     public void run(Object[] item, SubValuesListener subValuesListener) {
-        iterableElementsExtractor().run(asList(item), subValuesListener);
+        if (item != null) {
+            iterableElementsExtractor().run(asList(item), subValuesListener);
+        }
     }
 
     @Override

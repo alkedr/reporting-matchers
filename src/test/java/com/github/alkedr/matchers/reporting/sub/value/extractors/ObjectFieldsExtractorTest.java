@@ -20,16 +20,28 @@ public class ObjectFieldsExtractorTest {
     }
 
     @Test
-    public void noFields() {
+    public void run_null() {
+        objectFieldsExtractor().run(null, listener);
+        verifyNoMoreInteractions(listener);
+    }
+
+    @Test
+    public void run_noFields() {
         objectFieldsExtractor().run(new MyClassWithoutFields(), listener);
         verifyNoMoreInteractions(listener);
     }
 
     @Test
-    public void twoFields() {
+    public void run_twoFields() {
         objectFieldsExtractor().run(new MyClassWithFields(), listener);
         verify(listener).present(eq(fieldKey(field)), eq(1));
         verify(listener).present(eq(fieldKey(staticField)), eq(2));
+        verifyNoMoreInteractions(listener);
+    }
+
+    @Test
+    public void runForAbsentItem() {
+        objectFieldsExtractor().runForAbsentItem(listener);
         verifyNoMoreInteractions(listener);
     }
 

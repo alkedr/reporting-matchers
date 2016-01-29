@@ -12,9 +12,11 @@ class IteratorElementsExtractor implements SubValuesExtractor<Iterator<?>> {
 
     @Override
     public void run(Iterator<?> item, SubValuesListener subValuesListener) {
-        int i = 0;
-        while (item.hasNext()) {
-            subValuesListener.present(elementKey(i++), item.next());
+        if (item != null) {
+            int i = 0;
+            while (item.hasNext()) {
+                subValuesListener.present(elementKey(i++), item.next());
+            }
         }
     }
 

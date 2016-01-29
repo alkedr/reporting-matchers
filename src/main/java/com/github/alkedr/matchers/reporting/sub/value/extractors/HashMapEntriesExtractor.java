@@ -12,8 +12,10 @@ class HashMapEntriesExtractor implements SubValuesExtractor<Map<?,?>> {
 
     @Override
     public void run(Map<?, ?> item, SubValuesListener subValuesListener) {
-        for (Map.Entry<?, ?> entry : item.entrySet()) {
-            subValuesListener.present(hashMapKey(entry.getKey()), entry.getValue());
+        if (item != null) {
+            for (Map.Entry<?, ?> entry : item.entrySet()) {
+                subValuesListener.present(hashMapKey(entry.getKey()), entry.getValue());
+            }
         }
     }
 

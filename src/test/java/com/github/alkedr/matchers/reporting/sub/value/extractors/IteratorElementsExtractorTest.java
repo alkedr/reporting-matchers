@@ -17,13 +17,19 @@ public class IteratorElementsExtractorTest {
     private final InOrder inOrder = inOrder(listener);
 
     @Test
-    public void empty() {
+    public void run_null() {
+        iteratorElementsExtractor().run(null, listener);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void run_empty() {
         iteratorElementsExtractor().run(emptyList().iterator(), listener);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void threeElements() {
+    public void run_threeElements() {
         Integer element1 = 1;
         Integer element2 = 2;
         Integer element3 = 3;
@@ -31,6 +37,12 @@ public class IteratorElementsExtractorTest {
         inOrder.verify(listener).present(eq(elementKey(0)), same(element1));
         inOrder.verify(listener).present(eq(elementKey(1)), same(element2));
         inOrder.verify(listener).present(eq(elementKey(2)), same(element3));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void runForAbsentItem() {
+        iteratorElementsExtractor().runForAbsentItem(listener);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -21,6 +21,12 @@ public class ObjectGettersExtractorTest {
     }
 
     @Test
+    public void run_null() {
+        objectGettersExtractor().run(null, listener);
+        verifyNoMoreInteractions(listener);
+    }
+
+    @Test
     public void noGetters() {
         objectGettersExtractor().run(new MyClassWithoutGetters(), listener);
         verifyNoMoreInteractions(listener);
@@ -35,6 +41,12 @@ public class ObjectGettersExtractorTest {
         verifyNoMoreInteractions(listener);
     }
 
+    @Test
+    public void runForAbsentItem() {
+        objectGettersExtractor().runForAbsentItem(listener);
+        verifyNoMoreInteractions(listener);
+    }
+
 
     public static class MyClassWithoutGetters {
         public int getter() {
@@ -45,6 +57,10 @@ public class ObjectGettersExtractorTest {
         }
 
         public int getB(int x) {
+            return 0;
+        }
+
+        public static int getC() {
             return 0;
         }
 

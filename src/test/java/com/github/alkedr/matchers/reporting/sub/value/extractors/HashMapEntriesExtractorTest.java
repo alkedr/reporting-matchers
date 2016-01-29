@@ -19,13 +19,19 @@ public class HashMapEntriesExtractorTest {
     private final InOrder inOrder = inOrder(listener);
 
     @Test
-    public void empty() {
+    public void run_null() {
+        hashMapEntriesExtractor().run(null, listener);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void run_empty() {
         hashMapEntriesExtractor().run(emptyMap(), listener);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void threeElements() {
+    public void run_threeElements() {
         Integer[] keys = {1, 2, 3};
         Integer[] values = {4, 5, 6};
         Map<Integer, Integer> map = new HashMap<>();
@@ -36,6 +42,12 @@ public class HashMapEntriesExtractorTest {
         inOrder.verify(listener).present(eq(hashMapKey(keys[0])), same(values[0]));
         inOrder.verify(listener).present(eq(hashMapKey(keys[1])), same(values[1]));
         inOrder.verify(listener).present(eq(hashMapKey(keys[2])), same(values[2]));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void runForAbsentItem() {
+        hashMapEntriesExtractor().runForAbsentItem(listener);
         inOrder.verifyNoMoreInteractions();
     }
 }

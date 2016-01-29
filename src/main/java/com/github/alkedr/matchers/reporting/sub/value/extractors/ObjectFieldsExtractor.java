@@ -14,9 +14,10 @@ class ObjectFieldsExtractor implements SubValuesExtractor<Object> {
 
     @Override
     public void run(Object item, SubValuesListener subValuesListener) {
-        // TODO: check null
-        for (Field field : FieldUtils.getAllFieldsList(item.getClass())) {
-            fieldKey(field).run(item, subValuesListener);
+        if (item != null) {
+            for (Field field : FieldUtils.getAllFieldsList(item.getClass())) {
+                fieldKey(field).run(item, subValuesListener);
+            }
         }
     }
 
