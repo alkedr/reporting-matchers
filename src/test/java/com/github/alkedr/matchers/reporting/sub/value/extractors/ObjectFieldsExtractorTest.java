@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.fieldsForeachAdepter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.objectFieldsExtractor;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -21,13 +21,13 @@ public class ObjectFieldsExtractorTest {
 
     @Test
     public void noFields() {
-        fieldsForeachAdepter().run(new MyClassWithoutFields(), listener);
+        objectFieldsExtractor().run(new MyClassWithoutFields(), listener);
         verifyNoMoreInteractions(listener);
     }
 
     @Test
     public void twoFields() {
-        fieldsForeachAdepter().run(new MyClassWithFields(), listener);
+        objectFieldsExtractor().run(new MyClassWithFields(), listener);
         verify(listener).present(eq(fieldKey(field)), eq(1));
         verify(listener).present(eq(fieldKey(staticField)), eq(2));
         verifyNoMoreInteractions(listener);

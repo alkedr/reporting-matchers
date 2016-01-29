@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting.sub.value.extractors;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.arrayForeachAdapter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.arrayElementsExtractor;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
@@ -16,7 +16,7 @@ public class ArrayElementsExtractorTest {
 
     @Test
     public void empty() {
-        arrayForeachAdapter().run(new Object[]{}, listener);
+        arrayElementsExtractor().run(new Object[]{}, listener);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -25,7 +25,7 @@ public class ArrayElementsExtractorTest {
         Integer element1 = 1;
         Integer element2 = 2;
         Integer element3 = 3;
-        arrayForeachAdapter().run(new Object[]{element1, element2, element3}, listener);
+        arrayElementsExtractor().run(new Object[]{element1, element2, element3}, listener);
         inOrder.verify(listener).present(eq(elementKey(0)), same(element1));
         inOrder.verify(listener).present(eq(elementKey(1)), same(element2));
         inOrder.verify(listener).present(eq(elementKey(2)), same(element3));

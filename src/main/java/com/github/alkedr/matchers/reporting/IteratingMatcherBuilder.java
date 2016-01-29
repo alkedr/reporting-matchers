@@ -22,7 +22,7 @@ public class IteratingMatcherBuilder<T, U> extends BaseReportingMatcherBuilder<T
     }
 
     private IteratingMatcherBuilder(SubValuesExtractor<? super T> subValuesExtractor,
-                                        Collection<Matcher<U>> elementMatchers, boolean orderIsImportant) {
+                                    Collection<Matcher<U>> elementMatchers, boolean orderIsImportant) {
         this.subValuesExtractor = subValuesExtractor;
         this.elementMatchers = elementMatchers;
         this.orderIsImportant = orderIsImportant;

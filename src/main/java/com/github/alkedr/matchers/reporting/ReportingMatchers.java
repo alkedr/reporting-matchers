@@ -1,6 +1,5 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers;
 import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.keys.ExtractableKey;
@@ -158,140 +157,123 @@ public enum ReportingMatchers {
 
 
     public static <T> IteratingMatcherBuilder<T[], T> array() {
-        return new IteratingMatcherBuilder<>(arrayForeachAdapter());
+        return iteratingMatcherBuilder(arrayElementsExtractor());
     }
 
-    public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory... elementCheckerFactories) {
-        return array(asList(elementCheckerFactories));
+    public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerFactory);
     }
 
-    public static <T> ReportingMatcher<T[]> array(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
-        return iteratingMatcher(arrayForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
+    public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerFactories);
+    }
+
+    public static <T> ReportingMatcher<T[]> array(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerFactories);
     }
 
 
     public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable() {
-        return new IteratingMatcherBuilder<>(iterableForeachAdapter());
+        return iteratingMatcherBuilder(iterableElementsExtractor());
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory... elementCheckerFactories) {
-        return iterable(asList(elementCheckerFactories));
+    public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerFactory);
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
-        return iteratingMatcher(iterableForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
+    public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerFactories);
+    }
+
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerFactories);
     }
 
 
     public static <T> IteratingMatcherBuilder<Iterator<T>, T> iterator() {
-        return new IteratingMatcherBuilder<>(iteratorForeachAdapter());
+        return iteratingMatcherBuilder(iteratorElementsExtractor());
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory... elementCheckerFactories) {
-        return iterator(asList(elementCheckerFactories));
+    public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerFactory);
     }
 
-    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
-        return iteratingMatcher(iteratorForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
+    public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerFactories);
+    }
+
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerFactories);
     }
 
 
     public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
-        return new IteratingMatcherBuilder<>(hashMapForeachAdapter());
+        return iteratingMatcherBuilder(hashMapEntriesExtractor());
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory... elementCheckerFactories) {
-        return hashMap(asList(elementCheckerFactories));
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerFactory);
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<SubValuesCheckerFactory> elementCheckerFactories) {
-        return iteratingMatcher(hashMapForeachAdapter(), compositeElementCheckerFactory(elementCheckerFactories));
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerFactories);
     }
 
-
-    public static <T> ReportingMatcher<T> iteratingMatcher(SubValuesExtractor<? super T> foreachAdapter,
-                                                           SubValuesCheckerFactory elementCheckerFactory) {
-        return new SubValuesMatcher<>(foreachAdapter, elementCheckerFactory);
-    }
-
-
-
-    public static <T> ReportingMatcher<T> uncheckedFields() {
-        return iteratingMatcher(fieldsForeachAdepter(), SubValueCheckers::noOpElementChecker);
-    }
-
-    public static <T> ReportingMatcher<T> uncheckedGetters() {
-        return iteratingMatcher(gettersForeachAdepter(), SubValueCheckers::noOpElementChecker);
-    }
-
-    public static <T> ReportingMatcher<T[]> uncheckedArrayElements() {
-        return ReportingMatchers.<T>array().build();
-    }
-
-    public static <T> ReportingMatcher<Iterable<T>> uncheckedIterableElements() {
-        return ReportingMatchers.<T>iterable().build();
-    }
-
-    public static <T> ReportingMatcher<Iterator<T>> uncheckedIteratorElements() {
-        return ReportingMatchers.<T>iterator().build();
-    }
-
-    public static <K, V> ReportingMatcher<Map<K, V>> uncheckedMapEntries() {
-        return ReportingMatchers.<K, V>hashMap().build();
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerFactories);
     }
 
 
-
-    // TODO: рекурсивный матчер, который работает как equalTo
-    // TODO: compare().fields().getters().with(expected)
-    /*public static <T> ComparingReportingMatcherBuilder<T> compare() {
-        return new ComparingReportingMatcherBuilder<>();
-    }*/
-
-
-    //    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields() {
-//        return fields(notStaticNotTransientNotSyntheticFieldsPredicate());
-//    }
-//
-//    public static <T> ComparingReportingMatcherBuilder.FieldsMatcherBuilder<T> fields(Predicate<Field> predicate) {
-//        return new ComparingReportingMatcherBuilder.FieldsMatcherBuilder<>(predicate);
-//    }
-//
-//    public static <T> ComparingReportingMatcherBuilder.MethodsWithoutParametersMatcherBuilder<T> methodsWithoutParameters() {
-//        return methodsWithoutParameters(method -> true);
-//    }
-//
-//    public static <T> ComparingReportingMatcherBuilder.MethodsWithoutParametersMatcherBuilder<T> methodsWithoutParameters(Predicate<Method> predicate) {
-//        return new ComparingReportingMatcherBuilder.MethodsWithoutParametersMatcherBuilder<>(predicate);
-//    }
-//
-//    public static <T> ComparingReportingMatcherBuilder.MethodsWithoutParametersMatcherBuilder<T> getters() {
-//        return getters(method -> true);
-//    }
-//
-//    public static <T> ComparingReportingMatcherBuilder.MethodsWithoutParametersMatcherBuilder<T> getters(Predicate<Method> predicate) {
-//        return methodsWithoutParameters(gettersPredicate().and(predicate));
-//    }
-
-
-    /*public static <E> ReportingMatcher<List<E>> listWithElements(Collection<E> elements) {
-        return listWithElementsMatching(
-                elements.stream()
-                        .map(CoreMatchers::equalTo)
-                        .collect(Collectors.toList())
-        );
+    public static <T> ReportingMatcher<T> objectWithFields() {
+        return iteratingMatcherBuilder(objectFieldsExtractor());
     }
-*/
-    // если не использовать uncheckedIsFail() и извлекатель непроверенных элементов, то непроверенные элементы в конце
-    // будут проигнорированы, даже в отчёт не попадут, в будущем поведение может измениться
-    /*public static <E> ReportingMatcher<List<E>> listWithElementsMatching(Iterable<Matcher<E>> matchers) {
-        Collection<ReportingMatcher<List<E>>> elementMatchers = new ArrayList<>();
-        int i = 0;
-        for (Matcher<E> matcher : matchers) {
-            elementMatchers.add(ReportingMatchers.<E>element(i++).is(matcher));
-        }
-        return sequence(elementMatchers);
-    }*/
+
+    public static <T> ReportingMatcher<T> objectWithFields(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(objectFieldsExtractor(), subValuesCheckerFactory);
+    }
+
+    public static <T> ReportingMatcher<T> objectWithFields(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(objectFieldsExtractor(), subValuesCheckerFactories);
+    }
+
+    public static <T> ReportingMatcher<T> objectWithFields(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(objectFieldsExtractor(), subValuesCheckerFactories);
+    }
 
 
+    public static <T> ReportingMatcher<T> objectWithGetters() {
+        return iteratingMatcherBuilder(objectGettersExtractor());
+    }
+
+    public static <T> ReportingMatcher<T> objectWithGetters(SubValuesCheckerFactory subValuesCheckerFactory) {
+        return subValuesMatcher(objectGettersExtractor(), subValuesCheckerFactory);
+    }
+
+    public static <T> ReportingMatcher<T> objectWithGetters(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(objectGettersExtractor(), subValuesCheckerFactories);
+    }
+
+    public static <T> ReportingMatcher<T> objectWithGetters(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(objectGettersExtractor(), subValuesCheckerFactories);
+    }
+
+
+    public static <T, U> IteratingMatcherBuilder<T, U> iteratingMatcherBuilder(SubValuesExtractor<? super T> subValuesExtractor) {
+        return new IteratingMatcherBuilder<>(subValuesExtractor);
+    }
+
+    public static <T> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor,
+                                                           SubValuesCheckerFactory subValuesCheckerFactory) {
+        return new SubValuesMatcher<>(subValuesExtractor, subValuesCheckerFactory);
+    }
+
+    public static <T> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor,
+                                                           SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return subValuesMatcher(subValuesExtractor, compositeElementCheckerFactory(subValuesCheckerFactories));
+    }
+
+    public static <T> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor,
+                                                           Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return subValuesMatcher(subValuesExtractor, compositeElementCheckerFactory(subValuesCheckerFactories));
+    }
 }

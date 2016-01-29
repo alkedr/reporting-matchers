@@ -6,27 +6,27 @@ import java.util.Map;
 public enum SubValueExtractors {
     ;
 
-    public static SubValuesExtractor<Iterator<?>> iteratorForeachAdapter() {
+    public static SubValuesExtractor<Iterator<?>> iteratorElementsExtractor() {
         return IteratorElementsExtractor.INSTANCE;
     }
 
-    public static SubValuesExtractor<Iterable<?>> iterableForeachAdapter() {
+    public static SubValuesExtractor<Iterable<?>> iterableElementsExtractor() {
         return IterableElementsExtractor.INSTANCE;
     }
 
-    public static SubValuesExtractor<Object[]> arrayForeachAdapter() {
+    public static SubValuesExtractor<Object[]> arrayElementsExtractor() {
         return ArrayElementsExtractor.INSTANCE;
     }
 
-    public static SubValuesExtractor<Map<?, ?>> hashMapForeachAdapter() {
+    public static SubValuesExtractor<Map<?, ?>> hashMapEntriesExtractor() {
         return HashMapEntriesExtractor.INSTANCE;
     }
 
-    public static SubValuesExtractor<Object> fieldsForeachAdepter() {
+    public static SubValuesExtractor<Object> objectFieldsExtractor() {
         return ObjectFieldsExtractor.INSTANCE;
     }
 
-    public static SubValuesExtractor<Object> gettersForeachAdepter() {
+    public static SubValuesExtractor<Object> objectGettersExtractor() {
         return ObjectGettersExtractor.INSTANCE;
     }
 }

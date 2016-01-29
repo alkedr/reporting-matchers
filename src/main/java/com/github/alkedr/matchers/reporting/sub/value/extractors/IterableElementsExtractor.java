@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.sub.value.extractors;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iteratorForeachAdapter;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iteratorElementsExtractor;
 
 class IterableElementsExtractor implements SubValuesExtractor<Iterable<?>> {
     static final IterableElementsExtractor INSTANCE = new IterableElementsExtractor();
@@ -10,7 +10,7 @@ class IterableElementsExtractor implements SubValuesExtractor<Iterable<?>> {
 
     @Override
     public void run(Iterable<?> item, SubValuesListener subValuesListener) {
-        iteratorForeachAdapter().run(item.iterator(), subValuesListener);
+        iteratorElementsExtractor().run(item.iterator(), subValuesListener);
     }
 
     @Override
