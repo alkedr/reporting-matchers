@@ -2,7 +2,7 @@ language: java
 jdk:
   - oraclejdk8
 install: true
-script: mvn test
+script: mvn test -P only-test
 deploy:
   provider: script
   script: ./travis-deploy.sh
