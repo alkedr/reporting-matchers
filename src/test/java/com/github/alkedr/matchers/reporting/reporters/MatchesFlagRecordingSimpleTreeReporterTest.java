@@ -21,8 +21,8 @@ public class MatchesFlagRecordingSimpleTreeReporterTest {
     }
 
     @Test
-    public void beginMissingNode() {
-        reporter.beginMissingNode(null);
+    public void beginAbsentNode() {
+        reporter.beginAbsentNode(null);
         assertTrue(reporter.getMatchesFlag());
     }
 
@@ -45,8 +45,8 @@ public class MatchesFlagRecordingSimpleTreeReporterTest {
     }
 
     @Test
-    public void correctlyMissing() {
-        reporter.correctlyMissing();
+    public void correctlyAbsent() {
+        reporter.correctlyAbsent();
         assertTrue(reporter.getMatchesFlag());
     }
 
@@ -57,8 +57,8 @@ public class MatchesFlagRecordingSimpleTreeReporterTest {
     }
 
     @Test
-    public void incorrectlyMissing() {
-        reporter.incorrectlyMissing();
+    public void incorrectlyAbsent() {
+        reporter.incorrectlyAbsent();
         assertFalse(reporter.getMatchesFlag());
     }
 
@@ -75,8 +75,8 @@ public class MatchesFlagRecordingSimpleTreeReporterTest {
     }
 
     @Test
-    public void checkForMissingItem() {
-        reporter.checkForMissingItem(null);
+    public void checkForAbsentItem() {
+        reporter.checkForAbsentItem(null);
         assertFalse(reporter.getMatchesFlag());
     }
 

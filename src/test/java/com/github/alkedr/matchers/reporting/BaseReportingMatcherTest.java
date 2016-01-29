@@ -24,7 +24,7 @@ public class BaseReportingMatcherTest {
         }
 
         @Override
-        public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+        public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
         }
     }
 
@@ -35,7 +35,7 @@ public class BaseReportingMatcherTest {
         }
 
         @Override
-        public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+        public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
         }
     }
 }

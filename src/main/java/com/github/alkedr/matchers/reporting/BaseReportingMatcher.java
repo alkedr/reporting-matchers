@@ -7,7 +7,6 @@ import org.hamcrest.Description;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.matchesFlagRecordingReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 
-//прежде чем наследоваться от этого класса, убедись, что тебе не подходят ExtractingMatcher и IteratingMatcher
 public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     @Override
     public boolean matches(Object item) {
@@ -18,12 +17,11 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
 
     @Override
     public void describeTo(Description description) {
-        // TODO
+        description.appendText("<use run() or runForMissingItem() to get description>");
     }
 
     @Override
     public void describeMismatch(Object item, Description description) {
-        // TODO
         super.describeMismatch(item, description);
     }
 }

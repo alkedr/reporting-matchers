@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecordingSimpleTreeReporter {
     private boolean matchesFlag = true;
@@ -15,7 +15,7 @@ class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecording
     }
 
     @Override
-    public void beginMissingNode(Key key) {
+    public void beginAbsentNode(Key key) {
     }
 
     @Override
@@ -32,7 +32,7 @@ class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecording
     }
 
     @Override
-    public void correctlyMissing() {
+    public void correctlyAbsent() {
     }
 
     @Override
@@ -41,7 +41,7 @@ class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecording
     }
 
     @Override
-    public void incorrectlyMissing() {
+    public void incorrectlyAbsent() {
         matchesFlag = false;
     }
 
@@ -55,7 +55,7 @@ class MatchesFlagRecordingSimpleTreeReporterImpl implements MatchesFlagRecording
     }
 
     @Override
-    public void checkForMissingItem(String description) {
+    public void checkForAbsentItem(String description) {
         matchesFlag = false;
     }
 

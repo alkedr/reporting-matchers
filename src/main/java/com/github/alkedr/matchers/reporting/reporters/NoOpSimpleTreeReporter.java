@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 class NoOpSimpleTreeReporter implements SimpleTreeReporter {
     @Override
@@ -8,7 +8,7 @@ class NoOpSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void beginMissingNode(Key key) {
+    public void beginAbsentNode(Key key) {
     }
 
     @Override
@@ -24,7 +24,7 @@ class NoOpSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
+    public void correctlyAbsent() {
     }
 
     @Override
@@ -32,7 +32,7 @@ class NoOpSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void incorrectlyMissing() {
+    public void incorrectlyAbsent() {
     }
 
     @Override
@@ -44,7 +44,7 @@ class NoOpSimpleTreeReporter implements SimpleTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
+    public void checkForAbsentItem(String description) {
     }
 
     @Override

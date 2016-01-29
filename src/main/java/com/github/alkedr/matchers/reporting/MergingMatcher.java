@@ -19,9 +19,9 @@ class MergingMatcher<T> extends BaseReportingMatcher<T> {
     }
 
     @Override
-    public void runForMissingItem(SafeTreeReporter safeTreeReporter) {
+    public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
         try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(safeTreeReporter)) {
-            reportingMatcher.runForMissingItem(mergingReporter);
+            reportingMatcher.runForAbsentItem(mergingReporter);
         }
     }
 }

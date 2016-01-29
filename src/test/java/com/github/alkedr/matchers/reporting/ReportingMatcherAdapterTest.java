@@ -1,8 +1,28 @@
 package com.github.alkedr.matchers.reporting;
 
-// TODO: test nulls?  toReportingMatcher(null)
+import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
+import org.junit.Test;
+
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 public class ReportingMatcherAdapterTest {
-    /*@Test
+    private final SafeTreeReporter reporter = mock(SafeTreeReporter.class);
+
+
+    @Test
     public void toReportingMatcherMethod_shouldNotWrapReportingMatchers() {
         Matcher<?> reportingMatcher = mock(ReportingMatcher.class);
         assertSame(reportingMatcher, toReportingMatcher(reportingMatcher));
@@ -33,37 +53,46 @@ public class ReportingMatcherAdapterTest {
 
     @Test
     public void run_passed() {
-        ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
         toReportingMatcher(is(1)).run(1, reporter);
-        verify(reporter).addCheck(ReportingMatcher.Reporter.CheckStatus.PASSED, "is <1>");
+        verify(reporter).passedCheck("is <1>");
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
     public void run_failed() {
-        ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
         toReportingMatcher(is(1)).run(2, reporter);
-        verify(reporter).addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, "Expected: is <1>\n     but: was <2>");
+        verify(reporter).failedCheck("is <1>", "was <2>");
         verifyNoMoreInteractions(reporter);
     }
 
     @Test
     public void run_broken() {
-        ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
-        Matcher<Object> throwingMatcher = mock(Matcher.class);
-        doThrow(new RuntimeException("blah")).when(throwingMatcher).matches(any());
-        toReportingMatcher(throwingMatcher).run(1, reporter);
-        verify(reporter).addCheck(eq(ReportingMatcher.Reporter.CheckStatus.BROKEN),
-                argThat(allOf(containsString("blah"), containsString("run_broken"))));
+        RuntimeException exception = new RuntimeException("blah");
+        toReportingMatcher(new ThrowingMatcher("123", exception)).run(1, reporter);
+        verify(reporter).brokenCheck(eq("123"), same(exception));
         verifyNoMoreInteractions(reporter);
     }
 
 
     @Test
-    public void runForMissingItem() {
-        ReportingMatcher.Reporter reporter = mock(ReportingMatcher.Reporter.class);
-        toReportingMatcher(is(1)).runForMissingItem(reporter);
-        verify(reporter).addCheck(ReportingMatcher.Reporter.CheckStatus.FAILED, "is <1>");
+    public void runForAbsentItem() {
+        toReportingMatcher(is(1)).runForAbsentItem(reporter);
+        verify(reporter).checkForAbsentItem("is <1>");
         verifyNoMoreInteractions(reporter);
-    }*/
+    }
+
+
+    private static class ThrowingMatcher extends CustomMatcher<Object> {
+        private final RuntimeException exception;
+
+        ThrowingMatcher(String description, RuntimeException exception) {
+            super(description);
+            this.exception = exception;
+        }
+
+        @Override
+        public boolean matches(Object item) {
+            throw exception;
+        }
+    }
 }

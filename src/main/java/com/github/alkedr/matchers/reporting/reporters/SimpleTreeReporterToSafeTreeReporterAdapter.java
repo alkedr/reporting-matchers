@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.util.function.Consumer;
 
@@ -19,8 +19,8 @@ class SimpleTreeReporterToSafeTreeReporterAdapter implements SafeTreeReporter {
     }
 
     @Override
-    public void missingNode(Key key, Consumer<SafeTreeReporter> contents) {
-        simpleTreeReporter.beginMissingNode(key);
+    public void absentNode(Key key, Consumer<SafeTreeReporter> contents) {
+        simpleTreeReporter.beginAbsentNode(key);
         contents.accept(this);
         simpleTreeReporter.endNode();
     }
@@ -38,8 +38,8 @@ class SimpleTreeReporterToSafeTreeReporterAdapter implements SafeTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
-        simpleTreeReporter.correctlyMissing();
+    public void correctlyAbsent() {
+        simpleTreeReporter.correctlyAbsent();
     }
 
     @Override
@@ -48,8 +48,8 @@ class SimpleTreeReporterToSafeTreeReporterAdapter implements SafeTreeReporter {
     }
 
     @Override
-    public void incorrectlyMissing() {
-        simpleTreeReporter.incorrectlyMissing();
+    public void incorrectlyAbsent() {
+        simpleTreeReporter.incorrectlyAbsent();
     }
 
     @Override
@@ -63,8 +63,8 @@ class SimpleTreeReporterToSafeTreeReporterAdapter implements SafeTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
-        simpleTreeReporter.checkForMissingItem(description);
+    public void checkForAbsentItem(String description) {
+        simpleTreeReporter.checkForAbsentItem(description);
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.mergingReporter;
 
 class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     protected final SafeTreeReporter reporter;
@@ -19,16 +21,7 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     @Override
     public void close() {
         for (Map.Entry<Node, Collection<Consumer<SafeTreeReporter>>> entry : nodes.entrySet()) {
-            entry.getKey().addToReporter(
-                    reporter,
-                    r -> {  // TODO: сделать лямбду классом
-                        try (CloseableSafeTreeReporter mergingReporter = Reporters.mergingReporter(r)) {
-                            for (Consumer<SafeTreeReporter> contents : entry.getValue()) {
-                                contents.accept(mergingReporter);
-                            }
-                        }
-                    }
-            );
+            entry.getKey().addToReporter(reporter, new MergedNodeContents(entry.getValue()));
         }
         nodes.clear();
     }
@@ -39,8 +32,8 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     }
 
     @Override
-    public void missingNode(Key key, Consumer<SafeTreeReporter> contents) {
-        nodes.computeIfAbsent(new MissingNode(key), k -> new ArrayList<>()).add(contents);
+    public void absentNode(Key key, Consumer<SafeTreeReporter> contents) {
+        nodes.computeIfAbsent(new AbsentNode(key), k -> new ArrayList<>()).add(contents);
     }
 
     @Override
@@ -54,8 +47,8 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     }
 
     @Override
-    public void correctlyMissing() {
-        reporter.correctlyMissing();
+    public void correctlyAbsent() {
+        reporter.correctlyAbsent();
     }
 
     @Override
@@ -64,8 +57,8 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     }
 
     @Override
-    public void incorrectlyMissing() {
-        reporter.incorrectlyMissing();
+    public void incorrectlyAbsent() {
+        reporter.incorrectlyAbsent();
     }
 
     @Override
@@ -79,8 +72,8 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     }
 
     @Override
-    public void checkForMissingItem(String description) {
-        reporter.checkForMissingItem(description);
+    public void checkForAbsentItem(String description) {
+        reporter.checkForAbsentItem(description);
     }
 
     @Override
@@ -126,23 +119,23 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
     }
 
 
-    static class MissingNode implements Node {
+    static class AbsentNode implements Node {
         final Key key;
 
-        MissingNode(Key key) {
+        AbsentNode(Key key) {
             this.key = key;
         }
 
         @Override
         public void addToReporter(SafeTreeReporter safeTreeReporter, Consumer<SafeTreeReporter> contents) {
-            safeTreeReporter.missingNode(key, contents);
+            safeTreeReporter.absentNode(key, contents);
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            MissingNode that = (MissingNode) o;
+            AbsentNode that = (AbsentNode) o;
             return key.equals(that.key);
         }
 
@@ -180,6 +173,24 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
             int result = key.hashCode();
             result = 31 * result + throwable.hashCode();
             return result;
+        }
+    }
+
+
+    private static class MergedNodeContents implements Consumer<SafeTreeReporter> {
+        private final Collection<Consumer<SafeTreeReporter>> contentsCollection;
+
+        MergedNodeContents(Collection<Consumer<SafeTreeReporter>> contentsCollection) {
+            this.contentsCollection = contentsCollection;
+        }
+
+        @Override
+        public void accept(SafeTreeReporter reporter) {
+            try (CloseableSafeTreeReporter mergingReporter = mergingReporter(reporter)) {
+                for (Consumer<SafeTreeReporter> contents : contentsCollection) {
+                    contents.accept(mergingReporter);
+                }
+            }
         }
     }
 }

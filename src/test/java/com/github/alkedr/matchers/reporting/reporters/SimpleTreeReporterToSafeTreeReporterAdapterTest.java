@@ -1,6 +1,6 @@
 package com.github.alkedr.matchers.reporting.reporters;
 
-import com.github.alkedr.matchers.reporting.keys.Key;
+import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -34,9 +34,9 @@ public class SimpleTreeReporterToSafeTreeReporterAdapterTest {
     }
 
     @Test
-    public void missingNode() {
-        safeTreeReporter.missingNode(key, FlatReporter::correctlyPresent);
-        inOrder.verify(simpleTreeReporter).beginMissingNode(same(key));
+    public void absentNode() {
+        safeTreeReporter.absentNode(key, FlatReporter::correctlyPresent);
+        inOrder.verify(simpleTreeReporter).beginAbsentNode(same(key));
         inOrder.verify(simpleTreeReporter).correctlyPresent();
         inOrder.verify(simpleTreeReporter).endNode();
     }
@@ -56,9 +56,9 @@ public class SimpleTreeReporterToSafeTreeReporterAdapterTest {
     }
 
     @Test
-    public void correctlyMissing() {
-        safeTreeReporter.correctlyMissing();
-        inOrder.verify(simpleTreeReporter).correctlyMissing();
+    public void correctlyAbsent() {
+        safeTreeReporter.correctlyAbsent();
+        inOrder.verify(simpleTreeReporter).correctlyAbsent();
     }
 
     @Test
@@ -68,9 +68,9 @@ public class SimpleTreeReporterToSafeTreeReporterAdapterTest {
     }
 
     @Test
-    public void incorrectlyMissing() {
-        safeTreeReporter.incorrectlyMissing();
-        inOrder.verify(simpleTreeReporter).incorrectlyMissing();
+    public void incorrectlyAbsent() {
+        safeTreeReporter.incorrectlyAbsent();
+        inOrder.verify(simpleTreeReporter).incorrectlyAbsent();
     }
 
     @Test
@@ -86,9 +86,9 @@ public class SimpleTreeReporterToSafeTreeReporterAdapterTest {
     }
 
     @Test
-    public void checkForMissingItem() {
-        safeTreeReporter.checkForMissingItem(S1);
-        inOrder.verify(simpleTreeReporter).checkForMissingItem(same(S1));
+    public void checkForAbsentItem() {
+        safeTreeReporter.checkForAbsentItem(S1);
+        inOrder.verify(simpleTreeReporter).checkForAbsentItem(same(S1));
     }
 
     @Test
