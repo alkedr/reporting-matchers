@@ -145,10 +145,7 @@
 
     <profiles>
         <profile>
-            <id>only-test</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
+            <id>deploy-profile</id>
             <build>
                 <plugins>
                     <plugin>

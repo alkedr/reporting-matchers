@@ -15,4 +15,4 @@ gpg --import travis/public.key
 gpg --allow-secret-key-import --import travis/private.key
 
 # деплоим, используя settings.xml с паролями от аккаунта sonatype
-mvn deploy --settings travis/settings.xml
+mvn deploy --settings travis/settings.xml -P deploy-profile
