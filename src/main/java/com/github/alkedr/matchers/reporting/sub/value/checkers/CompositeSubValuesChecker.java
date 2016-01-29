@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 class CompositeSubValuesChecker implements SubValuesChecker {
-    private final Iterable<SubValuesChecker> elementCheckers;
+    private final Iterable<SubValuesChecker> subValuesCheckers;
 
-    CompositeSubValuesChecker(Iterable<SubValuesChecker> elementCheckers) {
-        this.elementCheckers = elementCheckers;
+    CompositeSubValuesChecker(Iterable<SubValuesChecker> subValuesCheckers) {
+        this.subValuesCheckers = subValuesCheckers;
     }
 
     @Override
@@ -22,27 +23,17 @@ class CompositeSubValuesChecker implements SubValuesChecker {
 
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
-        Collection<Consumer<SafeTreeReporter>> results = new ArrayList<>();
-        for (SubValuesChecker elementChecker : elementCheckers) {
-            results.add(elementChecker.present(key, value));
-        }
-        return safeTreeReporter -> {
-            for (Consumer<SafeTreeReporter> result : results) {
-                result.accept(safeTreeReporter);
-            }
-        };
+        return getMergedConsumer(subValuesChecker -> subValuesChecker.present(key, value));
     }
 
     @Override
     public Consumer<SafeTreeReporter> absent(Key key) {
-        // TODO
-        return null;
+        return getMergedConsumer(subValuesChecker -> subValuesChecker.absent(key));
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        // TODO
-        return null;
+        return getMergedConsumer(subValuesChecker -> subValuesChecker.broken(key, throwable));
     }
 
     @Override
@@ -51,8 +42,20 @@ class CompositeSubValuesChecker implements SubValuesChecker {
     }
 
     private void call(BiConsumer<SubValuesChecker, SafeTreeReporter> method, SafeTreeReporter safeTreeReporter) {
-        for (SubValuesChecker elementChecker : elementCheckers) {
+        for (SubValuesChecker elementChecker : subValuesCheckers) {
             method.accept(elementChecker, safeTreeReporter);
         }
+    }
+
+    public Consumer<SafeTreeReporter> getMergedConsumer(Function<SubValuesChecker, Consumer<SafeTreeReporter>> function) {
+        Collection<Consumer<SafeTreeReporter>> results = new ArrayList<>();
+        for (SubValuesChecker subValuesChecker : subValuesCheckers) {
+            results.add(function.apply(subValuesChecker));
+        }
+        return safeTreeReporter -> {
+            for (Consumer<SafeTreeReporter> result : results) {
+                result.accept(safeTreeReporter);
+            }
+        };
     }
 }
