@@ -10,7 +10,6 @@ import org.mockito.InOrder;
 import java.util.function.Consumer;
 
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.compositeElementChecker;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -22,33 +21,33 @@ public class CompositeSubValuesCheckerTest {
     private final Key key = mock(Key.class);
     private final Object value = new Object();
     private final Throwable throwable = new RuntimeException();
-    private final SubValuesChecker elementChecker1 = mock(SubValuesChecker.class);
-    private final SubValuesChecker elementChecker2 = mock(SubValuesChecker.class);
-    private final InOrder inOrder = inOrder(simpleTreeReporter, elementChecker1, elementChecker2);
+    private final SubValuesChecker subValuesChecker1 = mock(SubValuesChecker.class);
+    private final SubValuesChecker subValuesChecker2 = mock(SubValuesChecker.class);
+    private final InOrder inOrder = inOrder(simpleTreeReporter, subValuesChecker1, subValuesChecker2);
 
     @Before
     public void setUp() {
-        when(elementChecker1.present(key, value)).thenReturn(reporter -> reporter.passedCheck("11"));
-        when(elementChecker2.present(key, value)).thenReturn(reporter -> reporter.passedCheck("12"));
-        when(elementChecker1.absent(key)).thenReturn(reporter -> reporter.passedCheck("21"));
-        when(elementChecker2.absent(key)).thenReturn(reporter -> reporter.passedCheck("22"));
-        when(elementChecker1.broken(key, throwable)).thenReturn(reporter -> reporter.passedCheck("31"));
-        when(elementChecker2.broken(key, throwable)).thenReturn(reporter -> reporter.passedCheck("32"));
+        when(subValuesChecker1.present(key, value)).thenReturn(reporter -> reporter.passedCheck("11"));
+        when(subValuesChecker2.present(key, value)).thenReturn(reporter -> reporter.passedCheck("12"));
+        when(subValuesChecker1.absent(key)).thenReturn(reporter -> reporter.passedCheck("21"));
+        when(subValuesChecker2.absent(key)).thenReturn(reporter -> reporter.passedCheck("22"));
+        when(subValuesChecker1.broken(key, throwable)).thenReturn(reporter -> reporter.passedCheck("31"));
+        when(subValuesChecker2.broken(key, throwable)).thenReturn(reporter -> reporter.passedCheck("32"));
     }
 
     @Test
     public void begin() {
-        compositeElementChecker(elementChecker1, elementChecker2).begin(safeTreeReporter);
-        inOrder.verify(elementChecker1).begin(same(safeTreeReporter));
-        inOrder.verify(elementChecker2).begin(same(safeTreeReporter));
+        SubValueCheckers.compositeSubValuesChecker(subValuesChecker1, subValuesChecker2).begin(safeTreeReporter);
+        inOrder.verify(subValuesChecker1).begin(same(safeTreeReporter));
+        inOrder.verify(subValuesChecker2).begin(same(safeTreeReporter));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void present() {
-        Consumer<SafeTreeReporter> result = compositeElementChecker(elementChecker1, elementChecker2).present(key, value);
-        inOrder.verify(elementChecker1).present(same(key), same(value));
-        inOrder.verify(elementChecker2).present(same(key), same(value));
+        Consumer<SafeTreeReporter> result = SubValueCheckers.compositeSubValuesChecker(subValuesChecker1, subValuesChecker2).present(key, value);
+        inOrder.verify(subValuesChecker1).present(same(key), same(value));
+        inOrder.verify(subValuesChecker2).present(same(key), same(value));
         inOrder.verifyNoMoreInteractions();
         result.accept(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).passedCheck("11");
@@ -58,9 +57,9 @@ public class CompositeSubValuesCheckerTest {
 
     @Test
     public void absent() {
-        Consumer<SafeTreeReporter> result = compositeElementChecker(elementChecker1, elementChecker2).absent(key);
-        inOrder.verify(elementChecker1).absent(same(key));
-        inOrder.verify(elementChecker2).absent(same(key));
+        Consumer<SafeTreeReporter> result = SubValueCheckers.compositeSubValuesChecker(subValuesChecker1, subValuesChecker2).absent(key);
+        inOrder.verify(subValuesChecker1).absent(same(key));
+        inOrder.verify(subValuesChecker2).absent(same(key));
         inOrder.verifyNoMoreInteractions();
         result.accept(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).passedCheck("21");
@@ -70,9 +69,9 @@ public class CompositeSubValuesCheckerTest {
 
     @Test
     public void broken() {
-        Consumer<SafeTreeReporter> result = compositeElementChecker(elementChecker1, elementChecker2).broken(key, throwable);
-        inOrder.verify(elementChecker1).broken(same(key), same(throwable));
-        inOrder.verify(elementChecker2).broken(same(key), same(throwable));
+        Consumer<SafeTreeReporter> result = SubValueCheckers.compositeSubValuesChecker(subValuesChecker1, subValuesChecker2).broken(key, throwable);
+        inOrder.verify(subValuesChecker1).broken(same(key), same(throwable));
+        inOrder.verify(subValuesChecker2).broken(same(key), same(throwable));
         inOrder.verifyNoMoreInteractions();
         result.accept(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).passedCheck("31");
@@ -82,9 +81,9 @@ public class CompositeSubValuesCheckerTest {
 
     @Test
     public void end() {
-        compositeElementChecker(elementChecker1, elementChecker2).end(safeTreeReporter);
-        inOrder.verify(elementChecker1).end(same(safeTreeReporter));
-        inOrder.verify(elementChecker2).end(same(safeTreeReporter));
+        SubValueCheckers.compositeSubValuesChecker(subValuesChecker1, subValuesChecker2).end(safeTreeReporter);
+        inOrder.verify(subValuesChecker1).end(same(safeTreeReporter));
+        inOrder.verify(subValuesChecker2).end(same(safeTreeReporter));
         inOrder.verifyNoMoreInteractions();
     }
 }

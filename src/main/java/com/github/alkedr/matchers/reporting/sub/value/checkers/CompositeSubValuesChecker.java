@@ -42,8 +42,8 @@ class CompositeSubValuesChecker implements SubValuesChecker {
     }
 
     private void call(BiConsumer<SubValuesChecker, SafeTreeReporter> method, SafeTreeReporter safeTreeReporter) {
-        for (SubValuesChecker elementChecker : subValuesCheckers) {
-            method.accept(elementChecker, safeTreeReporter);
+        for (SubValuesChecker subValuesChecker : subValuesCheckers) {
+            method.accept(subValuesChecker, safeTreeReporter);
         }
     }
 

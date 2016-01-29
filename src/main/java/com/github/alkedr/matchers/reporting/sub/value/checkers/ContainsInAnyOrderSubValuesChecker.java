@@ -39,12 +39,14 @@ class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
 
     @Override
     public Consumer<SafeTreeReporter> absent(Key key) {
-        return null;
+        index++;
+        return reporter -> {};
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        return null;
+        index++;
+        return reporter -> {};
     }
 
     @Override

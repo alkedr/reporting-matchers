@@ -8,12 +8,12 @@ public class SubValueCheckerFactories {
     }*/
 
 
-    public static SubValuesCheckerFactory compositeElementCheckerFactory(SubValuesCheckerFactory... elementCheckers) {
-        return compositeElementCheckerFactory(asList(elementCheckers));
+    public static SubValuesCheckerFactory compositeSubValuesCheckerFactory(SubValuesCheckerFactory... subValuesCheckerFactories) {
+        return compositeSubValuesCheckerFactory(asList(subValuesCheckerFactories));
     }
 
-    public static SubValuesCheckerFactory compositeElementCheckerFactory(Iterable<SubValuesCheckerFactory> elementCheckers) {
-        return new CompositeSubValuesCheckerFactory(elementCheckers);
+    public static SubValuesCheckerFactory compositeSubValuesCheckerFactory(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+        return new CompositeSubValuesCheckerFactory(subValuesCheckerFactories);
     }
 
 

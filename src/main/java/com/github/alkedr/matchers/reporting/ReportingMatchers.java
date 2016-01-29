@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckerFactories.compositeElementCheckerFactory;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckerFactories.compositeSubValuesCheckerFactory;
 import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.*;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.*;
 import static java.util.Arrays.asList;
@@ -269,11 +269,11 @@ public enum ReportingMatchers {
 
     public static <T> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor,
                                                            SubValuesCheckerFactory... subValuesCheckerFactories) {
-        return subValuesMatcher(subValuesExtractor, compositeElementCheckerFactory(subValuesCheckerFactories));
+        return subValuesMatcher(subValuesExtractor, compositeSubValuesCheckerFactory(subValuesCheckerFactories));
     }
 
     public static <T> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor,
                                                            Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
-        return subValuesMatcher(subValuesExtractor, compositeElementCheckerFactory(subValuesCheckerFactories));
+        return subValuesMatcher(subValuesExtractor, compositeSubValuesCheckerFactory(subValuesCheckerFactories));
     }
 }

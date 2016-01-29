@@ -16,17 +16,17 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public enum SubValueCheckers {
     ;
 
-    public static SubValuesChecker noOpElementChecker() {
+    public static SubValuesChecker noOpSubValuesChecker() {
         return NoOpSubValuesChecker.INSTANCE;
     }
 
 
-    public static SubValuesChecker compositeElementChecker(SubValuesChecker... elementCheckers) {
-        return compositeElementChecker(asList(elementCheckers));
+    public static SubValuesChecker compositeSubValuesChecker(SubValuesChecker... subValuesCheckers) {
+        return compositeSubValuesChecker(asList(subValuesCheckers));
     }
 
-    public static SubValuesChecker compositeElementChecker(Iterable<SubValuesChecker> elementCheckers) {
-        return new CompositeSubValuesChecker(elementCheckers);
+    public static SubValuesChecker compositeSubValuesChecker(Iterable<SubValuesChecker> subValuesCheckers) {
+        return new CompositeSubValuesChecker(subValuesCheckers);
     }
 
 

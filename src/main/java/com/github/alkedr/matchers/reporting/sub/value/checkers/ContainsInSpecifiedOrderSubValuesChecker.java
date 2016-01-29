@@ -6,6 +6,7 @@ import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
@@ -24,22 +25,25 @@ class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
 
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
-        index++;
-        if (elementMatchers.hasNext()) {
-            ReportingMatcher<?> matcher = elementMatchers.next();
-            return safeTreeReporter -> matcher.run(value, safeTreeReporter);
-        }
-        return reporter -> {};
+        return value(reportingMatcher -> reporter -> reportingMatcher.run(value, reporter));
     }
 
     @Override
     public Consumer<SafeTreeReporter> absent(Key key) {
-        return null;
+        return value(reportingMatcher -> reportingMatcher::runForAbsentItem);
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        return null;
+        return value(reportingMatcher -> reportingMatcher::runForAbsentItem);
+    }
+
+    private Consumer<SafeTreeReporter> value(Function<ReportingMatcher<?>, Consumer<SafeTreeReporter>> function) {
+        index++;
+        if (elementMatchers.hasNext()) {
+            return function.apply(elementMatchers.next());
+        }
+        return reporter -> {};
     }
 
     @Override
