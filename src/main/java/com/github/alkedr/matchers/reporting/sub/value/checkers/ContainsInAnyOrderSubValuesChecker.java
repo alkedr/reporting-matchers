@@ -11,12 +11,12 @@ import java.util.function.Consumer;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
-class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
-    private final Iterable<ReportingMatcher<?>> elementMatchers;
+class ContainsInAnyOrderSubValuesChecker<T> implements SubValuesChecker {
+    private final Collection<ReportingMatcher<? super T>> elementMatchers = new ArrayList<>();
     private int index = 0;
 
-    ContainsInAnyOrderSubValuesChecker(Collection<ReportingMatcher<?>> elementMatchers) {
-        this.elementMatchers = new ArrayList<>(elementMatchers);
+    ContainsInAnyOrderSubValuesChecker(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+        elementMatchers.forEach(this.elementMatchers::add);
     }
 
     @Override
@@ -26,9 +26,9 @@ class ContainsInAnyOrderSubValuesChecker implements SubValuesChecker {
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
         index++;
-        Iterator<ReportingMatcher<?>> iterator = elementMatchers.iterator();
+        Iterator<? extends ReportingMatcher<? super T>> iterator = elementMatchers.iterator();
         while (iterator.hasNext()) {
-            ReportingMatcher<?> matcher = iterator.next();
+            ReportingMatcher<? super T> matcher = iterator.next();
             if (matcher.matches(value)) {
                 iterator.remove();
                 return safeTreeReporter -> matcher.run(value, safeTreeReporter);

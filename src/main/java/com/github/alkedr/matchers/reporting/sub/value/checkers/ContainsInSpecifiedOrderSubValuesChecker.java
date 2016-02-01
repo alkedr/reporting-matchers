@@ -11,11 +11,11 @@ import java.util.function.Function;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
 // TODO: пробовать пропускать элементы?
-class ContainsInSpecifiedOrderSubValuesChecker implements SubValuesChecker {
-    private final Iterator<ReportingMatcher<?>> elementMatchers;
+class ContainsInSpecifiedOrderSubValuesChecker<T> implements SubValuesChecker {
+    private final Iterator<? extends ReportingMatcher<? super T>> elementMatchers;
     private int index = 0;
 
-    ContainsInSpecifiedOrderSubValuesChecker(Iterator<ReportingMatcher<?>> elementMatchers) {
+    ContainsInSpecifiedOrderSubValuesChecker(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
         this.elementMatchers = elementMatchers;
     }
 

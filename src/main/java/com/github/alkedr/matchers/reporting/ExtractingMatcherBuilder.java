@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 // field("qwerty").displayedAs("12345").is(equalTo(1))
 // все fluent API методы возвращают новый инстанс
 // TODO: найти способ сделать матчеры в is() типобезопасными в случаях, когда известен их тип
+// TODO: ? super T ?
 public class ExtractingMatcherBuilder<T> extends BaseReportingMatcherBuilder<T> {
     private final ExtractableKey extractor;
     private final String name;
@@ -32,24 +33,23 @@ public class ExtractingMatcherBuilder<T> extends BaseReportingMatcherBuilder<T> 
     }
 
 
-    public ExtractingMatcherBuilder<T> displayedAs(String newName) {
+    public <T2> ExtractingMatcherBuilder<T2> displayedAs(String newName) {
         return new ExtractingMatcherBuilder<>(extractor, newName, matcherForExtractedValue);
     }
 
-    public ExtractingMatcherBuilder<T> is(Object value) {
+    public <T2> ExtractingMatcherBuilder<T2> is(Object value) {
         return is(equalTo(value));
     }
 
-    public ExtractingMatcherBuilder<T> is(Matcher<?> matcher) {
+    public <T2> ExtractingMatcherBuilder<T2> is(Matcher<?> matcher) {
         return new ExtractingMatcherBuilder<>(extractor, name, toReportingMatcher(matcher));
     }
 
-    @SafeVarargs
-    public final <U> ExtractingMatcherBuilder<T> is(Matcher<? super U>... matchers) {
+    public final <T2> ExtractingMatcherBuilder<T2> is(Matcher<?>... matchers) {
         return is(asList(matchers));
     }
 
-    public <U> ExtractingMatcherBuilder<T> is(Iterable<? extends Matcher<? super U>> matchers) {
+    public <T2, U2> ExtractingMatcherBuilder<T2> is(Iterable<? extends Matcher<? super U2>> matchers) {
         return is(merge(toReportingMatchers(matchers)));
     }
 

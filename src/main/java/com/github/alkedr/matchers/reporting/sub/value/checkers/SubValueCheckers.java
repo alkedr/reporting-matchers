@@ -2,7 +2,6 @@ package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
@@ -30,11 +29,11 @@ public enum SubValueCheckers {
     }
 
 
-    public static SubValuesChecker containsInSpecifiedOrder(Iterator<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInSpecifiedOrderSubValuesChecker(elementMatchers);
+    public static <T> SubValuesChecker containsInSpecifiedOrder(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
+        return new ContainsInSpecifiedOrderSubValuesChecker<>(elementMatchers);
     }
 
-    public static SubValuesChecker containsInSpecifiedOrder(Iterable<ReportingMatcher<?>> elementMatchers) {
+    public static <T> SubValuesChecker containsInSpecifiedOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
         return containsInSpecifiedOrder(elementMatchers.iterator());
     }
 
@@ -50,8 +49,8 @@ public enum SubValueCheckers {
 
 
     // TODO: Iterable?
-    public static SubValuesChecker containsInAnyOrder(Collection<ReportingMatcher<?>> elementMatchers) {
-        return new ContainsInAnyOrderSubValuesChecker(elementMatchers);
+    public static <T> SubValuesChecker containsInAnyOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+        return new ContainsInAnyOrderSubValuesChecker<>(elementMatchers);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
