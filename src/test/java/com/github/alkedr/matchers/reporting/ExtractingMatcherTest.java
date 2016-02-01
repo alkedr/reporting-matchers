@@ -1,6 +1,7 @@
 package com.github.alkedr.matchers.reporting;
 
 // TODO: протестировать merge!
+@Deprecated
 public class ExtractingMatcherTest {
     /*private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final InOrder inOrder = inOrder(simpleTreeReporter);

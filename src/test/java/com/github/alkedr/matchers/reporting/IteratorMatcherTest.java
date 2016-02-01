@@ -1,5 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
+@Deprecated
 public class IteratorMatcherTest {
     /*private final SimpleTreeReporter simpleTreeReporter = mock(SimpleTreeReporter.class);
     private final SafeTreeReporter safeTreeReporter = simpleTreeReporterToSafeTreeReporter(simpleTreeReporter);
