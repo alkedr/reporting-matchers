@@ -6,6 +6,7 @@ import org.hamcrest.Matcher;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.subValuesMatcher;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatchers;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInAnyOrder;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrder;
@@ -75,7 +76,7 @@ public class IteratingMatcherBuilder<T, U> extends BaseReportingMatcherBuilder<T
 
     @Override
     public ReportingMatcher<T> build() {
-        return new SubValuesMatcher<>(
+        return subValuesMatcher(
                 subValuesExtractor,
                 orderIsImportant
                         ? () -> containsInSpecifiedOrder(toReportingMatchers(elementMatchers))
