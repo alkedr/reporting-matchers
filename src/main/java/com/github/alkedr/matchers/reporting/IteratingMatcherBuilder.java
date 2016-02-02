@@ -31,37 +31,37 @@ public class IteratingMatcherBuilder<T, U> extends BaseReportingMatcherBuilder<T
 
 
     @SafeVarargs
-    public final <T2, U2> IteratingMatcherBuilder<T2, U2> withElements(U2... newElements) {
+    public final IteratingMatcherBuilder<T, U> withElements(U... newElements) {
         return withElements(asList(newElements));
     }
 
-    public <T2, U2> IteratingMatcherBuilder<T2, U2> withElements(Iterable<U2> newElements) {
+    public IteratingMatcherBuilder<T, U> withElements(Iterable<U> newElements) {
         // TODO: конвертировать на лету?
-        Collection<Matcher<U2>> matchers = new ArrayList<>();
-        for (U2 element : newElements) {
+        Collection<Matcher<U>> matchers = new ArrayList<>();
+        for (U element : newElements) {
             matchers.add(equalTo(element));
         }
         return withElementsMatching(matchers);
     }
 
     @SafeVarargs
-    public final <T2, U2> IteratingMatcherBuilder<T2, U2> withElementsMatching(Matcher<U2>... newElementMatchers) {
+    public final IteratingMatcherBuilder<T, U> withElementsMatching(Matcher<U>... newElementMatchers) {
         return withElementsMatching(asList(newElementMatchers));
     }
 
-    public <T2, U2> IteratingMatcherBuilder<T2, U2> withElementsMatching(Collection<? extends Matcher<? super U2>> newElementMatchers) {
-        return new IteratingMatcherBuilder<>((SubValuesExtractor<? super T2>) subValuesExtractor, newElementMatchers, orderIsImportant);
+    public IteratingMatcherBuilder<T, U> withElementsMatching(Collection<? extends Matcher<? super U>> newElementMatchers) {
+        return new IteratingMatcherBuilder<>(subValuesExtractor, newElementMatchers, orderIsImportant);
     }
 
-    public <T2, U2> IteratingMatcherBuilder<T2, U2> orderIsImportant(boolean newValue) {
-        return new IteratingMatcherBuilder<>((SubValuesExtractor<? super T2>) subValuesExtractor, (Collection<? extends Matcher<? super U2>>) elementMatchers, newValue);
+    public IteratingMatcherBuilder<T, U> orderIsImportant(boolean newValue) {
+        return new IteratingMatcherBuilder<>(subValuesExtractor, elementMatchers, newValue);
     }
 
-    public <T2, U2> IteratingMatcherBuilder<T2, U2> orderIsImportant() {
+    public IteratingMatcherBuilder<T, U> orderIsImportant() {
         return orderIsImportant(true);
     }
 
-    public <T2, U2> IteratingMatcherBuilder<T2, U2> orderIsNotImportant() {
+    public IteratingMatcherBuilder<T, U> orderIsNotImportant() {
         return orderIsImportant(false);
     }
 
