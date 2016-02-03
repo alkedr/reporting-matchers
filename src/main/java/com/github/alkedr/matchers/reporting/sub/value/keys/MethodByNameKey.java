@@ -1,15 +1,10 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodKey;
-
-class MethodByNameKey implements ExtractableKey {
+class MethodByNameKey implements Key {
     private final String methodName;
     private final Object[] arguments;
 
@@ -36,24 +31,5 @@ class MethodByNameKey implements ExtractableKey {
     @Override
     public String asString() {
         return MethodNameUtils.createNameForRegularMethodInvocation(methodName, arguments);
-    }
-
-    @Override
-    public void run(Object item, SubValuesListener subValuesListener) {
-        if (item == null) {
-            subValuesListener.absent(this);
-        } else {
-            Method method = MethodUtils.getMatchingAccessibleMethod(item.getClass(), methodName, ClassUtils.toClass(arguments));
-            if (method == null) {
-                subValuesListener.broken(this, new NoSuchMethodException(item.getClass().getName() + "." + toString()));
-            } else {
-                methodKey(method, arguments).run(item, subValuesListener);
-            }
-        }
-    }
-
-    @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
-        subValuesListener.absent(this);
     }
 }

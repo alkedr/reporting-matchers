@@ -26,7 +26,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedEmpty_gotEmpty() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder();
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder().get();
         subValuesChecker.begin(safeTreeReporter);
         subValuesChecker.end(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -34,7 +34,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedEmpty_gotOneItem() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder();
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder().get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -48,7 +48,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotEmpty() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -62,7 +62,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneItem() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -77,7 +77,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedTwoItems_gotTwoItemsInDifferentOrder() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2))));
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2)))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -96,7 +96,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneAbsent() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -111,7 +111,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneBroken() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1"))));
+        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();

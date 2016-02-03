@@ -4,13 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodByNameKey;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.methodKey;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -51,7 +45,7 @@ public class MethodByNameKeyTest {
     }
 
 
-    @Test
+    /*@Test
     public void nullItem() {
         ExtractableKey key = methodByNameKey("returnArg", 1);
         verifyAbsent(
@@ -116,7 +110,7 @@ public class MethodByNameKeyTest {
                 key::runForAbsentItem,
                 sameInstance(key)
         );
-    }
+    }*/
 
 
     public static class MyClass {

@@ -1,18 +1,7 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
-import org.junit.Test;
-
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 public class FieldKeyTest {
-    private final ExtractableKey inaccessibleFieldKey = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
+    /*private final ExtractableKey inaccessibleFieldKey = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
     private final ExtractableKey staticFieldKey = fieldKey(MyClass.class.getDeclaredField("MY_STATIC_FIELD"));
 
     public FieldKeyTest() throws NoSuchFieldException {
@@ -95,5 +84,5 @@ public class FieldKeyTest {
     private static class MyClass {
         private final int myInaccessibleField = 2;
         private static final int MY_STATIC_FIELD = 3;
-    }
+    }*/
 }

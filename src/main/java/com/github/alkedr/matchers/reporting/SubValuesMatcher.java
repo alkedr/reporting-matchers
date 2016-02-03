@@ -2,39 +2,40 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesChecker;
-import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
+import java.util.function.Supplier;
+
 // TODO: generic-параметр для типа элемента в SubValuesExtractor
 // TODO: generic-параметр для типа элемента в SubValuesCheckerFactory
-class SubValuesMatcher<T> extends BaseReportingMatcher<T> {
-    private final SubValuesExtractor<? super T> subValuesExtractor;
-    private final SubValuesCheckerFactory subValuesCheckerFactory;
+class SubValuesMatcher<T, S> extends BaseReportingMatcher<T> {
+    private final SubValuesExtractor<T, S> subValuesExtractor;
+    private final Supplier<SubValuesChecker> subValuesCheckerSupplier;
 
-    SubValuesMatcher(SubValuesExtractor<? super T> subValuesExtractor, SubValuesCheckerFactory subValuesCheckerFactory) {
+    SubValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Supplier<SubValuesChecker> subValuesCheckerSupplier) {
         this.subValuesExtractor = subValuesExtractor;
-        this.subValuesCheckerFactory = subValuesCheckerFactory;
+        this.subValuesCheckerSupplier = subValuesCheckerSupplier;
     }
 
     @Override
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
-        SubValuesChecker subValuesChecker = subValuesCheckerFactory.create();
+        SubValuesChecker subValuesChecker = subValuesCheckerSupplier.get();
         subValuesChecker.begin(safeTreeReporter);
-        // TODO: проверять instanceof T
-        subValuesExtractor.run((T) item, new CheckingSubValuesListener(safeTreeReporter, subValuesChecker));
+        // TODO: проверять instanceof T (ловить ClassCastException?)
+        subValuesExtractor.run((T) item, new CheckingSubValuesListener<>(safeTreeReporter, subValuesChecker));
         subValuesChecker.end(safeTreeReporter);
     }
 
     @Override
     public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
-        SubValuesChecker subValuesChecker = subValuesCheckerFactory.create();
+        SubValuesChecker subValuesChecker = subValuesCheckerSupplier.get();
         subValuesChecker.begin(safeTreeReporter);
         subValuesChecker.end(safeTreeReporter);
     }
 
 
-    private static class CheckingSubValuesListener implements SubValuesExtractor.SubValuesListener {
+    private static class CheckingSubValuesListener<S> implements SubValuesExtractor.SubValuesListener<S> {
         private final SafeTreeReporter safeTreeReporter;
         private final SubValuesChecker subValuesChecker;
 

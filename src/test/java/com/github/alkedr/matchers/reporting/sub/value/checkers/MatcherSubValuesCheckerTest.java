@@ -20,8 +20,8 @@ public class MatcherSubValuesCheckerTest {
         Object value = new Object();
         Throwable throwable = new RuntimeException();
         SafeTreeReporter safeTreeReporter = mock(SafeTreeReporter.class);
-        ReportingMatcher<?> reportingMatcher = mock(ReportingMatcher.class);
-        SubValuesChecker matcherSubValuesChecker = matcherSubValuesChecker(reportingMatcher);
+        ReportingMatcher<Object> reportingMatcher = mock(ReportingMatcher.class);
+        SubValuesChecker matcherSubValuesChecker = matcherSubValuesChecker(reportingMatcher).get();
 
         matcherSubValuesChecker.begin(safeTreeReporter);
         Consumer<SafeTreeReporter> consumer1 = matcherSubValuesChecker.present(key, value);

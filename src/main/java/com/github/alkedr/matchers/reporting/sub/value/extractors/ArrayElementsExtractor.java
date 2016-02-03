@@ -1,22 +1,21 @@
 package com.github.alkedr.matchers.reporting.sub.value.extractors;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iterableElementsExtractor;
 import static java.util.Arrays.asList;
 
-class ArrayElementsExtractor implements SubValuesExtractor<Object[]> {
-    static final ArrayElementsExtractor INSTANCE = new ArrayElementsExtractor();
+class ArrayElementsExtractor<T> implements SubValuesExtractor<T[], T> {
+    static final ArrayElementsExtractor INSTANCE = new ArrayElementsExtractor<>();
 
     private ArrayElementsExtractor() {
     }
 
     @Override
-    public void run(Object[] item, SubValuesListener subValuesListener) {
+    public void run(T[] item, SubValuesListener<T> subValuesListener) {
         if (item != null) {
-            iterableElementsExtractor().run(asList(item), subValuesListener);
+            SubValuesExtractors.<T>iterableElements().run(asList(item), subValuesListener);
         }
     }
 
     @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener<T> subValuesListener) {
     }
 }

@@ -1,13 +1,10 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
-import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import org.apache.commons.lang3.Validate;
-
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.renamedKey;
 
 // не объединяется с непереименованным Key
 // TODO: объединяться с непереименованным Key если названия совпадают?
-class RenamedKey implements ExtractableKey {
+class RenamedKey implements Key {
     private final Key originalKey;
     private final String name;
 
@@ -36,49 +33,5 @@ class RenamedKey implements ExtractableKey {
     @Override
     public String asString() {
         return name;
-    }
-
-    @Override
-    public void run(Object item, SubValuesListener subValuesListener) {
-        if (originalKey instanceof SubValuesExtractor) {
-            ((SubValuesExtractor<Object>) originalKey).run(item, new KeyRenamingSubValuesListener(subValuesListener, name));
-        } else {
-            throw new RuntimeException();  // FIXME
-        }
-    }
-
-    @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
-        if (originalKey instanceof SubValuesExtractor) {
-            ((SubValuesExtractor<Object>) originalKey).runForAbsentItem(new KeyRenamingSubValuesListener(subValuesListener, name));
-        } else {
-            throw new RuntimeException();  // FIXME
-        }
-    }
-
-
-    private static class KeyRenamingSubValuesListener implements SubValuesListener {
-        private final SubValuesListener subValuesListener;
-        private final String name;
-
-        KeyRenamingSubValuesListener(SubValuesListener subValuesListener, String name) {
-            this.subValuesListener = subValuesListener;
-            this.name = name;
-        }
-
-        @Override
-        public void present(Key key, Object value) {
-            subValuesListener.present(renamedKey(key, name), value);
-        }
-
-        @Override
-        public void absent(Key key) {
-            subValuesListener.absent(renamedKey(key, name));
-        }
-
-        @Override
-        public void broken(Key key, Throwable throwable) {
-            subValuesListener.broken(renamedKey(key, name), throwable);
-        }
     }
 }

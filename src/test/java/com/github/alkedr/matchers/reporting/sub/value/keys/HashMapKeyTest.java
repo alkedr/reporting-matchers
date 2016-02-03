@@ -1,20 +1,7 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
-import org.junit.Test;
-
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyAbsent;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyBroken;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.ExtractorVerificationUtils.verifyPresent;
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapKey;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
 public class HashMapKeyTest {
-    @Test
+    /*@Test
     public void asStringTest() {
         assertEquals("123", hashMapKey(123).asString());
     }
@@ -96,5 +83,5 @@ public class HashMapKeyTest {
                 key::runForAbsentItem,
                 sameInstance(key)
         );
-    }
+    }*/
 }
