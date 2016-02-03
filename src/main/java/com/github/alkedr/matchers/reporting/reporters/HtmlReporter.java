@@ -110,7 +110,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
 
     @Override
     public void failedCheck(String expected, String actual) {
-        appendDiv("FAILED", "Expected: " + escapeHtml4(expected) + "\n     but: was " + actual);
+        appendDiv("FAILED", "Expected: " + escapeHtml4(expected) + "\n     but: " + actual);
     }
 
     @Override
