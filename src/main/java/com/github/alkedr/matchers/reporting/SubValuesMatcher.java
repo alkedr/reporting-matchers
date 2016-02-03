@@ -2,24 +2,25 @@ package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesChecker;
-import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
+
+import java.util.function.Supplier;
 
 // TODO: generic-параметр для типа элемента в SubValuesExtractor
 // TODO: generic-параметр для типа элемента в SubValuesCheckerFactory
 class SubValuesMatcher<T, S> extends BaseReportingMatcher<T> {
     private final SubValuesExtractor<T, S> subValuesExtractor;
-    private final SubValuesCheckerFactory<S> subValuesCheckerFactory;
+    private final Supplier<SubValuesChecker> subValuesCheckerSupplier;
 
-    SubValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, SubValuesCheckerFactory<S> subValuesCheckerFactory) {
+    SubValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Supplier<SubValuesChecker> subValuesCheckerSupplier) {
         this.subValuesExtractor = subValuesExtractor;
-        this.subValuesCheckerFactory = subValuesCheckerFactory;
+        this.subValuesCheckerSupplier = subValuesCheckerSupplier;
     }
 
     @Override
     public void run(Object item, SafeTreeReporter safeTreeReporter) {
-        SubValuesChecker subValuesChecker = subValuesCheckerFactory.createSubValuesChecker();
+        SubValuesChecker subValuesChecker = subValuesCheckerSupplier.get();
         subValuesChecker.begin(safeTreeReporter);
         // TODO: проверять instanceof T (ловить ClassCastException?)
         subValuesExtractor.run((T) item, new CheckingSubValuesListener<>(safeTreeReporter, subValuesChecker));
@@ -28,7 +29,7 @@ class SubValuesMatcher<T, S> extends BaseReportingMatcher<T> {
 
     @Override
     public void runForAbsentItem(SafeTreeReporter safeTreeReporter) {
-        SubValuesChecker subValuesChecker = subValuesCheckerFactory.createSubValuesChecker();
+        SubValuesChecker subValuesChecker = subValuesCheckerSupplier.get();
         subValuesChecker.begin(safeTreeReporter);
         subValuesChecker.end(safeTreeReporter);
     }

@@ -3,6 +3,7 @@ package com.github.alkedr.matchers.reporting.sub.value.checkers;
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static java.util.Arrays.asList;
@@ -15,8 +16,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public enum SubValueCheckers {
     ;
 
-    public static SubValuesChecker noOpSubValuesChecker() {
-        return NoOpSubValuesChecker.INSTANCE;
+    public static Supplier<SubValuesChecker> noOpSubValuesChecker() {
+        return () -> NoOpSubValuesChecker.INSTANCE;
     }
 
 
@@ -29,17 +30,27 @@ public enum SubValueCheckers {
     }
 
 
-    public static <T> SubValuesChecker containsInSpecifiedOrder(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
-        return new ContainsInSpecifiedOrderSubValuesChecker<>(elementMatchers);
+    @SafeVarargs
+    public static Supplier<SubValuesChecker> compositeSubValuesCheckerSupplier(Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return compositeSubValuesCheckerSupplier(asList(subValuesCheckerSuppliers));
     }
 
-    public static <T> SubValuesChecker containsInSpecifiedOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+    public static Supplier<SubValuesChecker> compositeSubValuesCheckerSupplier(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return new CompositeSubValuesCheckerSupplier(subValuesCheckerSuppliers);
+    }
+
+
+    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
+        return () -> new ContainsInSpecifiedOrderSubValuesChecker<>(elementMatchers);
+    }
+
+    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
         return containsInSpecifiedOrder(elementMatchers.iterator());
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
-    public static <T> SubValuesChecker containsInSpecifiedOrder(T... elements) {
+    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(T... elements) {
         return containsInSpecifiedOrder(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
@@ -49,13 +60,13 @@ public enum SubValueCheckers {
 
 
     // TODO: Iterable?
-    public static <T> SubValuesChecker containsInAnyOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
-        return new ContainsInAnyOrderSubValuesChecker<>(elementMatchers);
+    public static <T> Supplier<SubValuesChecker> containsInAnyOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+        return () -> new ContainsInAnyOrderSubValuesChecker<>(elementMatchers);
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
-    public static <T> SubValuesChecker containsInAnyOrder(T... elements) {
+    public static <T> Supplier<SubValuesChecker> containsInAnyOrder(T... elements) {
         return containsInAnyOrder(
                 stream(elements)
                         .map(element -> toReportingMatcher(equalTo(element)))
@@ -65,8 +76,8 @@ public enum SubValueCheckers {
 
 
     // TODO: переименовать? allSubValuesMatch() ?
-    public static <T> SubValuesChecker matcherSubValuesChecker(ReportingMatcher<? super T> matcherForExtractedValue) {
-        return new MatcherSubValuesChecker(matcherForExtractedValue);
+    public static <T> Supplier<SubValuesChecker> matcherSubValuesChecker(ReportingMatcher<? super T> matcherForExtractedValue) {
+        return () -> new MatcherSubValuesChecker(matcherForExtractedValue);
     }
 
 

@@ -1,7 +1,6 @@
 package com.github.alkedr.matchers.reporting;
 
-import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers;
-import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesCheckerFactory;
+import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesChecker;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors;
 import org.hamcrest.Matcher;
@@ -9,9 +8,11 @@ import org.hamcrest.Matcher;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Supplier;
 
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckerFactories.compositeSubValuesCheckerFactory;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.compositeSubValuesCheckerSupplier;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.matcherSubValuesChecker;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.noOpSubValuesChecker;
 import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -83,7 +84,7 @@ public enum ReportingMatchers {
     }
 
     public static <T, S> ReportingMatcher<T> value(SubValuesExtractor<T, S> subValuesExtractor, ReportingMatcher<? super S> reportingMatcher) {
-        return subValuesMatcher(subValuesExtractor, () -> matcherSubValuesChecker(reportingMatcher));
+        return subValuesMatcher(subValuesExtractor, matcherSubValuesChecker(reportingMatcher));
     }
 
     @SafeVarargs   // TODO: требовать наличия хотя бы одного матчера!
@@ -442,55 +443,55 @@ public enum ReportingMatchers {
 
 
     @SafeVarargs
-    public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory<T>... subValuesCheckerFactories) {
-        return iterable(asList(subValuesCheckerFactories));
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return iterable(asList(subValuesCheckerSuppliers));
     }
 
-    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories) {
-        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerFactories);
-    }
-
-    @SafeVarargs
-    public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory<T>... subValuesCheckerFactories) {
-        return iterator(asList(subValuesCheckerFactories));
-    }
-
-    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories) {
-        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerFactories);
+    public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerSuppliers);
     }
 
     @SafeVarargs
-    public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory<T>... subValuesCheckerFactories) {
-        return array(asList(subValuesCheckerFactories));
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return iterator(asList(subValuesCheckerSuppliers));
     }
 
-    public static <T> ReportingMatcher<T[]> array(Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories) {
-        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerFactories);
+    public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerSuppliers);
     }
 
     @SafeVarargs
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory<V>... subValuesCheckerFactories) {
-        return hashMap(asList(subValuesCheckerFactories));
+    public static <T> ReportingMatcher<T[]> array(Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return array(asList(subValuesCheckerSuppliers));
     }
 
-    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<SubValuesCheckerFactory<V>> subValuesCheckerFactories) {
-        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerFactories);
+    public static <T> ReportingMatcher<T[]> array(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerSuppliers);
+    }
+
+    @SafeVarargs
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return hashMap(asList(subValuesCheckerSuppliers));
+    }
+
+    public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerSuppliers);
     }
 
 
     @SafeVarargs
-    public static <T, S> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, SubValuesCheckerFactory<S>... subValuesCheckerFactories) {
-        return subValuesMatcher(subValuesExtractor, asList(subValuesCheckerFactories));
+    public static <T, S> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Supplier<SubValuesChecker>... subValuesCheckerSuppliers) {
+        return subValuesMatcher(subValuesExtractor, asList(subValuesCheckerSuppliers));
     }
 
-    public static <T, S> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Iterable<SubValuesCheckerFactory<S>> subValuesCheckerFactories) {
-        return new SubValuesMatcher<>(subValuesExtractor, compositeSubValuesCheckerFactory(subValuesCheckerFactories));
+    public static <T, S> ReportingMatcher<T> subValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
+        return new SubValuesMatcher<>(subValuesExtractor, compositeSubValuesCheckerSupplier(subValuesCheckerSuppliers));
     }
 
 
 
     public static <T> ReportingMatcher<T> displayAll(SubValuesExtractor<T, ?> subValuesExtractor) {
-        return new SubValuesMatcher<>(subValuesExtractor, SubValueCheckers::noOpSubValuesChecker);
+        return new SubValuesMatcher<>(subValuesExtractor, noOpSubValuesChecker());
     }
 
 

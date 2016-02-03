@@ -37,14 +37,14 @@ public class IntegrationTestMain {
                 field("id", 123),
                 field("login", "login"),
                 field("password", "drowssap"),
-                getter("getNames",
-                        field("first", startsWith("qwe"), endsWith("rty")),
-                        field("middle", equalTo("123456")),
-                        field("last", is("ytrewq"))
+                getter("getNames"
+                        , field("first", startsWith("qwe"), endsWith("rty"))
+                        , field("middle", equalTo("123456"))
+                        , field("last", is("ytrewq"))
                 ),
-                method(invocation("getArray"),
-                        arrayElement(0, 1),
-                        array(() -> containsInAnyOrder(1, 2, 3))
+                method(invocation("getArray")
+                        , arrayElement(0, 1)
+                        , array(containsInAnyOrder(1, 2, 3))
                 )
         );
     }
