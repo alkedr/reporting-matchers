@@ -160,6 +160,10 @@ public enum ReportingMatchers {
         return iteratingMatcherBuilder(arrayElementsExtractor());
     }
 
+    public static <T> IteratingMatcherBuilder<T[], T> array(Class<T> elementClass) {
+        return array();
+    }
+
     public static <T> ReportingMatcher<T[]> array(SubValuesCheckerFactory subValuesCheckerFactory) {
         return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerFactory);
     }
@@ -175,6 +179,10 @@ public enum ReportingMatchers {
 
     public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable() {
         return iteratingMatcherBuilder(iterableElementsExtractor());
+    }
+
+    public static <T> IteratingMatcherBuilder<Iterable<T>, T> iterable(Class<T> elementClass) {
+        return iterable();
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(SubValuesCheckerFactory subValuesCheckerFactory) {
@@ -194,6 +202,10 @@ public enum ReportingMatchers {
         return iteratingMatcherBuilder(iteratorElementsExtractor());
     }
 
+    public static <T> IteratingMatcherBuilder<Iterator<T>, T> iterator(Class<T> elementClass) {
+        return iterator();
+    }
+
     public static <T> ReportingMatcher<Iterator<T>> iterator(SubValuesCheckerFactory subValuesCheckerFactory) {
         return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerFactory);
     }
@@ -209,6 +221,10 @@ public enum ReportingMatchers {
 
     public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap() {
         return iteratingMatcherBuilder(hashMapEntriesExtractor());
+    }
+
+    public static <K, V> IteratingMatcherBuilder<Map<K, V>, Map.Entry<K, V>> hashMap(Class<K> keyClass, Class<V> valueClass) {
+        return hashMap();
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> hashMap(SubValuesCheckerFactory subValuesCheckerFactory) {
