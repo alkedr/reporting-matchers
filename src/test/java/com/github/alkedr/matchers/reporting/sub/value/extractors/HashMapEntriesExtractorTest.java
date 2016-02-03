@@ -19,13 +19,13 @@ public class HashMapEntriesExtractorTest {
 
     @Test
     public void run_null() {
-        SubValuesExtractors.<Integer, Integer>hashMapEntriesExtractor().run(null, listener);
+        SubValuesExtractors.<Integer, Integer>hashMapEntries().run(null, listener);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void run_empty() {
-        SubValuesExtractors.<Integer, Integer>hashMapEntriesExtractor().run(emptyMap(), listener);
+        SubValuesExtractors.<Integer, Integer>hashMapEntries().run(emptyMap(), listener);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -37,7 +37,7 @@ public class HashMapEntriesExtractorTest {
         map.put(keys[0], values[0]);
         map.put(keys[1], values[1]);
         map.put(keys[2], values[2]);
-        SubValuesExtractors.<Integer, Integer>hashMapEntriesExtractor().run(map, listener);
+        SubValuesExtractors.<Integer, Integer>hashMapEntries().run(map, listener);
         inOrder.verify(listener).present(eq(hashMapKey(keys[0])), same(values[0]));
         inOrder.verify(listener).present(eq(hashMapKey(keys[1])), same(values[1]));
         inOrder.verify(listener).present(eq(hashMapKey(keys[2])), same(values[2]));
@@ -46,7 +46,7 @@ public class HashMapEntriesExtractorTest {
 
     @Test
     public void runForAbsentItem() {
-        SubValuesExtractors.<Integer, Integer>hashMapEntriesExtractor().runForAbsentItem(listener);
+        SubValuesExtractors.<Integer, Integer>hashMapEntries().runForAbsentItem(listener);
         inOrder.verifyNoMoreInteractions();
     }
 }

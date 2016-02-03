@@ -6,12 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.htmlReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInAnyOrder;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.getters;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,7 +36,7 @@ public class IntegrationTestMain {
     }
 
     static ReportingMatcher<? super User> isCorrectUser() {
-        return sequence(
+        return merge(
                 field("id", 123),
                 field("login", "login"),
                 field("password", "drowssap"),
@@ -45,7 +48,8 @@ public class IntegrationTestMain {
                 method(invocation("getArray")
                         , arrayElement(0, 1)
                         , array(containsInAnyOrder(1, 2, 3))
-                )
+                ),
+                displayAll(getters())
         );
     }
 
@@ -62,6 +66,14 @@ public class IntegrationTestMain {
 
         public Integer[] getArray() {
             return new Integer[]{1, 2, 3};
+        }
+
+        public URL getUnchecked() {
+            try {
+                return new URL("http://example.com");
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public static class Names {

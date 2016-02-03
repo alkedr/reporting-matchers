@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.objectGettersExtractor;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.getters;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,19 +22,19 @@ public class ObjectGettersExtractorTest {
 
     @Test
     public void run_null() {
-        objectGettersExtractor().run(null, listener);
+        getters().run(null, listener);
         verifyNoMoreInteractions(listener);
     }
 
     @Test
     public void noGetters() {
-        objectGettersExtractor().run(new MyClassWithoutGetters(), listener);
+        getters().run(new MyClassWithoutGetters(), listener);
         verifyNoMoreInteractions(listener);
     }
 
     @Test
     public void twoGetter() {
-        objectGettersExtractor().run(new MyClassWithGetter(), listener);
+        getters().run(new MyClassWithGetter(), listener);
         verify(listener).present(eq(Keys.renamedKey(Keys.methodKey(getGetter), "x")), eq(1));
         verify(listener).present(eq(Keys.renamedKey(Keys.methodKey(isGetter1), "y")), eq(true));
         verify(listener).present(eq(Keys.renamedKey(Keys.methodKey(isGetter2), "z")), eq(true));
@@ -43,7 +43,7 @@ public class ObjectGettersExtractorTest {
 
     @Test
     public void runForAbsentItem() {
-        objectGettersExtractor().runForAbsentItem(listener);
+        getters().runForAbsentItem(listener);
         verifyNoMoreInteractions(listener);
     }
 

@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting.sub.value.extractors;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.getterExtractor;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.getter;
 import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isStatic;
 
@@ -28,7 +28,7 @@ class ObjectGettersExtractor<T> implements SubValuesExtractor<T, Object> {
         if (item != null) {
             for (Method method : item.getClass().getMethods()) {
                 if (isGetter(method)) {
-                    getterExtractor(method).run(item, subValuesListener);
+                    getter(method).run(item, subValuesListener);
                 }
             }
         }

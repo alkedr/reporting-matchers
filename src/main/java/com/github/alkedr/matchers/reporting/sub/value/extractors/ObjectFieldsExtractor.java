@@ -4,7 +4,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.fieldExtractor;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.field;
 
 class ObjectFieldsExtractor<T> implements SubValuesExtractor<T, Object> {
     static final ObjectFieldsExtractor INSTANCE = new ObjectFieldsExtractor<>();
@@ -16,7 +16,7 @@ class ObjectFieldsExtractor<T> implements SubValuesExtractor<T, Object> {
     public void run(T item, SubValuesListener<Object> subValuesListener) {
         if (item != null) {
             for (Field field : FieldUtils.getAllFieldsList(item.getClass())) {
-                fieldExtractor(field).run(item, subValuesListener);
+                field(field).run(item, subValuesListener);
             }
         }
     }

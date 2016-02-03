@@ -28,7 +28,7 @@ class MethodByNameExtractor<T, S> implements SubValuesExtractor<T, S> {
             if (method == null) {
                 subValuesListener.broken(methodByNameKey(methodName, arguments), new NoSuchMethodException(item.getClass().getName() + "." + toString()));
             } else {
-                SubValuesExtractors.<T, S>methodExtractor(method, arguments).run(item, subValuesListener);
+                SubValuesExtractors.<T, S>method(method, arguments).run(item, subValuesListener);
             }
         }
     }

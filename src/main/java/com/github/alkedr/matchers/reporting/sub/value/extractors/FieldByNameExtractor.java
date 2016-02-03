@@ -32,7 +32,7 @@ class FieldByNameExtractor<T, S> implements SubValuesExtractor<T, S> {
                 // TODO: broken если нет такого поля?
                 subValuesListener.absent(fieldByNameKey(fieldName));
             } else {
-                SubValuesExtractors.<T, S>fieldExtractor(field).run(item, subValuesListener);
+                SubValuesExtractors.<T, S>field(field).run(item, subValuesListener);
             }
         }
     }

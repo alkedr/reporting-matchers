@@ -98,202 +98,202 @@ public enum ReportingMatchers {
 
 
     public static <T, S> ReportingMatcher<T> value(String nameForReport, SubValuesExtractor<T, S> subValuesExtractor, S value) {
-        return value(renamedExtractor(subValuesExtractor, nameForReport), value);
+        return value(renamed(subValuesExtractor, nameForReport), value);
     }
 
     public static <T, S> ReportingMatcher<T> value(String nameForReport, SubValuesExtractor<T, S> subValuesExtractor, Matcher<? super S> matcher) {
-        return value(renamedExtractor(subValuesExtractor, nameForReport), matcher);
+        return value(renamed(subValuesExtractor, nameForReport), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> value(String nameForReport, SubValuesExtractor<T, S> subValuesExtractor, ReportingMatcher<? super S> reportingMatcher) {
-        return value(renamedExtractor(subValuesExtractor, nameForReport), reportingMatcher);
+        return value(renamed(subValuesExtractor, nameForReport), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> value(String nameForReport, SubValuesExtractor<T, S> subValuesExtractor, Matcher<? super S>... matchers) {
-        return value(renamedExtractor(subValuesExtractor, nameForReport), matchers);
+        return value(renamed(subValuesExtractor, nameForReport), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> value(String nameForReport, SubValuesExtractor<T, S> subValuesExtractor, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(renamedExtractor(subValuesExtractor, nameForReport), matchers);
+        return value(renamed(subValuesExtractor, nameForReport), matchers);
     }
 
 
 
     public static <T, S> ReportingMatcher<T> field(Field field, S value) {
-        return value(SubValuesExtractors.<T, S>fieldExtractor(field), value);
+        return value(SubValuesExtractors.<T, S>field(field), value);
     }
 
     public static <T, S> ReportingMatcher<T> field(Field field, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>fieldExtractor(field), matcher);
+        return value(SubValuesExtractors.<T, S>field(field), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> field(Field field, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>fieldExtractor(field), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>field(field), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> field(Field field, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>fieldExtractor(field), matchers);
+        return value(SubValuesExtractors.<T, S>field(field), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> field(Field field, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>fieldExtractor(field), matchers);
+        return value(SubValuesExtractors.<T, S>field(field), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> field(String fieldName, S value) {
-        return value(SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), value);
+        return value(SubValuesExtractors.<T, S>fieldByName(fieldName), value);
     }
 
     public static <T, S> ReportingMatcher<T> field(String fieldName, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matcher);
+        return value(SubValuesExtractors.<T, S>fieldByName(fieldName), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> field(String fieldName, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>fieldByName(fieldName), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> field(String fieldName, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matchers);
+        return value(SubValuesExtractors.<T, S>fieldByName(fieldName), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> field(String fieldName, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matchers);
+        return value(SubValuesExtractors.<T, S>fieldByName(fieldName), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, Field field, S value) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldExtractor(field), value);
+        return value(nameForReport, SubValuesExtractors.<T, S>field(field), value);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, Field field, Matcher<? super S> matcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldExtractor(field), matcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>field(field), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, Field field, ReportingMatcher<? super S> reportingMatcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldExtractor(field), reportingMatcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>field(field), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> field(String nameForReport, Field field, Matcher<? super S>... matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldExtractor(field), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>field(field), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, Field field, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldExtractor(field), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>field(field), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, String fieldName, S value) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), value);
+        return value(nameForReport, SubValuesExtractors.<T, S>fieldByName(fieldName), value);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, String fieldName, Matcher<? super S> matcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>fieldByName(fieldName), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, String fieldName, ReportingMatcher<? super S> reportingMatcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), reportingMatcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>fieldByName(fieldName), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> field(String nameForReport, String fieldName, Matcher<? super S>... matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>fieldByName(fieldName), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> field(String nameForReport, String fieldName, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>fieldByNameExtractor(fieldName), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>fieldByName(fieldName), matchers);
     }
 
 
 
     public static <T, S> ReportingMatcher<T> method(MethodInvocation invocation, S value) {
-        return value(SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), value);
+        return value(SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), value);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodInvocation invocation, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matcher);
+        return value(SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodInvocation invocation, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> method(MethodInvocation invocation, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matchers);
+        return value(SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodInvocation invocation, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matchers);
+        return value(SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> method(MethodByNameInvocation invocation, S value) {
-        return value(SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), value);
+        return value(SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), value);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodByNameInvocation invocation, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matcher);
+        return value(SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodByNameInvocation invocation, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> method(MethodByNameInvocation invocation, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matchers);
+        return value(SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> method(MethodByNameInvocation invocation, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matchers);
+        return value(SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodInvocation invocation, S value) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), value);
+        return value(nameForReport, SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), value);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodInvocation invocation, Matcher<? super S> matcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodInvocation invocation, ReportingMatcher<? super S> reportingMatcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), reportingMatcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodInvocation invocation, Matcher<? super S>... matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodInvocation invocation, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodExtractor(invocation.method, invocation.arguments), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>method(invocation.method, invocation.arguments), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodByNameInvocation invocation, S value) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), value);
+        return value(nameForReport, SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), value);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodByNameInvocation invocation, Matcher<? super S> matcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodByNameInvocation invocation, ReportingMatcher<? super S> reportingMatcher) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), reportingMatcher);
+        return value(nameForReport, SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodByNameInvocation invocation, Matcher<? super S>... matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> method(String nameForReport, MethodByNameInvocation invocation, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(nameForReport, SubValuesExtractors.<T, S>methodByNameExtractor(invocation.methodName, invocation.arguments), matchers);
+        return value(nameForReport, SubValuesExtractors.<T, S>methodByName(invocation.methodName, invocation.arguments), matchers);
     }
 
 
@@ -308,136 +308,136 @@ public enum ReportingMatchers {
 
 
     public static <T, S> ReportingMatcher<T> getter(Method method, S value) {
-        return value(SubValuesExtractors.<T, S>getterExtractor(method), value);
+        return value(SubValuesExtractors.<T, S>getter(method), value);
     }
 
     public static <T, S> ReportingMatcher<T> getter(Method method, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>getterExtractor(method), matcher);
+        return value(SubValuesExtractors.<T, S>getter(method), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> getter(Method method, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>getterExtractor(method), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>getter(method), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> getter(Method method, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>getterExtractor(method), matchers);
+        return value(SubValuesExtractors.<T, S>getter(method), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> getter(Method method, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>getterExtractor(method), matchers);
+        return value(SubValuesExtractors.<T, S>getter(method), matchers);
     }
 
 
     public static <T, S> ReportingMatcher<T> getter(String methodName, S value) {
-        return value(SubValuesExtractors.<T, S>getterByNameExtractor(methodName), value);
+        return value(SubValuesExtractors.<T, S>getterByName(methodName), value);
     }
 
     public static <T, S> ReportingMatcher<T> getter(String methodName, Matcher<? super S> matcher) {
-        return value(SubValuesExtractors.<T, S>getterByNameExtractor(methodName), matcher);
+        return value(SubValuesExtractors.<T, S>getterByName(methodName), matcher);
     }
 
     public static <T, S> ReportingMatcher<T> getter(String methodName, ReportingMatcher<? super S> reportingMatcher) {
-        return value(SubValuesExtractors.<T, S>getterByNameExtractor(methodName), reportingMatcher);
+        return value(SubValuesExtractors.<T, S>getterByName(methodName), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T, S> ReportingMatcher<T> getter(String methodName, Matcher<? super S>... matchers) {
-        return value(SubValuesExtractors.<T, S>getterByNameExtractor(methodName), matchers);
+        return value(SubValuesExtractors.<T, S>getterByName(methodName), matchers);
     }
 
     public static <T, S> ReportingMatcher<T> getter(String methodName, Iterable<? extends Matcher<? super S>> matchers) {
-        return value(SubValuesExtractors.<T, S>getterByNameExtractor(methodName), matchers);
+        return value(SubValuesExtractors.<T, S>getterByName(methodName), matchers);
     }
 
 
 
     public static <T> ReportingMatcher<T[]> arrayElement(int index, T value) {
-        return value(SubValuesExtractors.<T>arrayElementExtractor(index), value);
+        return value(SubValuesExtractors.<T>arrayElement(index), value);
     }
 
     public static <T> ReportingMatcher<T[]> arrayElement(int index, Matcher<? super T> matcher) {
-        return value(SubValuesExtractors.<T>arrayElementExtractor(index), matcher);
+        return value(SubValuesExtractors.<T>arrayElement(index), matcher);
     }
 
     public static <T> ReportingMatcher<T[]> arrayElement(int index, ReportingMatcher<? super T> reportingMatcher) {
-        return value(SubValuesExtractors.<T>arrayElementExtractor(index), reportingMatcher);
+        return value(SubValuesExtractors.<T>arrayElement(index), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T> ReportingMatcher<T[]> arrayElement(int index, Matcher<? super T>... matchers) {
-        return value(SubValuesExtractors.<T>arrayElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>arrayElement(index), matchers);
     }
 
     public static <T> ReportingMatcher<T[]> arrayElement(int index, Iterable<? extends Matcher<? super T>> matchers) {
-        return value(SubValuesExtractors.<T>arrayElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>arrayElement(index), matchers);
     }
 
 
     public static <T> ReportingMatcher<Iterable<T>> iterableElement(int index, T value) {
-        return value(SubValuesExtractors.<T>iterableElementExtractor(index), value);
+        return value(SubValuesExtractors.<T>iterableElement(index), value);
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterableElement(int index, Matcher<? super T> matcher) {
-        return value(SubValuesExtractors.<T>iterableElementExtractor(index), matcher);
+        return value(SubValuesExtractors.<T>iterableElement(index), matcher);
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterableElement(int index, ReportingMatcher<? super T> reportingMatcher) {
-        return value(SubValuesExtractors.<T>iterableElementExtractor(index), reportingMatcher);
+        return value(SubValuesExtractors.<T>iterableElement(index), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T> ReportingMatcher<Iterable<T>> iterableElement(int index, Matcher<? super T>... matchers) {
-        return value(SubValuesExtractors.<T>iterableElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>iterableElement(index), matchers);
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterableElement(int index, Iterable<? extends Matcher<? super T>> matchers) {
-        return value(SubValuesExtractors.<T>iterableElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>iterableElement(index), matchers);
     }
 
 
     public static <T> ReportingMatcher<List<T>> listElement(int index, T value) {
-        return value(SubValuesExtractors.<T>listElementExtractor(index), value);
+        return value(SubValuesExtractors.<T>listElement(index), value);
     }
 
     public static <T> ReportingMatcher<List<T>> listElement(int index, Matcher<? super T> matcher) {
-        return value(SubValuesExtractors.<T>listElementExtractor(index), matcher);
+        return value(SubValuesExtractors.<T>listElement(index), matcher);
     }
 
     public static <T> ReportingMatcher<List<T>> listElement(int index, ReportingMatcher<? super T> reportingMatcher) {
-        return value(SubValuesExtractors.<T>listElementExtractor(index), reportingMatcher);
+        return value(SubValuesExtractors.<T>listElement(index), reportingMatcher);
     }
 
     @SafeVarargs
     public static <T> ReportingMatcher<List<T>> listElement(int index, Matcher<? super T>... matchers) {
-        return value(SubValuesExtractors.<T>listElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>listElement(index), matchers);
     }
 
     public static <T> ReportingMatcher<List<T>> listElement(int index, Iterable<? extends Matcher<? super T>> matchers) {
-        return value(SubValuesExtractors.<T>listElementExtractor(index), matchers);
+        return value(SubValuesExtractors.<T>listElement(index), matchers);
     }
 
 
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, V value) {
-        return value(SubValuesExtractors.<K, V>hashMapExtractor(key), value);
+        return value(SubValuesExtractors.<K, V>hashMap(key), value);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Matcher<? super V> matcher) {
-        return value(SubValuesExtractors.<K, V>hashMapExtractor(key), matcher);
+        return value(SubValuesExtractors.<K, V>hashMap(key), matcher);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, ReportingMatcher<? super V> reportingMatcher) {
-        return value(SubValuesExtractors.<K, V>hashMapExtractor(key), reportingMatcher);
+        return value(SubValuesExtractors.<K, V>hashMap(key), reportingMatcher);
     }
 
     @SafeVarargs
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Matcher<? super V>... matchers) {
-        return value(SubValuesExtractors.<K, V>hashMapExtractor(key), matchers);
+        return value(SubValuesExtractors.<K, V>hashMap(key), matchers);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Iterable<? extends Matcher<? super V>> matchers) {
-        return value(SubValuesExtractors.<K, V>hashMapExtractor(key), matchers);
+        return value(SubValuesExtractors.<K, V>hashMap(key), matchers);
     }
 
 
@@ -448,7 +448,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<Iterable<T>> iterable(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
-        return subValuesMatcher(iterableElementsExtractor(), subValuesCheckerSuppliers);
+        return subValuesMatcher(iterableElements(), subValuesCheckerSuppliers);
     }
 
     @SafeVarargs
@@ -457,7 +457,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<Iterator<T>> iterator(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
-        return subValuesMatcher(iteratorElementsExtractor(), subValuesCheckerSuppliers);
+        return subValuesMatcher(iteratorElements(), subValuesCheckerSuppliers);
     }
 
     @SafeVarargs
@@ -466,7 +466,7 @@ public enum ReportingMatchers {
     }
 
     public static <T> ReportingMatcher<T[]> array(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
-        return subValuesMatcher(arrayElementsExtractor(), subValuesCheckerSuppliers);
+        return subValuesMatcher(arrayElements(), subValuesCheckerSuppliers);
     }
 
     @SafeVarargs
@@ -475,7 +475,7 @@ public enum ReportingMatchers {
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> hashMap(Iterable<Supplier<SubValuesChecker>> subValuesCheckerSuppliers) {
-        return subValuesMatcher(hashMapEntriesExtractor(), subValuesCheckerSuppliers);
+        return subValuesMatcher(hashMapEntries(), subValuesCheckerSuppliers);
     }
 
 

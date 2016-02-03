@@ -13,73 +13,72 @@ public enum SubValuesExtractors {
     ;
 
 
-    public static <T, S> SubValuesExtractor<T, S> fieldExtractor(Field field) {
+    public static <T, S> SubValuesExtractor<T, S> field(Field field) {
         return new FieldExtractor<>(field);
     }
 
-    public static <T> SubValuesExtractor<T[], T> arrayElementExtractor(int index) {
+    public static <T> SubValuesExtractor<T[], T> arrayElement(int index) {
         return new ArrayElementExtractor<>(index);
     }
 
-    public static <T> SubValuesExtractor<Iterable<T>, T> iterableElementExtractor(int index) {
+    public static <T> SubValuesExtractor<Iterable<T>, T> iterableElement(int index) {
         return new IterableElementExtractor<>(index);
     }
 
-    public static <T> SubValuesExtractor<List<T>, T> listElementExtractor(int index) {
+    public static <T> SubValuesExtractor<List<T>, T> listElement(int index) {
         return new ListElementExtractor<>(index);
     }
 
-    public static <T, S> SubValuesExtractor<T, S> fieldByNameExtractor(String fieldName) {
+    public static <T, S> SubValuesExtractor<T, S> fieldByName(String fieldName) {
         return new FieldByNameExtractor<>(fieldName);
     }
 
-    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMapExtractor(K key) {
+    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMap(K key) {
         return new HashMapExtractor<>(key);
     }
 
-    public static <T, S> SubValuesExtractor<T, S> methodByNameExtractor(String methodName, Object... arguments) {
+    public static <T, S> SubValuesExtractor<T, S> methodByName(String methodName, Object... arguments) {
         return new MethodByNameExtractor<>(methodName, arguments);
     }
 
-    public static <T, S> SubValuesExtractor<T, S> methodExtractor(Method method, Object... arguments) {
+    public static <T, S> SubValuesExtractor<T, S> method(Method method, Object... arguments) {
         return new MethodExtractor<>(method, arguments);
     }
 
-    public static <T, S> SubValuesExtractor<T, S> getterByNameExtractor(String methodName) {
-        return renamedExtractor(methodByNameExtractor(methodName), createNameForGetterMethodInvocation(methodName));
+    public static <T, S> SubValuesExtractor<T, S> getterByName(String methodName) {
+        return renamed(methodByName(methodName), createNameForGetterMethodInvocation(methodName));
     }
 
-    public static <T, S> SubValuesExtractor<T, S> getterExtractor(Method method) {
-        return renamedExtractor(methodExtractor(method), createNameForGetterMethodInvocation(method.getName()));
+    public static <T, S> SubValuesExtractor<T, S> getter(Method method) {
+        return renamed(method(method), createNameForGetterMethodInvocation(method.getName()));
     }
 
-    public static <T, S> SubValuesExtractor<T, S> renamedExtractor(SubValuesExtractor<T, S> originalExtractor, String name) {
+    public static <T, S> SubValuesExtractor<T, S> renamed(SubValuesExtractor<T, S> originalExtractor, String name) {
         return new RenamedExtractor<>(originalExtractor, name);
     }
 
 
-
-    public static <T> SubValuesExtractor<Iterator<T>, T> iteratorElementsExtractor() {
+    public static <T> SubValuesExtractor<Iterator<T>, T> iteratorElements() {
         return IteratorElementsExtractor.INSTANCE;
     }
 
-    public static <T> SubValuesExtractor<Iterable<T>, T> iterableElementsExtractor() {
+    public static <T> SubValuesExtractor<Iterable<T>, T> iterableElements() {
         return IterableElementsExtractor.INSTANCE;
     }
 
-    public static <T> SubValuesExtractor<T[], T> arrayElementsExtractor() {
+    public static <T> SubValuesExtractor<T[], T> arrayElements() {
         return ArrayElementsExtractor.INSTANCE;
     }
 
-    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMapEntriesExtractor() {
+    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMapEntries() {
         return HashMapEntriesExtractor.INSTANCE;
     }
 
-    public static <T> SubValuesExtractor<T, Object> objectFieldsExtractor() {
+    public static <T> SubValuesExtractor<T, Object> fields() {
         return ObjectFieldsExtractor.INSTANCE;
     }
 
-    public static <T> SubValuesExtractor<T, Object> objectGettersExtractor() {
+    public static <T> SubValuesExtractor<T, Object> getters() {
         return ObjectGettersExtractor.INSTANCE;
     }
 

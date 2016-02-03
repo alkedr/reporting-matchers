@@ -9,7 +9,7 @@ class IterableElementsExtractor<T> implements SubValuesExtractor<Iterable<T>, T>
     @Override
     public void run(Iterable<T> item, SubValuesListener<T> subValuesListener) {
         if (item != null) {
-            SubValuesExtractors.<T>iteratorElementsExtractor().run(item.iterator(), subValuesListener);
+            SubValuesExtractors.<T>iteratorElements().run(item.iterator(), subValuesListener);
         }
     }
 
