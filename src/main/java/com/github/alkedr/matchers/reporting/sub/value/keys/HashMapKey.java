@@ -1,11 +1,9 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
-import java.util.Map;
-
 // не подходит для TreeMap, IdentityHashMap и пр.
 // подходит только для HashMap (использует key.equals() и key.hashCode())
 // TODO: иметь возможность настраивать способ преобразования ключа в строку?
-class HashMapKey implements ExtractableKey {
+class HashMapKey implements Key {
     private final Object key;
 
     HashMapKey(Object key) {
@@ -28,23 +26,5 @@ class HashMapKey implements ExtractableKey {
     @Override
     public String asString() {
         return String.valueOf(key);
-    }
-
-    @Override
-    public void run(Object item, SubValuesListener subValuesListener) {
-        try {
-            if (item == null || !((Map<?, ?>) item).containsKey(key)) {
-                subValuesListener.absent(this);
-            } else {
-                subValuesListener.present(this, ((Map<?, ?>) item).get(key));
-            }
-        } catch (ClassCastException e) {
-            subValuesListener.broken(this, e);
-        }
-    }
-
-    @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
-        subValuesListener.absent(this);
     }
 }

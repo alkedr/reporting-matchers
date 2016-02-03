@@ -5,18 +5,18 @@ import java.util.Collection;
 
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.compositeSubValuesChecker;
 
-class CompositeSubValuesCheckerFactory implements SubValuesCheckerFactory {
-    private final Iterable<SubValuesCheckerFactory> subValuesCheckerFactories;
+class CompositeSubValuesCheckerFactory<T> implements SubValuesCheckerFactory<T> {
+    private final Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories;
 
-    CompositeSubValuesCheckerFactory(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+    CompositeSubValuesCheckerFactory(Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories) {
         this.subValuesCheckerFactories = subValuesCheckerFactories;
     }
 
     @Override
-    public SubValuesChecker create() {
+    public SubValuesChecker createSubValuesChecker() {
         Collection<SubValuesChecker> subValuesCheckers = new ArrayList<>();
-        for (SubValuesCheckerFactory factory : subValuesCheckerFactories) {
-            subValuesCheckers.add(factory.create());
+        for (SubValuesCheckerFactory<T> factory : subValuesCheckerFactories) {
+            subValuesCheckers.add(factory.createSubValuesChecker());
         }
         return compositeSubValuesChecker(subValuesCheckers);
     }

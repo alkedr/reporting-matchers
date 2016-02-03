@@ -65,7 +65,7 @@ public enum SubValueCheckers {
 
 
     // TODO: переименовать? allSubValuesMatch() ?
-    public static SubValuesChecker matcherSubValuesChecker(ReportingMatcher<?> matcherForExtractedValue) {
+    public static <T> SubValuesChecker matcherSubValuesChecker(ReportingMatcher<? super T> matcherForExtractedValue) {
         return new MatcherSubValuesChecker(matcherForExtractedValue);
     }
 

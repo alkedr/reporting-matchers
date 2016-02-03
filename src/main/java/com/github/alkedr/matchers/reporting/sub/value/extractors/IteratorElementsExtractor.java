@@ -4,14 +4,14 @@ import java.util.Iterator;
 
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 
-class IteratorElementsExtractor implements SubValuesExtractor<Iterator<?>> {
-    static final IteratorElementsExtractor INSTANCE = new IteratorElementsExtractor();
+class IteratorElementsExtractor<T> implements SubValuesExtractor<Iterator<T>, T> {
+    static final IteratorElementsExtractor INSTANCE = new IteratorElementsExtractor<>();
 
     private IteratorElementsExtractor() {
     }
 
     @Override
-    public void run(Iterator<?> item, SubValuesListener subValuesListener) {
+    public void run(Iterator<T> item, SubValuesListener<T> subValuesListener) {
         if (item != null) {
             int i = 0;
             while (item.hasNext()) {
@@ -21,6 +21,6 @@ class IteratorElementsExtractor implements SubValuesExtractor<Iterator<?>> {
     }
 
     @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener<T> subValuesListener) {
     }
 }

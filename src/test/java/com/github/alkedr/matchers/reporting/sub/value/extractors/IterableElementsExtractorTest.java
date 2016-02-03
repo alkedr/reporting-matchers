@@ -3,7 +3,7 @@ package com.github.alkedr.matchers.reporting.sub.value.extractors;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.iterableElementsExtractor;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.iterableElementsExtractor;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

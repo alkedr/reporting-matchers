@@ -20,6 +20,7 @@ enum MethodNameUtils {
         return sb.toString();
     }
 
+    @Deprecated
     static String createNameForGetterMethodInvocation(String name) {
         if (name == null) {
             return "";

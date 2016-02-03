@@ -1,11 +1,8 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
-import java.lang.reflect.Field;
-
-class FieldByNameKey implements ExtractableKey {
+class FieldByNameKey implements Key {
     private final String fieldName;
 
     FieldByNameKey(String fieldName) {
@@ -29,32 +26,5 @@ class FieldByNameKey implements ExtractableKey {
     @Override
     public String asString() {
         return fieldName;
-    }
-
-    @Override
-    public void run(Object item, SubValuesListener subValuesListener) {
-        if (item == null) {
-            subValuesListener.absent(this);
-        } else {
-            Field field;
-            try {
-                field = FieldUtils.getField(item.getClass(), fieldName, true);
-            } catch (IllegalArgumentException e) {
-                // "field name is matched at multiple places in the inheritance hierarchy"
-                subValuesListener.broken(this, e);
-                return;
-            }
-            if (field == null) {
-                // TODO: broken если нет такого поля?
-                subValuesListener.absent(this);
-            } else {
-                Keys.fieldKey(field).run(item, subValuesListener);
-            }
-        }
-    }
-
-    @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
-        subValuesListener.absent(this);
     }
 }

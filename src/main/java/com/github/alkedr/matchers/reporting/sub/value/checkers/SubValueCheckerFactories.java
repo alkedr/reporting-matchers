@@ -8,11 +8,12 @@ public class SubValueCheckerFactories {
     }*/
 
 
-    public static SubValuesCheckerFactory compositeSubValuesCheckerFactory(SubValuesCheckerFactory... subValuesCheckerFactories) {
+    @SafeVarargs
+    public static <T> SubValuesCheckerFactory<T> compositeSubValuesCheckerFactory(SubValuesCheckerFactory<T>... subValuesCheckerFactories) {
         return compositeSubValuesCheckerFactory(asList(subValuesCheckerFactories));
     }
 
-    public static SubValuesCheckerFactory compositeSubValuesCheckerFactory(Iterable<SubValuesCheckerFactory> subValuesCheckerFactories) {
+    public static <T> SubValuesCheckerFactory<T> compositeSubValuesCheckerFactory(Iterable<SubValuesCheckerFactory<T>> subValuesCheckerFactories) {
         return new CompositeSubValuesCheckerFactory(subValuesCheckerFactories);
     }
 

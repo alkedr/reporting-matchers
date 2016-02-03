@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValueExtractors.objectFieldsExtractor;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.objectFieldsExtractor;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;

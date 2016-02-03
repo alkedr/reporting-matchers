@@ -3,14 +3,14 @@ package com.github.alkedr.matchers.reporting.sub.value.extractors;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.getterKey;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.getterExtractor;
 import static java.lang.Character.isUpperCase;
 import static java.lang.reflect.Modifier.isStatic;
 
-class ObjectGettersExtractor implements SubValuesExtractor<Object> {
+class ObjectGettersExtractor<T> implements SubValuesExtractor<T, Object> {
     private static final Method objectGetClassMethod;
 
-    static final ObjectGettersExtractor INSTANCE = new ObjectGettersExtractor();
+    static final ObjectGettersExtractor INSTANCE = new ObjectGettersExtractor<>();
 
     static {
         try {
@@ -24,18 +24,18 @@ class ObjectGettersExtractor implements SubValuesExtractor<Object> {
     }
 
     @Override
-    public void run(Object item, SubValuesListener subValuesListener) {
+    public void run(T item, SubValuesListener<Object> subValuesListener) {
         if (item != null) {
             for (Method method : item.getClass().getMethods()) {
                 if (isGetter(method)) {
-                    getterKey(method).run(item, subValuesListener);
+                    getterExtractor(method).run(item, subValuesListener);
                 }
             }
         }
     }
 
     @Override
-    public void runForAbsentItem(SubValuesListener subValuesListener) {
+    public void runForAbsentItem(SubValuesListener<Object> subValuesListener) {
     }
 
     private static boolean isGetter(Method method) {

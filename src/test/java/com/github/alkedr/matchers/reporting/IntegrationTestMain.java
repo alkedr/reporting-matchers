@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.*;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.htmlReporter;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
-import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrder;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInAnyOrder;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -34,17 +34,17 @@ public class IntegrationTestMain {
 
     static ReportingMatcher<? super User> isCorrectUser() {
         return sequence(
-                field("id").is(123),
-                field("login").is("login"),
-                field("password").is("drowssap"),
-                getter("getNames").is(
-                        field("first").is(startsWith("qwe"), endsWith("rty")),
-                        field("middle").is(equalTo("123456")),
-                        field("last").is(is("ytrewq"))
+                field("id", 123),
+                field("login", "login"),
+                field("password", "drowssap"),
+                getter("getNames",
+                        field("first", startsWith("qwe"), endsWith("rty")),
+                        field("middle", equalTo("123456")),
+                        field("last", is("ytrewq"))
                 ),
-                method("getArray").is(
-                        arrayElement(0).is(1),
-                        array(() -> containsInSpecifiedOrder(1, 2, 3, 4))
+                method(invocation("getArray"),
+                        arrayElement(0, 1),
+                        array(() -> containsInAnyOrder(1, 2, 3))
                 )
         );
     }
