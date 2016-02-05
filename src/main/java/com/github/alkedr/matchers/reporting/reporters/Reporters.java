@@ -9,6 +9,11 @@ public enum Reporters {
         return new SimpleTreeReporterToSafeTreeReporterAdapter(simpleTreeReporter);
     }
 
+    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable) {
+        return new HtmlReporter(appendable);
+    }
+
+    @Deprecated
     public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable, String title) {
         return new HtmlReporter(appendable, title);
     }

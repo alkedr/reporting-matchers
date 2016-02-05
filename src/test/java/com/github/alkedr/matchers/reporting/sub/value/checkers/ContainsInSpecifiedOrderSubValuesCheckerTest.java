@@ -29,6 +29,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
         SubValuesChecker subValuesChecker = containsInSpecifiedOrder().get();
         subValuesChecker.begin(safeTreeReporter);
         subValuesChecker.end(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).passedCheck("empty list");
         inOrder.verifyNoMoreInteractions();
     }
 

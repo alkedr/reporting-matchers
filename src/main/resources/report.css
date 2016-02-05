@@ -1,0 +1,38 @@
+body {
+    font-family:'Bitstream Vera Sans Mono','DejaVu Sans Mono',Monaco,Courier,monospace
+}
+#checks {
+    white-space:pre;
+}
+.key, .value {
+    vertical-align: top;
+    display: inline-block;
+}
+.key {
+    font-weight:bold;
+}
+.key::after {
+    content: ": "
+}
+.passed {
+    background-color: #DFF0D8
+}
+.failed {
+    background-color: #F2DEDE
+}
+.broken {
+    background-color: #FAEBCC
+}
+.absent {
+    background-color: #F2DEDE;
+}
+.checks {
+    margin: 0px 0px 0px 20px;
+}
+
+
+
+//.hide_passed .passed {display: none;}
+//.hide_failed_and_absent .failed {display: none;}
+//.hide_broken .broken {display: none;}
+//.hide_failed_and_absent .absent {display: none;}   // TODO: hide empty
