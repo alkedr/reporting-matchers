@@ -3,17 +3,15 @@ package com.github.alkedr.matchers.reporting.reporters;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 // TODO: эскейпить
 // TODO: три вкладки: actual, diff, expected
 // TODO: серые линии слева, как в тасках
 // TODO: защита от очень больших значений
-// TODO: (missing), (broken)
 class HtmlReporter implements CloseableSimpleTreeReporter {
     private final Appendable appendable;
 
@@ -35,10 +33,10 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
                 + ".key,.value{vertical-align:top;display:inline-block;}"
                 + ".key{font-weight:bold;}"
                 + ".key::after{content:\": \"}"
-                + ".PASSED{background-color:#DFF0D8}"
-                + ".FAILED{background-color:#F2DEDE}"
-                + ".BROKEN{background-color:#FAEBCC}"
-                + ".ABSENT{background-color:#F2DEDE;}"
+                + ".passed{background-color:#DFF0D8}"
+                + ".failed{background-color:#F2DEDE}"
+                + ".broken{background-color:#FAEBCC}"
+                + ".absent{background-color:#F2DEDE;}"
                 + ".checks{margin:0px 0px 10px 20px;}"
                 + "</style>"
                 + "</head>"
@@ -74,7 +72,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
         appendDiv("key", escapeHtml4(key.asString()));
         appendDiv("value", "(сломано)");
         appendDivStart("checks");
-        appendDiv("BROKEN", "при извлечении значения было брошено исключение:\n" + throwableToString(throwable));
+        appendDiv("broken", "при извлечении значения было брошено исключение:\n" + getStackTrace(throwable));
     }
 
     @Override
@@ -105,22 +103,22 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
 
     @Override
     public void passedCheck(String description) {
-        appendDiv("PASSED", escapeHtml4(description));
+        appendDiv("passed", escapeHtml4(description));
     }
 
     @Override
     public void failedCheck(String expected, String actual) {
-        appendDiv("FAILED", "Expected: " + escapeHtml4(expected) + "\n     but: " + actual);
+        appendDiv("failed", "Expected: " + escapeHtml4(expected) + "\n     but: " + actual);
     }
 
     @Override
     public void checkForAbsentItem(String description) {
-        appendDiv("FAILED", description);
+        appendDiv("failed", description);
     }
 
     @Override
     public void brokenCheck(String description, Throwable throwable) {
-        appendDiv("BROKEN", escapeHtml4(description) + "\n" + throwableToString(throwable));
+        appendDiv("broken", escapeHtml4(description) + "\n" + getStackTrace(throwable));
     }
 
 
@@ -151,12 +149,5 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
         } catch (IOException e) {
             throw new RuntimeException(e);  // FIXME: своё исключение?
         }
-    }
-
-    private static String throwableToString(Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw, true);
-        throwable.printStackTrace(pw);
-        return sw.getBuffer().toString();
     }
 }
