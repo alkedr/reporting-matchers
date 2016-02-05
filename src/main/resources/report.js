@@ -5,6 +5,8 @@ var hideFailed = false;
 var hideBroken = false;
 var hideUnchecked = false;
 
+// TODO: убрать дублирование кода PresentNode AbsentNode BrokenNode
+
 function PresentNode(name, value, checks) {
     this.hasPassed = checks.some(function(check){return check.hasPassed;});
     this.hasFailed = checks.some(function(check){return check.hasFailed;});
@@ -32,7 +34,7 @@ function PresentNode(name, value, checks) {
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
-            displayChecks();
+            displayChecks();  // TODO: перерисовывать только изменившуюся часть
         };
         return result;
     }
@@ -80,7 +82,7 @@ function AbsentNode(name, checks) {
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
-            displayChecks();
+            displayChecks();  // TODO: перерисовывать только изменившуюся часть
         };
         return result;
     }
@@ -128,7 +130,7 @@ function BrokenNode(name, stacktrace, checks) {
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
-            displayChecks();
+            displayChecks();  // TODO: перерисовывать только изменившуюся часть
         };
         return result;
     }
