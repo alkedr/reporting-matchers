@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Отчёт о проверках</title>
+    <style>@@CSS@@</style>
+    <script>
+        @@JS@@
+        var checks = [@@CHECKS@@];
+    </script>
+</head>
+<body>
+    <div class="button-group">
+        <button onclick="foldAll()">Свернуть всё</button>
+        <button onclick="unfoldAll()">Развернуть всё</button>
+        <label><input type="checkbox" onchange="setHidePassed(this.checked)">passed</label>
+        <label><input type="checkbox" onchange="setHideFailed(this.checked)">failed</label>
+        <label><input type="checkbox" onchange="setHideBroken(this.checked)">broken</label>
+        <label><input type="checkbox" onchange="setHideUnchecked(this.checked)">unchecked</label>
+    </div>
+    <div id="checks"></div>
+    <script>
+        displayChecks();
+    </script>
+</body>
