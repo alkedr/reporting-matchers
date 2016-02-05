@@ -52,5 +52,8 @@ class ContainsInSpecifiedOrderSubValuesChecker<T> implements SubValuesChecker {
             ReportingMatcher<?> matcher = elementMatchers.next();
             safeTreeReporter.absentNode(elementKey(index++), r -> matcher.runForAbsentItem(safeTreeReporter));
         }
+        if (index == 0) {
+            safeTreeReporter.passedCheck("empty list");
+        }
     }
 }
