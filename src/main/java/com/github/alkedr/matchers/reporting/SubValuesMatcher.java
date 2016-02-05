@@ -4,6 +4,7 @@ import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import com.github.alkedr.matchers.reporting.sub.value.checkers.SubValuesChecker;
 import com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractor;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
+import org.apache.commons.lang3.Validate;
 
 import java.util.function.Supplier;
 
@@ -14,6 +15,8 @@ class SubValuesMatcher<T, S> extends BaseReportingMatcher<T> {
     private final Supplier<SubValuesChecker> subValuesCheckerSupplier;
 
     SubValuesMatcher(SubValuesExtractor<T, S> subValuesExtractor, Supplier<SubValuesChecker> subValuesCheckerSupplier) {
+        Validate.notNull(subValuesExtractor, "subValuesExtractor");
+        Validate.notNull(subValuesCheckerSupplier, "subValuesCheckerSupplier");
         this.subValuesExtractor = subValuesExtractor;
         this.subValuesCheckerSupplier = subValuesCheckerSupplier;
     }
