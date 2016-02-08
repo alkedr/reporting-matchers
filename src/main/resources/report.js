@@ -30,7 +30,8 @@ function PresentNode(name, value, checks) {
 
     function createNameDiv(name, node) {
         var result = document.createElement("div");
-        result.appendChild(document.createTextNode(name));
+        var foldingSymbol = checks.length > 0 ? (node.isFolded ? "▶ " : "▼ ") : "";
+        result.appendChild(document.createTextNode(foldingSymbol + name));
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
@@ -78,7 +79,8 @@ function AbsentNode(name, checks) {
 
     function createNameDiv(name, node) {
         var result = document.createElement("div");
-        result.appendChild(document.createTextNode(name));
+        var foldingSymbol = checks.length > 0 ? (node.isFolded ? "▶ " : "▼ ") : "";
+        result.appendChild(document.createTextNode(foldingSymbol + name));
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
@@ -126,7 +128,8 @@ function BrokenNode(name, stacktrace, checks) {
 
     function createNameDiv(name, node) {
         var result = document.createElement("div");
-        result.appendChild(document.createTextNode(name));
+        var foldingSymbol = checks.length > 0 ? (node.isFolded ? "▶ " : "▼ ") : "";
+        result.appendChild(document.createTextNode(foldingSymbol + name));
         result.classList.add('key');
         result.onclick = function(element) {
             node.isFolded = !node.isFolded;
