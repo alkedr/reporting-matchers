@@ -6,7 +6,7 @@ import org.mockito.InOrder;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapKey;
+import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.hashMapValueForKeyKey;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
@@ -38,9 +38,9 @@ public class HashMapEntriesExtractorTest {
         map.put(keys[1], values[1]);
         map.put(keys[2], values[2]);
         SubValuesExtractors.<Integer, Integer>hashMapEntries().run(map, listener);
-        inOrder.verify(listener).present(eq(hashMapKey(keys[0])), same(values[0]));
-        inOrder.verify(listener).present(eq(hashMapKey(keys[1])), same(values[1]));
-        inOrder.verify(listener).present(eq(hashMapKey(keys[2])), same(values[2]));
+        inOrder.verify(listener).present(eq(hashMapValueForKeyKey(keys[0])), same(values[0]));
+        inOrder.verify(listener).present(eq(hashMapValueForKeyKey(keys[1])), same(values[1]));
+        inOrder.verify(listener).present(eq(hashMapValueForKeyKey(keys[2])), same(values[2]));
         inOrder.verifyNoMoreInteractions();
     }
 

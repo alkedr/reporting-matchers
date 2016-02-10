@@ -4,6 +4,8 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.Arrays;
 
+import static com.github.alkedr.matchers.reporting.sub.value.keys.MethodNameUtils.createNameForRegularMethodInvocation;
+
 class MethodByNameKey implements Key {
     private final String methodName;
     private final Object[] arguments;
@@ -30,6 +32,6 @@ class MethodByNameKey implements Key {
 
     @Override
     public String asString() {
-        return MethodNameUtils.createNameForRegularMethodInvocation(methodName, arguments);
+        return createNameForRegularMethodInvocation(methodName, arguments);
     }
 }

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 class NoOpSubValuesChecker implements SubValuesChecker {
     static final NoOpSubValuesChecker INSTANCE = new NoOpSubValuesChecker();
+    private static final Consumer<SafeTreeReporter> NO_OP_SAFE_TREE_REPORTER_CONSUMER = safeTreeReporter -> {};
 
     private NoOpSubValuesChecker() {
     }
@@ -17,17 +18,17 @@ class NoOpSubValuesChecker implements SubValuesChecker {
 
     @Override
     public Consumer<SafeTreeReporter> present(Key key, Object value) {
-        return safeTreeReporter -> {};
+        return NO_OP_SAFE_TREE_REPORTER_CONSUMER;
     }
 
     @Override
     public Consumer<SafeTreeReporter> absent(Key key) {
-        return safeTreeReporter -> {};
+        return NO_OP_SAFE_TREE_REPORTER_CONSUMER;
     }
 
     @Override
     public Consumer<SafeTreeReporter> broken(Key key, Throwable throwable) {
-        return safeTreeReporter -> {};
+        return NO_OP_SAFE_TREE_REPORTER_CONSUMER;
     }
 
     @Override

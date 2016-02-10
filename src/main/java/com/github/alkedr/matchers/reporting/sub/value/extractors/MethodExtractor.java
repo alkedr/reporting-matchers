@@ -27,7 +27,7 @@ class MethodExtractor<T, S> implements SubValuesExtractor<T, S> {
             try {
                 method.setAccessible(true);
                 subValuesListener.present(methodKey(method, arguments), (S) method.invoke(item, arguments));
-            } catch (IllegalArgumentException | IllegalAccessException e) {   // TODO: ClassCastException
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 subValuesListener.broken(methodKey(method, arguments), e);
             } catch (InvocationTargetException e) {
                 subValuesListener.broken(methodKey(method, arguments), e.getCause());

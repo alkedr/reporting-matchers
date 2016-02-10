@@ -26,8 +26,10 @@ public enum Keys {
         return new ElementKey(index);
     }
 
-    public static Key hashMapKey(Object key) {
-        return new HashMapKey(key);
+    // не подходит для TreeMap, IdentityHashMap и пр.
+    // подходит только для HashMap (использует key.equals() и key.hashCode())
+    public static Key hashMapValueForKeyKey(Object key) {
+        return new HashMapValueForKeyKey(key);
     }
 
     public static Key renamedKey(Key originalKey, String name) {

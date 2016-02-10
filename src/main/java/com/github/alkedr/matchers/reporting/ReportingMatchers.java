@@ -420,24 +420,24 @@ public enum ReportingMatchers {
 
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, V value) {
-        return value(SubValuesExtractors.<K, V>hashMap(key), value);
+        return value(SubValuesExtractors.<K, V>hashMapValueForKey(key), value);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Matcher<? super V> matcher) {
-        return value(SubValuesExtractors.<K, V>hashMap(key), matcher);
+        return value(SubValuesExtractors.<K, V>hashMapValueForKey(key), matcher);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, ReportingMatcher<? super V> reportingMatcher) {
-        return value(SubValuesExtractors.<K, V>hashMap(key), reportingMatcher);
+        return value(SubValuesExtractors.<K, V>hashMapValueForKey(key), reportingMatcher);
     }
 
     @SafeVarargs
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Matcher<? super V>... matchers) {
-        return value(SubValuesExtractors.<K, V>hashMap(key), matchers);
+        return value(SubValuesExtractors.<K, V>hashMapValueForKey(key), matchers);
     }
 
     public static <K, V> ReportingMatcher<Map<K, V>> entry(K key, Iterable<? extends Matcher<? super V>> matchers) {
-        return value(SubValuesExtractors.<K, V>hashMap(key), matchers);
+        return value(SubValuesExtractors.<K, V>hashMapValueForKey(key), matchers);
     }
 
 
