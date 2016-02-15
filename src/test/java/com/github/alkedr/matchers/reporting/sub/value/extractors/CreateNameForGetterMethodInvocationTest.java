@@ -1,8 +1,8 @@
-package com.github.alkedr.matchers.reporting.sub.value.keys;
+package com.github.alkedr.matchers.reporting.sub.value.extractors;
 
 import org.junit.Test;
 
-import static com.github.alkedr.matchers.reporting.sub.value.keys.MethodNameUtils.createNameForGetterMethodInvocation;
+import static com.github.alkedr.matchers.reporting.sub.value.extractors.SubValuesExtractors.createNameForGetterMethodInvocation;
 import static org.junit.Assert.assertEquals;
 
 public class CreateNameForGetterMethodInvocationTest {

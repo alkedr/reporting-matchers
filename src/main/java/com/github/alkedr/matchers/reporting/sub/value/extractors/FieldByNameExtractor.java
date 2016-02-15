@@ -29,7 +29,6 @@ class FieldByNameExtractor<T, S> implements SubValuesExtractor<T, S> {
                 return;
             }
             if (field == null) {
-                // TODO: broken если нет такого поля?
                 subValuesListener.absent(fieldByNameKey(fieldName));
             } else {
                 SubValuesExtractors.<T, S>field(field).run(item, subValuesListener);

@@ -23,7 +23,7 @@ class FieldExtractor<T, S> implements SubValuesExtractor<T, S> {
         } else {
             try {
                 subValuesListener.present(fieldKey(field), (S) FieldUtils.readField(field, item, true));
-            } catch (IllegalArgumentException | IllegalAccessException e) {  // TODO: ClassCastException
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 // IllegalArgumentException будет если у item неправильный класс
                 // IllegalAccessException быть не может, потому что мы пробиваем доступ с пом. readField(*, *, true)
                 subValuesListener.broken(fieldKey(field), e);

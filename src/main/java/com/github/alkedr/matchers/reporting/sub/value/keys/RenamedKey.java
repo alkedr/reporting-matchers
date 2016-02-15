@@ -25,9 +25,7 @@ class RenamedKey implements Key {
 
     @Override
     public int hashCode() {
-        int result = originalKey.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return 31 * originalKey.hashCode() + name.hashCode();
     }
 
     @Override

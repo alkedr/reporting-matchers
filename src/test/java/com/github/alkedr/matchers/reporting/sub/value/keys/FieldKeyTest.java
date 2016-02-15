@@ -1,8 +1,16 @@
 package com.github.alkedr.matchers.reporting.sub.value.keys;
 
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+
+import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.fieldKey;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 public class FieldKeyTest {
-    /*private final ExtractableKey inaccessibleFieldKey = fieldKey(MyClass.class.getDeclaredField("myInaccessibleField"));
-    private final ExtractableKey staticFieldKey = fieldKey(MyClass.class.getDeclaredField("MY_STATIC_FIELD"));
+    private final Field field1 = MyClass.class.getDeclaredField("field1");
+    private final Field field2 = MyClass.class.getDeclaredField("field2");
 
     public FieldKeyTest() throws NoSuchFieldException {
     }
@@ -14,75 +22,22 @@ public class FieldKeyTest {
 
     @Test
     public void asStringTest() {
-        assertEquals("myInaccessibleField", inaccessibleFieldKey.asString());
+        assertEquals("field1", fieldKey(field1).asString());
     }
 
     @Test
     public void hashCodeTest() {
-        assertEquals(inaccessibleFieldKey.hashCode(), inaccessibleFieldKey.hashCode());
+        assertEquals(fieldKey(field1).hashCode(), fieldKey(field1).hashCode());
     }
 
     @Test
     public void equalsTest() {
-        assertEquals(inaccessibleFieldKey, inaccessibleFieldKey);
-        assertNotEquals(inaccessibleFieldKey, staticFieldKey);
-    }
-
-
-    @Test
-    public void extractFrom_nullItem() {
-        verifyAbsent(
-                listener -> inaccessibleFieldKey.run(null, listener),
-                sameInstance(inaccessibleFieldKey)
-        );
-    }
-
-    @Test
-    public void extractFrom_inaccessibleField() {
-        verifyPresent(
-                listener -> inaccessibleFieldKey.run(new MyClass(), listener),
-                sameInstance(inaccessibleFieldKey),
-                equalTo(2)
-        );
-    }
-
-    @Test
-    public void extractFrom_inaccessibleStaticField_nullItem() {
-        verifyPresent(
-                listener -> staticFieldKey.run(null, listener),
-                sameInstance(staticFieldKey),
-                equalTo(3)
-        );
-    }
-
-    @Test
-    public void extractFrom_inaccessibleStaticField_absentItem() {
-        verifyPresent(
-                staticFieldKey::runForAbsentItem,
-                sameInstance(staticFieldKey),
-                equalTo(3)
-        );
-    }
-
-    @Test
-    public void extractFrom_itemHasWrongClass() {
-        verifyBroken(   // TODO: missing?
-                listener ->inaccessibleFieldKey.run(new Object(), listener),
-                sameInstance(inaccessibleFieldKey),
-                IllegalArgumentException.class
-        );
-    }
-
-    @Test
-    public void extractFrom_absentItem() {
-        verifyAbsent(
-                inaccessibleFieldKey::runForAbsentItem,
-                sameInstance(inaccessibleFieldKey)
-        );
+        assertEquals(fieldKey(field1), fieldKey(field1));
+        assertNotEquals(fieldKey(field1), fieldKey(field2));
     }
 
     private static class MyClass {
-        private final int myInaccessibleField = 2;
-        private static final int MY_STATIC_FIELD = 3;
-    }*/
+        private final int field1 = 1;
+        private final int field2 = 2;
+    }
 }

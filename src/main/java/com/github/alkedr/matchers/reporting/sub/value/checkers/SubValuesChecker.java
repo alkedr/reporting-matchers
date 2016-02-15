@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 // методы present, missing и broken добавляют содержимое нод
 public interface SubValuesChecker {
-    // TODO: убрать begin()
     void begin(SafeTreeReporter safeTreeReporter);
     Consumer<SafeTreeReporter> present(Key key, Object value);
     Consumer<SafeTreeReporter> absent(Key key);

@@ -8,4 +8,6 @@ public interface SimpleTreeReporter extends FlatReporter {
     void beginAbsentNode(Key key);
     void beginBrokenNode(Key key, Throwable throwable);
     void endNode();
+
+    // TODO: default toSafeTreeReporter() ?
 }

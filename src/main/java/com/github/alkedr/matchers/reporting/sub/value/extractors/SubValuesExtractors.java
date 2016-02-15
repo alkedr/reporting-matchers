@@ -9,9 +9,11 @@ import java.util.Map;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 
+// TODO: проверить, что везде правильно обрабатывается ClassCastException
+// TODO: проверить, что ситуации "поле не найдено", "метод не найден" и подобные обрабатываются правильно и логично
+//       TODO: "поле не найдено" - absent или broken?
 public enum SubValuesExtractors {
     ;
-
 
     public static <T, S> SubValuesExtractor<T, S> field(Field field) {
         return new FieldExtractor<>(field);
@@ -33,8 +35,12 @@ public enum SubValuesExtractors {
         return new FieldByNameExtractor<>(fieldName);
     }
 
-    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMap(K key) {
-        return new HashMapExtractor<>(key);
+    // TODO: hashMapEntry? извлекает Map.Entry?
+    // не подходит для TreeMap, IdentityHashMap и пр.
+    // подходит только для HashMap (использует key.equals() и key.hashCode())
+// TODO: ключ или значение неправильного класса, ClassCastException
+    public static <K, V> SubValuesExtractor<Map<K, V>, V> hashMapValueForKey(K key) {
+        return new HashMapValueForKeyExtractor<>(key);
     }
 
     public static <T, S> SubValuesExtractor<T, S> methodByName(String methodName, Object... arguments) {
@@ -81,7 +87,6 @@ public enum SubValuesExtractors {
     public static <T> SubValuesExtractor<T, Object> getters() {
         return ObjectGettersExtractor.INSTANCE;
     }
-
 
 
     static String createNameForGetterMethodInvocation(String name) {
