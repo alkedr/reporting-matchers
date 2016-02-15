@@ -5,29 +5,20 @@ import static java.util.Arrays.asList;
 public enum Reporters {
     ;
 
-    public static SafeTreeReporter simpleTreeReporterToSafeTreeReporter(SimpleTreeReporter simpleTreeReporter) {
-        return new SimpleTreeReporterToSafeTreeReporterAdapter(simpleTreeReporter);
-    }
-
-    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable) {
-        return new HtmlReporter(appendable);
-    }
-
-    @Deprecated
-    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable, String title) {
-        return new HtmlReporter(appendable, title);
-    }
-
-    public static MatchesFlagRecordingSimpleTreeReporter matchesFlagRecordingReporter() {
-        return new MatchesFlagRecordingSimpleTreeReporterImpl();
-    }
-
     public static SafeTreeReporter noOpSafeTreeReporter() {
         return new NoOpSafeTreeReporter();
     }
 
     public static SimpleTreeReporter noOpSimpleTreeReporter() {
         return new NoOpSimpleTreeReporter();
+    }
+
+    public static SafeTreeReporter simpleTreeReporterToSafeTreeReporter(SimpleTreeReporter simpleTreeReporter) {
+        return new SimpleTreeReporterToSafeTreeReporterAdapter(simpleTreeReporter);
+    }
+
+    public static MatchesFlagRecordingSimpleTreeReporter matchesFlagRecordingReporter() {
+        return new MatchesFlagRecordingSimpleTreeReporterImpl();
     }
 
     public static SimpleTreeReporter compositeSimpleTreeReporter(SimpleTreeReporter... reporters) {
@@ -38,7 +29,40 @@ public enum Reporters {
         return new CompositeSimpleTreeReporter(reporters);
     }
 
+
+    // TODO: не показывать наружу? сделать private в MergingMatcher?
     public static CloseableSafeTreeReporter mergingReporter(SafeTreeReporter wrappedSafeTreeReporter) {
         return new MergingSafeTreeReporter(wrappedSafeTreeReporter);
+    }
+
+
+    public static SimpleTreeReporter brokenThrowingReporter(SimpleTreeReporter next) {
+        return new BrokenThrowingReporter(next);
+    }
+
+    public static SimpleTreeReporter notFailedFilteringReporter(SimpleTreeReporter next) {
+        return new NotFailedFilteringReporter(next);
+    }
+
+    public static SimpleTreeReporter uncheckedNodesFilteringReporter(SimpleTreeReporter next) {
+        return new UncheckedNodesFilteringReporter(next);
+    }
+
+    public static SimpleTreeReporter checksCountLimitingReporter(SimpleTreeReporter next, int maxChecksCount) {
+        return new ChecksCountLimitingReporter(next, maxChecksCount);
+    }
+
+
+    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable) {
+        return new HtmlReporter(appendable);
+    }
+
+    @Deprecated
+    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable, String title) {
+        return new HtmlReporter(appendable, title);
+    }
+
+    public static SimpleTreeReporter plainTextReporter(Appendable appendable) {
+        return new PlainTextReporter(appendable);
     }
 }

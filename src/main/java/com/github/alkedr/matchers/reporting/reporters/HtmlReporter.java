@@ -3,6 +3,7 @@ package com.github.alkedr.matchers.reporting.reporters;
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Scanner;
 
 import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
@@ -141,7 +142,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
         try {
             appendable.append(charSequence);
         } catch (IOException e) {
-            throw new RuntimeException(e);  // FIXME: своё исключение?
+            throw new UncheckedIOException(e);
         }
     }
 

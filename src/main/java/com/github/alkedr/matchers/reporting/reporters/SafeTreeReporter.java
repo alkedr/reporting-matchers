@@ -5,6 +5,7 @@ import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 import java.util.function.Consumer;
 
 // TODO: написать в доках интерфейсов как их реализовывать
+// TODO: LazyReporter?
 public interface SafeTreeReporter extends FlatReporter {
     void presentNode(Key key, Object value, Consumer<SafeTreeReporter> contents);
     void absentNode(Key key, Consumer<SafeTreeReporter> contents);
