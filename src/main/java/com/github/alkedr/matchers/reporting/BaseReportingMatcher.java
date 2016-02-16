@@ -27,7 +27,7 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
     @Override
     public void describeMismatch(Object item, Description description) {
         StringBuilder stringBuilder = new StringBuilder();
-        run(item, describeMismatchReporter(stringBuilder));
+        run(item, simpleTreeReporterToSafeTreeReporter(describeMismatchReporter(stringBuilder)));
         description.appendText(stringBuilder.toString());
     }
 }
