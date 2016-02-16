@@ -1,11 +1,12 @@
 package com.github.alkedr.matchers.reporting;
 
 import com.github.alkedr.matchers.reporting.reporters.MatchesFlagRecordingSimpleTreeReporter;
-import com.github.alkedr.matchers.reporting.reporters.SafeTreeReporter;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import static com.github.alkedr.matchers.reporting.reporters.Reporters.*;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.describeMismatchReporter;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.matchesFlagRecordingReporter;
+import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 
 public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements ReportingMatcher<T> {
     @Override
@@ -26,23 +27,7 @@ public abstract class BaseReportingMatcher<T> extends BaseMatcher<T> implements 
     @Override
     public void describeMismatch(Object item, Description description) {
         StringBuilder stringBuilder = new StringBuilder();
-        run(item, createReporterForDescribeMismatch(stringBuilder));
+        run(item, describeMismatchReporter(stringBuilder));
         description.appendText(stringBuilder.toString());
-    }
-
-
-    static SafeTreeReporter createReporterForDescribeMismatch(Appendable stringBuilder) {
-        return simpleTreeReporterToSafeTreeReporter(
-                brokenThrowingReporter(
-                        notFailedFilteringReporter(
-                                checksCountLimitingReporter(
-                                        uncheckedNodesFilteringReporter(
-                                                plainTextReporter(stringBuilder)
-                                        ),
-                                        10
-                                )
-                        )
-                )
-        );
     }
 }
