@@ -6,7 +6,7 @@
 
     <groupId>com.github.alkedr</groupId>
     <artifactId>reporting-matchers</artifactId>
-    <version>0.16.0</version>
+    <version>0.17.0</version>
 
     <name>Reporting Matchers</name>
     <url>https://github.com/alkedr/reporting-matchers</url>

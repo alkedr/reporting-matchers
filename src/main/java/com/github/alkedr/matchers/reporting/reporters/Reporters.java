@@ -59,16 +59,14 @@ public enum Reporters {
     }
 
 
-    public static SafeTreeReporter describeMismatchReporter(Appendable stringBuilder) {
-        return simpleTreeReporterToSafeTreeReporter(
-                brokenThrowingReporter(
-                        notFailedFilteringReporter(
-                                checksCountLimitingReporter(
-                                        uncheckedNodesFilteringReporter(
-                                                plainTextReporter(stringBuilder)
-                                        ),
-                                        10
-                                )
+    public static SimpleTreeReporter describeMismatchReporter(Appendable stringBuilder) {
+        return brokenThrowingReporter(
+                notFailedFilteringReporter(
+                        checksCountLimitingReporter(
+                                uncheckedNodesFilteringReporter(
+                                        plainTextReporter(stringBuilder)
+                                ),
+                                10
                         )
                 )
         );
