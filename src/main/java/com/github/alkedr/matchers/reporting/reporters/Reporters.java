@@ -29,12 +29,9 @@ public enum Reporters {
         return new CompositeSimpleTreeReporter(reporters);
     }
 
-
-    // TODO: не показывать наружу? сделать private в MergingMatcher?
     public static CloseableSafeTreeReporter mergingReporter(SafeTreeReporter wrappedSafeTreeReporter) {
         return new MergingSafeTreeReporter(wrappedSafeTreeReporter);
     }
-
 
     public static SimpleTreeReporter brokenThrowingReporter(SimpleTreeReporter next) {
         return new BrokenThrowingReporter(next);
@@ -57,12 +54,23 @@ public enum Reporters {
         return new HtmlReporter(appendable);
     }
 
-    @Deprecated
-    public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable, String title) {
-        return new HtmlReporter(appendable, title);
-    }
-
     public static SimpleTreeReporter plainTextReporter(Appendable appendable) {
         return new PlainTextReporter(appendable);
+    }
+
+
+    public static SafeTreeReporter describeMismatchReporter(Appendable stringBuilder) {
+        return simpleTreeReporterToSafeTreeReporter(
+                brokenThrowingReporter(
+                        notFailedFilteringReporter(
+                                checksCountLimitingReporter(
+                                        uncheckedNodesFilteringReporter(
+                                                plainTextReporter(stringBuilder)
+                                        ),
+                                        10
+                                )
+                        )
+                )
+        );
     }
 }

@@ -31,8 +31,6 @@ public class BaseReportingMatcherTest {
         assertEquals("[fail] - Expected: 1\n              but: 2\n", stringDescription.toString());
     }
 
-    // TODO: интеграционные тесты createReporterForDescribeMismatch
-
 
     private static class BaseReportingMatcherThatDoesNotAddChecks extends BaseReportingMatcher<Object> {
         @Override
