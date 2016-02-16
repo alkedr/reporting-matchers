@@ -26,7 +26,7 @@ public class IntegrationTestMain {
     public static void main(String... args) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(args[0])) {
             try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-                CloseableSimpleTreeReporter reporter = htmlReporter(writer, "Заголовок страницы");
+                CloseableSimpleTreeReporter reporter = htmlReporter(writer);
                 isCorrectUser().run(USER, simpleTreeReporterToSafeTreeReporter(reporter));
                 reporter.close();
             }
