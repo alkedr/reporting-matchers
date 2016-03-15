@@ -495,6 +495,24 @@ public enum ReportingMatchers {
     }
 
 
+    public static <T> ReportingMatcher<T> uncheckedElementsAreFails(Matcher<? super T> matcher) {
+        return uncheckedElementsAreFails((ReportingMatcher<? super T>) toReportingMatcher(matcher));
+    }
+
+    public static <T> ReportingMatcher<T> uncheckedElementsAreFails(ReportingMatcher<? super T> matcher) {
+        return new UncheckedElementsAreFailsMatcher<>(matcher);
+    }
+
+    @SafeVarargs
+    public static <T> ReportingMatcher<T> uncheckedElementsAreFails(Matcher<? super T>... matchers) {
+        return uncheckedElementsAreFails(asList(matchers));
+    }
+
+    public static <T> ReportingMatcher<T> uncheckedElementsAreFails(Iterable<? extends Matcher<? super T>> matchers) {
+        return uncheckedElementsAreFails(merge(toReportingMatchers(matchers)));
+    }
+
+
 
     public static class MethodInvocation {
         final Method method;
