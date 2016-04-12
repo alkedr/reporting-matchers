@@ -1,4 +1,5 @@
-"use strict";
+//"use strict";
+// use strict иногда выдаёт ошибку "SyntaxError: octal literals and octal escape sequences are deprecated"
 
 var hidePassed = false;
 var hideFailed = false;
