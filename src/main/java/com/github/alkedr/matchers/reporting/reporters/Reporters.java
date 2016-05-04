@@ -49,6 +49,10 @@ public enum Reporters {
         return new ChecksCountLimitingReporter(next, maxChecksCount);
     }
 
+    public static SafeTreeReporter uncheckedToIncorrectlyPresentConvertingReporter(SafeTreeReporter next) {
+        return new UncheckedToIncorrectlyPresentConvertingReporter(next);
+    }
+
 
     public static CloseableSimpleTreeReporter htmlReporter(Appendable appendable) {
         return new HtmlReporter(appendable);

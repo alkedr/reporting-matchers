@@ -2,10 +2,7 @@ package com.github.alkedr.matchers.reporting.reporters;
 
 import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.mergingReporter;
@@ -106,15 +103,12 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PresentNode that = (PresentNode) o;
-            return key.equals(that.key) && value.equals(that.value);
-
+            return Objects.equals(key, that.key) && Objects.equals(value, that.value);
         }
 
         @Override
         public int hashCode() {
-            int result = key.hashCode();
-            result = 31 * result + value.hashCode();
-            return result;
+            return Objects.hash(key, value);
         }
     }
 
@@ -136,12 +130,12 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             AbsentNode that = (AbsentNode) o;
-            return key.equals(that.key);
+            return Objects.equals(key, that.key);
         }
 
         @Override
         public int hashCode() {
-            return key.hashCode();
+            return Objects.hash(key);
         }
     }
 
@@ -165,14 +159,12 @@ class MergingSafeTreeReporter implements CloseableSafeTreeReporter {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             BrokenNode that = (BrokenNode) o;
-            return key.equals(that.key) && throwable.equals(that.throwable);
+            return Objects.equals(key, that.key) && Objects.equals(throwable, that.throwable);
         }
 
         @Override
         public int hashCode() {
-            int result = key.hashCode();
-            result = 31 * result + throwable.hashCode();
-            return result;
+            return Objects.hash(key, throwable);
         }
     }
 
