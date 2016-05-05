@@ -10,7 +10,6 @@ import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeJson;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
-// TODO: эскейпить
 // TODO: три вкладки: actual, diff, expected
 // TODO: серые линии слева, как в тасках
 // TODO: защита от очень больших значений
@@ -55,7 +54,7 @@ class HtmlReporter implements CloseableSimpleTreeReporter {
             append("null");
         } else if (isPrimitiveOrWrapper(value.getClass()) || value instanceof String) {
             append("\"");
-            append(value.toString());
+            append(escapeJson(value.toString()));
             append("\"");
         } else {
             append("\"\"");
