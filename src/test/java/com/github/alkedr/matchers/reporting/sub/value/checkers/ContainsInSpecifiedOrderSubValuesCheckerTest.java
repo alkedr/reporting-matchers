@@ -9,6 +9,7 @@ import org.mockito.InOrder;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrder;
+import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsMatchingInSpecifiedOrder;
 import static com.github.alkedr.matchers.reporting.sub.value.keys.Keys.elementKey;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -49,7 +50,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotEmpty() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -63,7 +64,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneItem() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -78,7 +79,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedTwoItems_gotTwoItemsInDifferentOrder() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2)))).get();
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(asList(toReportingMatcher(equalTo(1)), toReportingMatcher(equalTo(2)))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -97,7 +98,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneAbsent() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();
@@ -112,7 +113,7 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
 
     @Test
     public void expectedOneItem_gotOneBroken() {
-        SubValuesChecker subValuesChecker = containsInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(singleton(toReportingMatcher(anything("1")))).get();
 
         subValuesChecker.begin(safeTreeReporter);
         inOrder.verifyNoMoreInteractions();

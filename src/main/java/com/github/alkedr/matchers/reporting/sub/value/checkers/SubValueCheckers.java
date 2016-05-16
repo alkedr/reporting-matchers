@@ -2,12 +2,12 @@ package com.github.alkedr.matchers.reporting.sub.value.checkers;
 
 import com.github.alkedr.matchers.reporting.ReportingMatcher;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -39,35 +39,52 @@ public enum SubValueCheckers {
     }
 
 
-    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
+    public static <T> Supplier<SubValuesChecker> containsMatchingInSpecifiedOrder(Iterator<? extends ReportingMatcher<? super T>> elementMatchers) {
         return () -> new ContainsInSpecifiedOrderSubValuesChecker<>(elementMatchers);
     }
 
-    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
-        return containsInSpecifiedOrder(elementMatchers.iterator());
+    public static <T> Supplier<SubValuesChecker> containsMatchingInSpecifiedOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+        return containsMatchingInSpecifiedOrder(elementMatchers.iterator());
+    }
+
+    @SafeVarargs
+    public static <T> Supplier<SubValuesChecker> containsMatchingInSpecifiedOrder(ReportingMatcher<? super T>... elementMatchers) {
+        return containsMatchingInSpecifiedOrder(asList(elementMatchers));
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
     public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(T... elements) {
-        return containsInSpecifiedOrder(
-                stream(elements)
+        return containsInSpecifiedOrder(asList(elements));
+    }
+
+    public static <T> Supplier<SubValuesChecker> containsInSpecifiedOrder(Collection<T> elements) {
+        return containsMatchingInSpecifiedOrder(
+                elements.stream()
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
         );
     }
 
 
-    // TODO: Iterable?
-    public static <T> Supplier<SubValuesChecker> containsInAnyOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
+    public static <T> Supplier<SubValuesChecker> containsMatchingInAnyOrder(Iterable<? extends ReportingMatcher<? super T>> elementMatchers) {
         return () -> new ContainsInAnyOrderSubValuesChecker<>(elementMatchers);
+    }
+
+    @SafeVarargs
+    public static <T> Supplier<SubValuesChecker> containsMatchingInAnyOrder(ReportingMatcher<? super T>... elementMatchers) {
+        return containsMatchingInAnyOrder(asList(elementMatchers));
     }
 
     // TODO: тут нужны перегрузки для всех примитивных типов?
     @SafeVarargs
     public static <T> Supplier<SubValuesChecker> containsInAnyOrder(T... elements) {
-        return containsInAnyOrder(
-                stream(elements)
+        return containsInAnyOrder(asList(elements));
+    }
+
+    public static <T> Supplier<SubValuesChecker> containsInAnyOrder(Collection<T> elements) {
+        return containsMatchingInAnyOrder(
+                elements.stream()
                         .map(element -> toReportingMatcher(equalTo(element)))
                         .collect(toList())
         );
