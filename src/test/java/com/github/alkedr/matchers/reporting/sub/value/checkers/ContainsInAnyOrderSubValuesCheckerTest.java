@@ -15,6 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -42,6 +43,7 @@ public class ContainsInAnyOrderSubValuesCheckerTest {
         inOrder.verifyNoMoreInteractions();
 
         subValuesChecker.present(key1, 1).accept(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).incorrectlyPresent();
         inOrder.verifyNoMoreInteractions();
 
         subValuesChecker.end(safeTreeReporter);
@@ -74,6 +76,24 @@ public class ContainsInAnyOrderSubValuesCheckerTest {
         inOrder.verifyNoMoreInteractions();
 
         subValuesChecker.end(safeTreeReporter);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void expectedOneItem_gotOneWrongItem() {
+        SubValuesChecker subValuesChecker = containsMatchingInAnyOrder(singleton(toReportingMatcher(not(anything("1"))))).get();
+
+        subValuesChecker.begin(safeTreeReporter);
+        inOrder.verifyNoMoreInteractions();
+
+        subValuesChecker.present(key1, 1).accept(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).incorrectlyPresent();
+        inOrder.verifyNoMoreInteractions();
+
+        subValuesChecker.end(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).beginAbsentNode(elementKey(1));
+        inOrder.verify(simpleTreeReporter).checkForAbsentItem("not 1");
+        inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
 
