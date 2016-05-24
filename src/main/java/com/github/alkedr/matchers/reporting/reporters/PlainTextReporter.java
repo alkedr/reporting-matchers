@@ -5,6 +5,7 @@ import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
 import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
@@ -21,7 +22,9 @@ class PlainTextReporter implements SimpleTreeReporter {
         append(indentation());
         append(key.asString());
         append(": ");
-        append(String.valueOf(value));    // TODO: делать правильные отступы если в значении содержатся переходы на новую строку
+        if (value == null || isPrimitiveOrWrapper(value.getClass()) || value instanceof String) {
+            append(String.valueOf(value)); // TODO: делать правильные отступы если в значении содержатся переходы на новую строку
+        }
         append("\n");
         indentationLevel++;
     }
