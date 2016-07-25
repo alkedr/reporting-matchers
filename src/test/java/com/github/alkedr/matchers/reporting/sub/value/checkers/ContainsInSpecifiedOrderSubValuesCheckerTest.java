@@ -6,6 +6,7 @@ import com.github.alkedr.matchers.reporting.sub.value.keys.Key;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import static com.github.alkedr.matchers.reporting.ReportingMatchers.merge;
 import static com.github.alkedr.matchers.reporting.ReportingMatchers.toReportingMatcher;
 import static com.github.alkedr.matchers.reporting.reporters.Reporters.simpleTreeReporterToSafeTreeReporter;
 import static com.github.alkedr.matchers.reporting.sub.value.checkers.SubValueCheckers.containsInSpecifiedOrder;
@@ -58,6 +59,20 @@ public class ContainsInSpecifiedOrderSubValuesCheckerTest{
         subValuesChecker.end(safeTreeReporter);
         inOrder.verify(simpleTreeReporter).beginAbsentNode(elementKey(0));
         inOrder.verify(simpleTreeReporter).checkForAbsentItem("1");
+        inOrder.verify(simpleTreeReporter).endNode();
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void expectedOneItem_gotEmpty_matcherAllowsAbsent() {
+        SubValuesChecker subValuesChecker = containsMatchingInSpecifiedOrder(singleton(merge())).get();
+
+        subValuesChecker.begin(safeTreeReporter);
+        inOrder.verifyNoMoreInteractions();
+
+        subValuesChecker.end(safeTreeReporter);
+        inOrder.verify(simpleTreeReporter).beginAbsentNode(elementKey(0));
+        inOrder.verify(simpleTreeReporter).incorrectlyAbsent();
         inOrder.verify(simpleTreeReporter).endNode();
         inOrder.verifyNoMoreInteractions();
     }
